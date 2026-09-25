@@ -1,0 +1,3094 @@
+{
+ "resources": [
+  {
+   "_meta": {
+    "ui": {
+     "csp": {
+      "connectDomains": [],
+      "resourceDomains": []
+     }
+    }
+   },
+   "mimeType": "text/html;profile=mcp-app",
+   "name": "qr-design.html",
+   "uri": "ui://scanova/qr-design.html?v=24"
+  },
+  {
+   "_meta": {
+    "ui": {
+     "csp": {
+      "connectDomains": [],
+      "resourceDomains": []
+     }
+    }
+   },
+   "mimeType": "text/html;profile=mcp-app",
+   "name": "create_qr_code.html",
+   "uri": "ui://scanova/create-qr-code.html?v=24"
+  },
+  {
+   "_meta": {
+    "ui": {
+     "csp": {
+      "connectDomains": [],
+      "resourceDomains": []
+     }
+    }
+   },
+   "mimeType": "text/html;profile=mcp-app",
+   "name": "create_folder.html",
+   "uri": "ui://scanova/create-folder.html?v=24"
+  },
+  {
+   "_meta": {
+    "ui": {
+     "csp": {
+      "connectDomains": [],
+      "resourceDomains": []
+     }
+    }
+   },
+   "mimeType": "text/html;profile=mcp-app",
+   "name": "download_qr.html",
+   "uri": "ui://scanova/download-qr.html?v=24"
+  },
+  {
+   "_meta": {
+    "ui": {
+     "csp": {
+      "connectDomains": [],
+      "resourceDomains": []
+     }
+    }
+   },
+   "mimeType": "text/html;profile=mcp-app",
+   "name": "qr_codes_list.html",
+   "uri": "ui://scanova/qr-codes-list.html?v=24"
+  },
+  {
+   "_meta": {
+    "ui": {
+     "csp": {
+      "connectDomains": [],
+      "resourceDomains": []
+     }
+    }
+   },
+   "mimeType": "text/html;profile=mcp-app",
+   "name": "design_options.html",
+   "uri": "ui://scanova/design-options.html?v=24"
+  },
+  {
+   "_meta": {
+    "ui": {
+     "csp": {
+      "connectDomains": [],
+      "resourceDomains": []
+     }
+    }
+   },
+   "mimeType": "text/html;profile=mcp-app",
+   "name": "folders.html",
+   "uri": "ui://scanova/folders.html?v=24"
+  },
+  {
+   "_meta": {
+    "ui": {
+     "csp": {
+      "connectDomains": [],
+      "resourceDomains": []
+     }
+    }
+   },
+   "mimeType": "text/html;profile=mcp-app",
+   "name": "forms.html",
+   "uri": "ui://scanova/forms.html?v=24"
+  },
+  {
+   "_meta": {
+    "ui": {
+     "csp": {
+      "connectDomains": [],
+      "resourceDomains": []
+     }
+    }
+   },
+   "mimeType": "text/html;profile=mcp-app",
+   "name": "lead_lists.html",
+   "uri": "ui://scanova/lead-lists.html?v=24"
+  },
+  {
+   "_meta": {
+    "ui": {
+     "csp": {
+      "connectDomains": [],
+      "resourceDomains": []
+     }
+    }
+   },
+   "mimeType": "text/html;profile=mcp-app",
+   "name": "users.html",
+   "uri": "ui://scanova/users.html?v=24"
+  },
+  {
+   "_meta": {
+    "ui": {
+     "csp": {
+      "connectDomains": [],
+      "resourceDomains": []
+     }
+    }
+   },
+   "mimeType": "text/html;profile=mcp-app",
+   "name": "account_stats.html",
+   "uri": "ui://scanova/account-stats.html?v=24"
+  },
+  {
+   "_meta": {
+    "ui": {
+     "csp": {
+      "connectDomains": [],
+      "resourceDomains": []
+     }
+    }
+   },
+   "mimeType": "text/html;profile=mcp-app",
+   "name": "analytics_export.html",
+   "uri": "ui://scanova/analytics-export.html?v=24"
+  }
+ ],
+ "tools": [
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "Check connectivity to the Scanova docs MCP server and list its available tools",
+   "inputSchema": {
+    "properties": {},
+    "type": "object"
+   },
+   "name": "probe_docs_mcp",
+   "outputSchema": {
+    "properties": {
+     "available_tools": {
+      "description": "List of tool names offered by the docs MCP server",
+      "items": {
+       "type": "string"
+      },
+      "type": "array"
+     },
+     "connected": {
+      "description": "True if the docs MCP server responded",
+      "type": "boolean"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "server": {
+      "properties": {
+       "name": {
+        "type": "string"
+       },
+       "version": {
+        "type": "string"
+       }
+      },
+      "type": "object"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Probe Scanova docs MCP"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "Bridge to the live Scanova docs MCP server. mode='search' runs a semantic search across all docs. mode='filesystem' runs a read-only shell command (cat, head, rg, tree, jq\u2026) on the docs virtual filesystem \u2014 use this to read specific pages like /api-reference/references/pattern-info.mdx or /api-reference/references/category-list.mdx",
+   "inputSchema": {
+    "properties": {
+     "mode": {
+      "description": "'search' \u2014 semantic full-text search across all Scanova API docs. 'filesystem' \u2014 run a read-only shell command (rg, cat, head, tree, ls, jq\u2026) on the docs virtual filesystem rooted at /.",
+      "enum": [
+       "search",
+       "filesystem"
+      ],
+      "type": "string"
+     },
+     "query": {
+      "description": "Search query (for mode='search') or shell command (for mode='filesystem'). Filesystem examples: 'cat /api-reference/references/pattern-info.mdx', 'tree / -L 2', 'rg -il \"pattern\" /'",
+      "type": "string"
+     }
+    },
+    "required": [
+     "mode",
+     "query"
+    ],
+    "type": "object"
+   },
+   "name": "query_docs",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Error message when ok is false",
+      "type": "string"
+     },
+     "ok": {
+      "description": "True when the docs server returned a result",
+      "type": "boolean"
+     },
+     "result": {
+      "description": "Text content from the documentation",
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Query Scanova API documentation"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "List available QR code categories (URL, vCard, WiFi, Document, Social Media, etc.)",
+   "inputSchema": {
+    "properties": {
+     "view_type": {
+      "default": "all",
+      "description": "Category view filter",
+      "enum": [
+       "all",
+       "recommended",
+       "use_case",
+       "content_type",
+       "favourite"
+      ],
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "name": "get_qr_categories",
+   "outputSchema": {
+    "properties": {
+     "data": {
+      "items": {
+       "properties": {
+        "id": {
+         "type": "integer"
+        },
+        "name": {
+         "type": "string"
+        },
+        "slug": {
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Get QR code categories"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "Return the required/optional `info` JSON field reference for a QR code category (or all categories if none is given) \u2014 static reference data, no API call. Call this before create_qr_code/update_qr_code so the `info` payload matches the shape the category expects. Use validate_qr_info afterward to confirm a specific payload.",
+   "inputSchema": {
+    "properties": {
+     "category": {
+      "description": "QR code category ID to look up (e.g. 1=Website URL, 24=Business Card). Omit to list all categories.",
+      "oneOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "string"
+       }
+      ]
+     }
+    },
+    "type": "object"
+   },
+   "name": "get_qr_category_fields",
+   "outputSchema": {
+    "description": "Either one category's info-field reference (when `category` was given) or the full {categories: {...}} catalog",
+    "properties": {
+     "categories": {
+      "description": "Present when no category was given \u2014 the full catalog keyed by category ID",
+      "type": "object"
+     },
+     "category": {
+      "type": "integer"
+     },
+     "documented": {
+      "type": "boolean"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "info_example": {
+      "description": "Example info payload \u2014 object or array depending on the category"
+     },
+     "name": {
+      "type": "string"
+     },
+     "notes": {
+      "type": "string"
+     },
+     "slug": {
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Get QR category field reference"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "Validate a category + info JSON payload before calling create_qr_code or update_qr_code \u2014 catches malformed JSON, missing required fields, and invalid URLs/emails ahead of time. Call get_qr_category_fields first if you're unsure of the expected shape for a category.",
+   "inputSchema": {
+    "description": "Validate a category + info payload before create_qr_code/update_qr_code.",
+    "properties": {
+     "category": {
+      "description": "QR code category ID (see get_qr_categories / get_qr_category_fields).",
+      "oneOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "string"
+       }
+      ]
+     },
+     "info": {
+      "description": "JSON string of QR content, matching the shape for the given category (see get_qr_category_fields).",
+      "type": "string"
+     }
+    },
+    "required": [
+     "category",
+     "info"
+    ],
+    "type": "object"
+   },
+   "name": "validate_qr_info",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "message": {
+      "type": "string"
+     },
+     "valid": {
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Validate QR code info payload"
+  },
+  {
+   "_meta": {
+    "openai/outputTemplate": "ui://scanova/create-qr-code.html?v=24",
+    "ui": {
+     "resourceUri": "ui://scanova/create-qr-code.html?v=24"
+    }
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Create a new QR code. Only call this when you already have all required fields (name, category, qr_type, info) explicitly stated or clearly inferable from the conversation \u2014 never invent or guess placeholder values. If the user asked to create a QR code but hasn't given enough detail, call open_qr_code_creation_form instead so they can fill in a form (do not call this tool with guesses just to show the form \u2014 on success this tool does NOT show any UI, only a text confirmation; the form only appears automatically if this call fails, pre-filled with what was attempted, so the user can fix and retry). For categories you're unsure about, call get_qr_category_fields first to see the expected `info` shape, and optionally validate_qr_info to check the payload before creating.",
+   "inputSchema": {
+    "properties": {
+     "params": {
+      "additionalProperties": true,
+      "description": "Scanova API create payload (POST /qr/). See https://docs.scanova.io/api-reference/endpoint/qr_manager/create",
+      "properties": {
+       "category": {
+        "description": "QR code category ID (e.g. 1=Website URL, 7=vCard, 11=Google Map, 23=App Deep Link). Integer or string. See the info field's description for the full list of supported categories.",
+        "oneOf": [
+         {
+          "type": "integer"
+         },
+         {
+          "type": "string"
+         }
+        ]
+       },
+       "custom_domain": {
+        "description": "Optional custom domain ID assigned in Scanova",
+        "type": "integer"
+       },
+       "expire_on": {
+        "description": "Optional expiration timestamp (ISO 8601, e.g. 2025-12-31T23:59:59+05:30)",
+        "type": "string"
+       },
+       "info": {
+        "description": "JSON string of QR content. The structure depends on the category.\n\nSimple object format (categories 1, 2, 3, 4, 5, 6, 10, 11):\n  Website URL (cat 1):   {\"type\":\"url\",\"data\":{\"url\":\"https://example.com\"}}\n  Email (cat 2):         {\"type\":\"email\",\"data\":{\"to\":\"a@b.com\",\"cc\":\"c@b.com\",\"bcc\":\"d@b.com\",\"subject\":\"Hi\",\"body\":\"Hello\"}}\n                         to is required; cc, bcc, subject, body are optional.\n  Text (cat 3):          {\"type\":\"text\",\"data\":{\"text\":\"Hello World\"}}\n  Phone (cat 4):         {\"type\":\"phoneNumber\",\"data\":{\"number\":\"7011472701\"}}\n  SMS (cat 5):           {\"type\":\"sms\",\"data\":{\"contactNumber\":\"7011472701\",\"message\":\"Hello\"}}\n  WiFi (cat 6):          {\"type\":\"wifi\",\"data\":{\"ssid\":\"MyNet\",\"password\":\"secret\",\"authentication\":\"WPA\"}}\n                         authentication values: WPA | WPA2 | WEP | none\n  App Store (cat 10):    {\"type\":\"appStore\",\"data\":[{\"type\":\"playStore\",\"url\":\"https://play.google.com/store/apps/details?id=com.example\"},{\"type\":\"appleStore\",\"url\":\"https://apps.apple.com/app/id123456789\"}]}\n  Google Map (cat 11):   {\"type\":\"map\",\"data\":{\"provider\":\"google\",\"latitude\":28.6139,\"longitude\":77.2090,\"placeId\":\"ChIJL_P_CXMEDTkRs_FGKBLBFBE\",\"placeName\":\"New Delhi, India\"}}\n\nIMPORTANT: categories 2 and 3 were swapped from an earlier version of this description \u2014 category 2 is Email, category 3 is Text. Also note the field names above: Email uses data.to (NOT data.email), Phone uses data.number (NOT data.phone/data.contactNumber), SMS uses data.contactNumber (NOT data.phone).\n\nvCard (cat 7) \u2014 info is a JSON ARRAY of page-builder sections, NOT a flat \"vcard\" object:\n  [{\"type\":\"profile_info\",\"data\":{\"name\":\"John Doe\",\"title\":\"Engineer\",\"company\":\"Acme Inc\"}},{\"type\":\"contact_details\",\"data\":{\"emails\":[{\"email\":\"john@example.com\"}],\"phoneNumbers\":[{\"phoneNumber\":\"7011472701\"}]}}]\n\nApp Deep Link (cat 23) \u2014 info IS the JSON ARRAY of typed sections directly (NO outer {type,data} wrapper). intentUri (at least one of android/ios) and fallback are BOTH required; appStore is always optional:\n  [{\"type\":\"intentUri\",\"data\":[{\"type\":\"android\",\"uri\":\"myapp://open/screen/123\"},{\"type\":\"ios\",\"uri\":\"myapp://open/screen/123\"}]},{\"type\":\"appStore\",\"data\":[{\"type\":\"playStore\",\"url\":\"https://play.google.com/store/apps/details?id=com.example\"},{\"type\":\"appleStore\",\"url\":\"https://apps.apple.com/app/id123456789\"}]},{\"type\":\"fallback\",\"data\":{\"url\":\"https://example.com/download\"}}]\n\nCategories 9, 13, 14, 15, 16, 17, 18, 19, 20, 24, 26, 27, 28, and 31 (Custom Page, Document, Wedding, Social Media, Audio, Coupon, Product, Image, Event, Business Card, Feedback, Real Estate, Link Page, GS1) plus Restaurant (25, 44) are BLOCKED by this server \u2014 calling create_qr_code with one of these category IDs returns a message telling the user to create it via https://app.scanova.io instead. Don't attempt to construct info for these; tell the user to use the Scanova app.\nFor any other category not listed above, call get_qr_category_fields to look up the correct info schema before attempting create_qr_code.",
+        "type": "string"
+       },
+       "name": {
+        "description": "Human-readable name for the QR code",
+        "type": "string"
+       },
+       "pattern_info": {
+        "description": "Optional JSON string for QR design (pattern, colors, eyes, frame)",
+        "type": "string"
+       },
+       "qr_type": {
+        "description": "dy = Dynamic (content editable after creation); st = Static (fixed content)",
+        "enum": [
+         "dy",
+         "st"
+        ],
+        "type": "string"
+       }
+      },
+      "required": [
+       "name",
+       "category",
+       "qr_type",
+       "info"
+      ],
+      "type": "object"
+     }
+    },
+    "required": [
+     "params"
+    ],
+    "type": "object"
+   },
+   "name": "create_qr_code",
+   "outputSchema": {
+    "description": "A Scanova QR code object",
+    "properties": {
+     "category": {
+      "description": "QR code category ID (1=URL, 11=vCard, etc.)",
+      "type": "integer"
+     },
+     "created_at": {
+      "description": "ISO 8601 creation timestamp",
+      "type": "string"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "info": {
+      "description": "Payload data (type + data fields)",
+      "type": "object"
+     },
+     "name": {
+      "description": "Display name of the QR code",
+      "type": "string"
+     },
+     "pattern_info": {
+      "description": "JSON string with visual design settings",
+      "type": "string"
+     },
+     "qr_type": {
+      "description": "Dynamic or static",
+      "enum": [
+       "dy",
+       "st"
+      ],
+      "type": "string"
+     },
+     "qrid": {
+      "description": "Unique QR code identifier",
+      "type": "string"
+     },
+     "status": {
+      "description": "Activation status",
+      "enum": [
+       "active",
+       "inactive"
+      ],
+      "type": "string"
+     },
+     "updated_at": {
+      "description": "ISO 8601 last-modified timestamp",
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Create QR code"
+  },
+  {
+   "_meta": {
+    "openai/outputTemplate": "ui://scanova/create-qr-code.html?v=24",
+    "ui": {
+     "resourceUri": "ui://scanova/create-qr-code.html?v=24"
+    }
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "Show an interactive form for creating a QR code. Use this when the user wants to create a QR code but hasn't provided enough information (missing or ambiguous name/category/content) \u2014 do not call create_qr_code with guessed values in this case. Any fields already known can be passed here to pre-fill the form.",
+   "inputSchema": {
+    "description": "Show an interactive QR code creation form. Use this when the user wants to create a QR code but hasn't provided enough information yet (missing or ambiguous name/category/content) \u2014 do not guess or invent placeholder values in that case.",
+    "properties": {
+     "category": {
+      "description": "Pre-fill the category ID, if already known",
+      "oneOf": [
+       {
+        "type": "integer"
+       },
+       {
+        "type": "string"
+       }
+      ]
+     },
+     "name": {
+      "description": "Pre-fill the QR name, if already known",
+      "type": "string"
+     },
+     "qr_type": {
+      "description": "Pre-fill dynamic/static, if already known",
+      "enum": [
+       "dy",
+       "st"
+      ],
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "name": "open_qr_code_creation_form",
+   "outputSchema": {
+    "properties": {
+     "mode": {
+      "type": "string"
+     },
+     "prefill": {
+      "type": "object"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Open QR code creation form"
+  },
+  {
+   "_meta": {
+    "openai/outputTemplate": "ui://scanova/design-options.html?v=24",
+    "ui": {
+     "resourceUri": "ui://scanova/design-options.html?v=24"
+    }
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "Return the full catalog of available QR design options: all data pattern names, gradient styles, eye shape codes, frame IDs, error correction levels, fonts, and design tips. Use this before calling set_qr_design so users can see and choose from available options without writing any JSON.",
+   "inputSchema": {
+    "properties": {},
+    "type": "object"
+   },
+   "name": "get_qr_design_options",
+   "outputSchema": {
+    "properties": {
+     "data_patterns": {
+      "description": "All valid pattern names for the pattern field",
+      "items": {
+       "type": "string"
+      },
+      "type": "array"
+     },
+     "error_correction": {
+      "description": "Error correction levels: L (7%), M (15%), Q (25%), H (30%)",
+      "properties": {
+       "H": {
+        "type": "string"
+       },
+       "L": {
+        "type": "string"
+       },
+       "M": {
+        "type": "string"
+       },
+       "Q": {
+        "type": "string"
+       }
+      },
+      "type": "object"
+     },
+     "eye_shapes": {
+      "description": "All valid eye shape codes (Shape0, Shape1, \u2026)",
+      "items": {
+       "type": "string"
+      },
+      "type": "array"
+     },
+     "fonts": {
+      "description": "Available font families for frame text",
+      "items": {
+       "type": "string"
+      },
+      "type": "array"
+     },
+     "frame_ids": {
+      "description": "Available frame template IDs",
+      "items": {
+       "type": "integer"
+      },
+      "type": "array"
+     },
+     "gradient_styles": {
+      "description": "Gradient options: None, Horizontal, Vertical, Diagonal, Radial",
+      "items": {
+       "type": "string"
+      },
+      "type": "array"
+     },
+     "shape_container_ids": {
+      "description": "Available shape container IDs",
+      "items": {
+       "type": "string"
+      },
+      "type": "array"
+     },
+     "tips": {
+      "description": "Design tips and recommendations",
+      "items": {
+       "type": "string"
+      },
+      "type": "array"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Get QR code design options"
+  },
+  {
+   "_meta": {
+    "openai/outputTemplate": "ui://scanova/qr-design.html?v=24",
+    "ui": {
+     "resourceUri": "ui://scanova/qr-design.html?v=24"
+    }
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Apply a visual design to an existing QR code using human-friendly named parameters. Only the fields you specify are changed \u2014 all other design settings (eye shape, pattern, colors, frame, etc.) are automatically preserved from the current design. Internally fetches the existing design and merges your changes on top. Call get_qr_design_options first to show users available patterns, eye shapes, and frames.",
+   "inputSchema": {
+    "description": "Apply a visual design to an existing QR code. All design fields are optional \u2014 omit any you don't want to change. Call get_qr_design_options first to see all available patterns, eye shapes, and frame IDs.",
+    "properties": {
+     "background_color": {
+      "default": "#ffffff",
+      "description": "QR canvas background color. Hex #RRGGBB, or empty string '' for transparent.",
+      "type": "string"
+     },
+     "dot_scale": {
+      "description": "Module (dot) size scale 10\u2013100. Lower = more spacing between dots.",
+      "maximum": 100,
+      "minimum": 10,
+      "type": "integer"
+     },
+     "end_color": {
+      "description": "End color for gradient. Omit or same as start_color for solid color.",
+      "type": "string"
+     },
+     "error_correction": {
+      "default": "M",
+      "description": "L=7%, M=15% (default), Q=25% (use with logo), H=30% (best for logo overlay)",
+      "enum": [
+       "L",
+       "M",
+       "Q",
+       "H"
+      ],
+      "type": "string"
+     },
+     "eye_inner_color": {
+      "default": "#000000",
+      "description": "Color of the inner square of the corner eyes. Hex #RRGGBB.",
+      "type": "string"
+     },
+     "eye_outer_color": {
+      "default": "#000000",
+      "description": "Color of the outer border of the corner eyes. Hex #RRGGBB.",
+      "type": "string"
+     },
+     "eye_shape": {
+      "default": "Shape4",
+      "description": "Corner finder pattern shape. Standard: Shape0\u2013Shape10. Advanced: Shape15, Shape30\u2013Shape59 (various). Default: Shape4",
+      "type": "string"
+     },
+     "frame_bg_color": {
+      "default": "#FFFFFF",
+      "description": "Background color of the frame area (behind the QR scan region).",
+      "type": "string"
+     },
+     "frame_category": {
+      "default": "url",
+      "description": "QR category slug for frame style (e.g. 'url', 'document', 'map', 'businessCard').",
+      "type": "string"
+     },
+     "frame_id": {
+      "description": "Decorative frame ID (1\u20135). Omit for no frame.",
+      "maximum": 5,
+      "minimum": 1,
+      "type": "integer"
+     },
+     "frame_primary_color": {
+      "description": "Main frame color. Defaults to start_color if omitted.",
+      "type": "string"
+     },
+     "frame_secondary_color": {
+      "description": "Secondary frame color for two-tone frames. Null for single-color frames.",
+      "type": "string"
+     },
+     "frame_text": {
+      "description": "Custom text displayed inside the frame (only supported on certain frame_id + frame_category combos).",
+      "type": "string"
+     },
+     "frame_text_color": {
+      "default": "#FFFFFF",
+      "description": "Color of any text inside the frame.",
+      "type": "string"
+     },
+     "frame_text_font": {
+      "default": "Montserrat",
+      "description": "Font for frame text. Options: Montserrat, Inter, Arial, Roboto, Noto Sans, Times New Roman, Brush Script MT, Raleway, and more.",
+      "type": "string"
+     },
+     "frame_text_placement": {
+      "default": "center",
+      "description": "Placement of the custom frame text.",
+      "enum": [
+       "center",
+       "top",
+       "bottom",
+       "left",
+       "right",
+       "top-left",
+       "top-right",
+       "bottom-left",
+       "bottom-right"
+      ],
+      "type": "string"
+     },
+     "gradient_style": {
+      "default": "None",
+      "description": "Gradient direction. Use 'None' for solid color.",
+      "enum": [
+       "None",
+       "Horizontal",
+       "Vertical",
+       "Diagonal",
+       "Radial"
+      ],
+      "type": "string"
+     },
+     "logo_url": {
+      "description": "HTTPS URL of an image to embed in the QR center. Keep \u2264 30% of QR area.",
+      "type": "string"
+     },
+     "padding": {
+      "description": "Quiet zone (empty margin) around the QR code.",
+      "type": "integer"
+     },
+     "pattern": {
+      "default": "Default",
+      "description": "Data module pattern shape. Options: Default, Round, RoundedCorners, RotatedSquares, connectedCircles, Newone1, Newone3, circularDiagonal, lightCircle, lightSquare, lightRoundedCorners, lightCircleInSquare, diamond, stars, heart, cross, signalGrid, boltWeave, starBurst, metroPulse, pulseBars",
+      "type": "string"
+     },
+     "qrid": {
+      "description": "Scanova QR code ID to apply the design to",
+      "type": "string"
+     },
+     "shape_bg_color": {
+      "default": "#FFFFFF",
+      "description": "Fill color inside the shape container.",
+      "type": "string"
+     },
+     "shape_id": {
+      "description": "Decorative shape container wrapped around the entire QR code. Omit for no shape.",
+      "enum": [
+       "1",
+       "2",
+       "3",
+       "4",
+       "5",
+       "6",
+       "7"
+      ],
+      "type": "string"
+     },
+     "shape_margin": {
+      "default": 5,
+      "description": "Margin between shape border and QR code (0\u201310).",
+      "maximum": 10,
+      "minimum": 0,
+      "type": "integer"
+     },
+     "shape_pattern_color": {
+      "default": "#000000",
+      "description": "Color of decorative dots/pattern inside the shape.",
+      "type": "string"
+     },
+     "shape_stroke_color": {
+      "description": "Border/stroke color of the shape container.",
+      "type": "string"
+     },
+     "shape_stroke_width": {
+      "default": 5,
+      "description": "Stroke width of the shape border (0\u201310).",
+      "maximum": 10,
+      "minimum": 0,
+      "type": "integer"
+     },
+     "start_color": {
+      "description": "Primary/start color of data modules. Hex #RRGGBB. Default: #000000",
+      "type": "string"
+     }
+    },
+    "required": [
+     "qrid"
+    ],
+    "type": "object"
+   },
+   "name": "set_qr_design",
+   "outputSchema": {
+    "description": "Updated QR code with the new design applied",
+    "properties": {
+     "category": {
+      "description": "QR code category ID (1=URL, 11=vCard, etc.)",
+      "type": "integer"
+     },
+     "created_at": {
+      "description": "ISO 8601 creation timestamp",
+      "type": "string"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "info": {
+      "description": "Payload data (type + data fields)",
+      "type": "object"
+     },
+     "name": {
+      "description": "Display name of the QR code",
+      "type": "string"
+     },
+     "pattern_info": {
+      "description": "JSON string with visual design settings",
+      "type": "string"
+     },
+     "qr_type": {
+      "description": "Dynamic or static",
+      "enum": [
+       "dy",
+       "st"
+      ],
+      "type": "string"
+     },
+     "qrid": {
+      "description": "Unique QR code identifier",
+      "type": "string"
+     },
+     "status": {
+      "description": "Activation status",
+      "enum": [
+       "active",
+       "inactive"
+      ],
+      "type": "string"
+     },
+     "updated_at": {
+      "description": "ISO 8601 last-modified timestamp",
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Set QR code design"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "List QR codes and/or Pages in the account. By default returns all items (QR codes + Pages combined). Use is_page=false to list only QR Codes, or is_page=true to list only Pages. Use the count field from the response for accurate totals \u2014 do not infer counts from page size alone.",
+   "inputSchema": {
+    "properties": {
+     "is_page": {
+      "description": "Filter by content type: true = Pages only, false = QR Codes only. Omit to list everything (QR codes and Pages combined).",
+      "type": "boolean"
+     },
+     "limit": {
+      "default": 10,
+      "description": "Number of results per page, capped at 20. To fetch more than 20 QR codes, make additional calls incrementing 'page' rather than raising this value.",
+      "maximum": 20,
+      "minimum": 1,
+      "type": "integer"
+     },
+     "page": {
+      "default": 1,
+      "description": "Page number for pagination",
+      "minimum": 1,
+      "type": "integer"
+     },
+     "search": {
+      "description": "Optional search filter by name",
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "name": "list_qr_codes",
+   "outputSchema": {
+    "properties": {
+     "data": {
+      "description": "Page of QR code objects with the total count",
+      "properties": {
+       "count": {
+        "type": "integer"
+       },
+       "results": {
+        "items": {
+         "description": "A Scanova QR code object",
+         "properties": {
+          "category": {
+           "description": "QR code category ID (1=URL, 11=vCard, etc.)",
+           "type": "integer"
+          },
+          "created_at": {
+           "description": "ISO 8601 creation timestamp",
+           "type": "string"
+          },
+          "error": {
+           "description": "Human-readable error message",
+           "type": "string"
+          },
+          "info": {
+           "description": "Payload data (type + data fields)",
+           "type": "object"
+          },
+          "name": {
+           "description": "Display name of the QR code",
+           "type": "string"
+          },
+          "pattern_info": {
+           "description": "JSON string with visual design settings",
+           "type": "string"
+          },
+          "qr_type": {
+           "description": "Dynamic or static",
+           "enum": [
+            "dy",
+            "st"
+           ],
+           "type": "string"
+          },
+          "qrid": {
+           "description": "Unique QR code identifier",
+           "type": "string"
+          },
+          "status": {
+           "description": "Activation status",
+           "enum": [
+            "active",
+            "inactive"
+           ],
+           "type": "string"
+          },
+          "updated_at": {
+           "description": "ISO 8601 last-modified timestamp",
+           "type": "string"
+          }
+         },
+         "type": "object"
+        },
+        "type": "array"
+       }
+      },
+      "type": "object"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "ok": {
+      "type": "boolean"
+     },
+     "pagination": {
+      "properties": {
+       "count": {
+        "type": "integer"
+       },
+       "next": {
+        "type": [
+         "integer",
+         "null"
+        ]
+       },
+       "previous": {
+        "type": [
+         "integer",
+         "null"
+        ]
+       }
+      },
+      "type": "object"
+     }
+    },
+    "type": "object"
+   },
+   "title": "List QR codes"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "Get details of a specific QR code",
+   "inputSchema": {
+    "properties": {
+     "qrid": {
+      "description": "Scanova QR code ID (e.g. Qc22580d20dd14c44)",
+      "type": "string"
+     }
+    },
+    "required": [
+     "qrid"
+    ],
+    "type": "object"
+   },
+   "name": "retrieve_qr_code",
+   "outputSchema": {
+    "description": "A Scanova QR code object",
+    "properties": {
+     "category": {
+      "description": "QR code category ID (1=URL, 11=vCard, etc.)",
+      "type": "integer"
+     },
+     "created_at": {
+      "description": "ISO 8601 creation timestamp",
+      "type": "string"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "info": {
+      "description": "Payload data (type + data fields)",
+      "type": "object"
+     },
+     "name": {
+      "description": "Display name of the QR code",
+      "type": "string"
+     },
+     "pattern_info": {
+      "description": "JSON string with visual design settings",
+      "type": "string"
+     },
+     "qr_type": {
+      "description": "Dynamic or static",
+      "enum": [
+       "dy",
+       "st"
+      ],
+      "type": "string"
+     },
+     "qrid": {
+      "description": "Unique QR code identifier",
+      "type": "string"
+     },
+     "status": {
+      "description": "Activation status",
+      "enum": [
+       "active",
+       "inactive"
+      ],
+      "type": "string"
+     },
+     "updated_at": {
+      "description": "ISO 8601 last-modified timestamp",
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Retrieve QR code details"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Update an existing QR code",
+   "inputSchema": {
+    "properties": {
+     "params": {
+      "additionalProperties": true,
+      "description": "Fields to update (PUT /qr/{qrid}/). Only include fields to change. category, qr_type, and custom_domain cannot be updated after creation.",
+      "minProperties": 1,
+      "properties": {
+       "expire_on": {
+        "description": "Expiration timestamp (ISO 8601)",
+        "type": "string"
+       },
+       "expire_on_text": {
+        "description": "HTML shown when the QR code has expired",
+        "type": "string"
+       },
+       "expire_on_timezone": {
+        "description": "Timezone for expiration (e.g. Asia/Kolkata)",
+        "type": "string"
+       },
+       "high_accuracy_confirmation": {
+        "type": "boolean"
+       },
+       "high_accuracy_geo_fencing": {
+        "type": "boolean"
+       },
+       "high_accuracy_mode": {
+        "type": "boolean"
+       },
+       "high_accuracy_mode_text": {
+        "type": "string"
+       },
+       "info": {
+        "description": "Updated QR content as a JSON string (structure depends on original category). URL example: {\"type\":\"url\",\"data\":{\"url\":\"https://updated-url.com\"}}",
+        "type": "string"
+       },
+       "is_active": {
+        "description": "Activate (true) or deactivate (false) the QR code",
+        "type": "boolean"
+       },
+       "lead_list": {
+        "description": "Lead list ID to capture leads; use null to remove association",
+        "oneOf": [
+         {
+          "type": "integer"
+         },
+         {
+          "type": "null"
+         }
+        ]
+       },
+       "minimum_age": {
+        "description": "Minimum age to access content",
+        "type": "integer"
+       },
+       "name": {
+        "description": "New display name for the QR code",
+        "type": "string"
+       },
+       "password": {
+        "description": "Password to protect QR code content",
+        "type": "string"
+       },
+       "pattern_info": {
+        "description": "Design updates (pattern, colors, eyes, frame)",
+        "oneOf": [
+         {
+          "type": "string"
+         },
+         {
+          "type": "object"
+         }
+        ]
+       }
+      },
+      "type": "object"
+     },
+     "qrid": {
+      "description": "Scanova QR code ID (e.g. Qc22580d20dd14c44)",
+      "type": "string"
+     }
+    },
+    "required": [
+     "qrid",
+     "params"
+    ],
+    "type": "object"
+   },
+   "name": "update_qr_code",
+   "outputSchema": {
+    "description": "A Scanova QR code object",
+    "properties": {
+     "category": {
+      "description": "QR code category ID (1=URL, 11=vCard, etc.)",
+      "type": "integer"
+     },
+     "created_at": {
+      "description": "ISO 8601 creation timestamp",
+      "type": "string"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "info": {
+      "description": "Payload data (type + data fields)",
+      "type": "object"
+     },
+     "name": {
+      "description": "Display name of the QR code",
+      "type": "string"
+     },
+     "pattern_info": {
+      "description": "JSON string with visual design settings",
+      "type": "string"
+     },
+     "qr_type": {
+      "description": "Dynamic or static",
+      "enum": [
+       "dy",
+       "st"
+      ],
+      "type": "string"
+     },
+     "qrid": {
+      "description": "Unique QR code identifier",
+      "type": "string"
+     },
+     "status": {
+      "description": "Activation status",
+      "enum": [
+       "active",
+       "inactive"
+      ],
+      "type": "string"
+     },
+     "updated_at": {
+      "description": "ISO 8601 last-modified timestamp",
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Update QR code"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Activate a QR code",
+   "inputSchema": {
+    "properties": {
+     "qrid": {
+      "description": "Scanova QR code ID (e.g. Qc22580d20dd14c44)",
+      "type": "string"
+     }
+    },
+    "required": [
+     "qrid"
+    ],
+    "type": "object"
+   },
+   "name": "activate_qr_code",
+   "outputSchema": {
+    "description": "A Scanova QR code object",
+    "properties": {
+     "category": {
+      "description": "QR code category ID (1=URL, 11=vCard, etc.)",
+      "type": "integer"
+     },
+     "created_at": {
+      "description": "ISO 8601 creation timestamp",
+      "type": "string"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "info": {
+      "description": "Payload data (type + data fields)",
+      "type": "object"
+     },
+     "name": {
+      "description": "Display name of the QR code",
+      "type": "string"
+     },
+     "pattern_info": {
+      "description": "JSON string with visual design settings",
+      "type": "string"
+     },
+     "qr_type": {
+      "description": "Dynamic or static",
+      "enum": [
+       "dy",
+       "st"
+      ],
+      "type": "string"
+     },
+     "qrid": {
+      "description": "Unique QR code identifier",
+      "type": "string"
+     },
+     "status": {
+      "description": "Activation status",
+      "enum": [
+       "active",
+       "inactive"
+      ],
+      "type": "string"
+     },
+     "updated_at": {
+      "description": "ISO 8601 last-modified timestamp",
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Activate QR code"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Deactivate a QR code",
+   "inputSchema": {
+    "properties": {
+     "qrid": {
+      "description": "Scanova QR code ID (e.g. Qc22580d20dd14c44)",
+      "type": "string"
+     }
+    },
+    "required": [
+     "qrid"
+    ],
+    "type": "object"
+   },
+   "name": "deactivate_qr_code",
+   "outputSchema": {
+    "description": "A Scanova QR code object",
+    "properties": {
+     "category": {
+      "description": "QR code category ID (1=URL, 11=vCard, etc.)",
+      "type": "integer"
+     },
+     "created_at": {
+      "description": "ISO 8601 creation timestamp",
+      "type": "string"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "info": {
+      "description": "Payload data (type + data fields)",
+      "type": "object"
+     },
+     "name": {
+      "description": "Display name of the QR code",
+      "type": "string"
+     },
+     "pattern_info": {
+      "description": "JSON string with visual design settings",
+      "type": "string"
+     },
+     "qr_type": {
+      "description": "Dynamic or static",
+      "enum": [
+       "dy",
+       "st"
+      ],
+      "type": "string"
+     },
+     "qrid": {
+      "description": "Unique QR code identifier",
+      "type": "string"
+     },
+     "status": {
+      "description": "Activation status",
+      "enum": [
+       "active",
+       "inactive"
+      ],
+      "type": "string"
+     },
+     "updated_at": {
+      "description": "ISO 8601 last-modified timestamp",
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Deactivate QR code"
+  },
+  {
+   "annotations": {
+    "destructiveHint": true,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Permanently delete a QR code",
+   "inputSchema": {
+    "properties": {
+     "qrid": {
+      "description": "Scanova QR code ID (e.g. Qc22580d20dd14c44)",
+      "type": "string"
+     }
+    },
+    "required": [
+     "qrid"
+    ],
+    "type": "object"
+   },
+   "name": "delete_qr_code",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "message": {
+      "example": "QR code deleted",
+      "type": "string"
+     },
+     "success": {
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Delete QR code"
+  },
+  {
+   "_meta": {
+    "openai/outputTemplate": "ui://scanova/download-qr.html?v=24",
+    "ui": {
+     "resourceUri": "ui://scanova/download-qr.html?v=24"
+    }
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "Download QR code image in PNG, JPG, or PDF format",
+   "inputSchema": {
+    "properties": {
+     "params": {
+      "additionalProperties": false,
+      "description": "Download options (GET /qr/{qrid}/download/ query parameters)",
+      "properties": {
+       "file": {
+        "default": "png",
+        "description": "Output image format",
+        "enum": [
+         "png",
+         "jpg",
+         "pdf"
+        ],
+        "type": "string"
+       },
+       "for_print": {
+        "default": false,
+        "description": "When true, returns a print-optimized (black and white) QR image",
+        "type": "boolean"
+       },
+       "size": {
+        "default": 300,
+        "description": "Image width and height in pixels",
+        "maximum": 1000,
+        "minimum": 10,
+        "type": "integer"
+       }
+      },
+      "type": "object"
+     },
+     "qrid": {
+      "description": "Scanova QR code ID (e.g. Qc22580d20dd14c44)",
+      "type": "string"
+     }
+    },
+    "required": [
+     "qrid"
+    ],
+    "type": "object"
+   },
+   "name": "download_qr_code",
+   "outputSchema": {
+    "properties": {
+     "content_type": {
+      "description": "MIME type, e.g. image/png, image/svg+xml, application/pdf",
+      "type": "string"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "message": {
+      "type": "string"
+     },
+     "success": {
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Download QR code image"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Create a new folder to organize QR codes or pages",
+   "inputSchema": {
+    "properties": {
+     "folder_type": {
+      "description": "'qr' for QR code folders, 'page' for page folders",
+      "enum": [
+       "qr",
+       "page"
+      ],
+      "type": "string"
+     },
+     "name": {
+      "description": "Folder name",
+      "type": "string"
+     }
+    },
+    "required": [
+     "name",
+     "folder_type"
+    ],
+    "type": "object"
+   },
+   "name": "create_folder",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "folder_type": {
+      "type": "string"
+     },
+     "id": {
+      "type": "integer"
+     },
+     "name": {
+      "type": "string"
+     },
+     "qr_count": {
+      "type": "integer"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Create folder"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "List all folders of a given type (qr or page)",
+   "inputSchema": {
+    "properties": {
+     "folder_type": {
+      "description": "'qr' for QR code folders, 'page' for page folders",
+      "enum": [
+       "qr",
+       "page"
+      ],
+      "type": "string"
+     }
+    },
+    "required": [
+     "folder_type"
+    ],
+    "type": "object"
+   },
+   "name": "list_folders",
+   "outputSchema": {
+    "properties": {
+     "data": {
+      "items": {
+       "properties": {
+        "error": {
+         "description": "Human-readable error message",
+         "type": "string"
+        },
+        "folder_type": {
+         "type": "string"
+        },
+        "id": {
+         "type": "integer"
+        },
+        "name": {
+         "type": "string"
+        },
+        "qr_count": {
+         "type": "integer"
+        }
+       },
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "List folders"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Rename an existing folder",
+   "inputSchema": {
+    "properties": {
+     "folder_id": {
+      "description": "Numeric folder ID",
+      "type": "integer"
+     },
+     "name": {
+      "description": "New folder name",
+      "type": "string"
+     }
+    },
+    "required": [
+     "folder_id",
+     "name"
+    ],
+    "type": "object"
+   },
+   "name": "update_folder",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "folder_type": {
+      "type": "string"
+     },
+     "id": {
+      "type": "integer"
+     },
+     "name": {
+      "type": "string"
+     },
+     "qr_count": {
+      "type": "integer"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Rename folder"
+  },
+  {
+   "annotations": {
+    "destructiveHint": true,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Delete a folder. IMPORTANT: Before calling this tool, ask the user which action to take for QR codes inside the folder: (1) move to Uncategorized (move_to_uncategorized=true, delete_permanently=false) or (2) permanently delete them along with the folder (delete_permanently=true, move_to_uncategorized=false). Do not proceed without explicit user confirmation of the desired behavior.",
+   "inputSchema": {
+    "properties": {
+     "delete_permanently": {
+      "default": false,
+      "description": "Permanently delete contained QR codes",
+      "type": "boolean"
+     },
+     "folder_id": {
+      "description": "Numeric folder ID",
+      "type": "integer"
+     },
+     "move_to_uncategorized": {
+      "default": true,
+      "description": "Move contained QR codes to uncategorized instead of deleting",
+      "type": "boolean"
+     }
+    },
+    "required": [
+     "folder_id"
+    ],
+    "type": "object"
+   },
+   "name": "delete_folder",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "message": {
+      "type": "string"
+     },
+     "success": {
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Delete folder"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Move multiple QR codes into a folder",
+   "inputSchema": {
+    "properties": {
+     "folder_id": {
+      "description": "Numeric folder ID",
+      "type": "integer"
+     },
+     "from_folder_id": {
+      "description": "Source folder ID (omit for uncategorized)",
+      "type": "integer"
+     },
+     "qr_code_ids": {
+      "description": "QR code IDs to move",
+      "items": {
+       "type": "string"
+      },
+      "type": "array"
+     }
+    },
+    "required": [
+     "folder_id",
+     "qr_code_ids"
+    ],
+    "type": "object"
+   },
+   "name": "move_qr_codes_to_folder",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "moved": {
+      "description": "Number of QR codes moved",
+      "type": "integer"
+     },
+     "success": {
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Move QR codes to folder"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Remove multiple QR codes from a folder (moves them to uncategorized)",
+   "inputSchema": {
+    "properties": {
+     "folder_id": {
+      "description": "Numeric folder ID",
+      "type": "integer"
+     },
+     "qr_code_ids": {
+      "description": "QR code IDs to remove from the folder",
+      "items": {
+       "type": "string"
+      },
+      "type": "array"
+     }
+    },
+    "required": [
+     "folder_id",
+     "qr_code_ids"
+    ],
+    "type": "object"
+   },
+   "name": "unassign_qr_codes_from_folder",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "moved": {
+      "description": "Number of QR codes moved",
+      "type": "integer"
+     },
+     "success": {
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Unassign QR codes from folder"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "List tags attached to (or assignable against) the account's QR codes. Read-only \u2014 tags are created implicitly when attached to a QR code, not through a standalone call.",
+   "inputSchema": {
+    "properties": {
+     "name": {
+      "description": "Case-insensitive prefix filter",
+      "type": "string"
+     },
+     "page": {
+      "description": "Page number",
+      "type": "integer"
+     },
+     "page_size": {
+      "default": 10,
+      "maximum": 100,
+      "minimum": 1,
+      "type": "integer"
+     }
+    },
+    "type": "object"
+   },
+   "name": "list_tags",
+   "outputSchema": {
+    "description": "Matches normalizer.py's paginated envelope shape \u2014 see LIST_QR_CODES_OUTPUT",
+    "properties": {
+     "data": {
+      "properties": {
+       "count": {
+        "type": "integer"
+       },
+       "results": {
+        "items": {
+         "properties": {
+          "id": {
+           "type": "integer"
+          },
+          "name": {
+           "type": "string"
+          }
+         },
+         "type": "object"
+        },
+        "type": "array"
+       }
+      },
+      "type": "object"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "ok": {
+      "type": "boolean"
+     },
+     "pagination": {
+      "properties": {
+       "count": {
+        "type": "integer"
+       },
+       "next": {
+        "type": [
+         "integer",
+         "null"
+        ]
+       },
+       "previous": {
+        "type": [
+         "integer",
+         "null"
+        ]
+       }
+      },
+      "type": "object"
+     }
+    },
+    "type": "object"
+   },
+   "title": "List tags"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "List all lead capture forms, optionally filtered by active status",
+   "inputSchema": {
+    "properties": {
+     "is_active": {
+      "description": "Filter by active status (omit for all)",
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "name": "list_forms",
+   "outputSchema": {
+    "properties": {
+     "data": {
+      "items": {
+       "properties": {
+        "error": {
+         "description": "Human-readable error message",
+         "type": "string"
+        },
+        "fields": {
+         "items": {
+          "type": "object"
+         },
+         "type": "array"
+        },
+        "id": {
+         "type": "string"
+        },
+        "is_active": {
+         "type": "boolean"
+        },
+        "name": {
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "List forms"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "Get detailed information about a specific form including its configuration",
+   "inputSchema": {
+    "properties": {
+     "form_id": {
+      "description": "Form ID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "form_id"
+    ],
+    "type": "object"
+   },
+   "name": "retrieve_form",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "fields": {
+      "items": {
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "id": {
+      "type": "string"
+     },
+     "is_active": {
+      "type": "boolean"
+     },
+     "name": {
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Retrieve form details"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Create a new lead-capture form. Optionally pass qr_id to attach it to a dynamic QR code immediately, or use attach_form_to_qr afterward.",
+   "inputSchema": {
+    "properties": {
+     "data": {
+      "description": "The form's field schema, e.g. {\"fields\": [{\"type\": \"text\", \"label\": \"Full name\", \"required\": true}]}",
+      "type": "object"
+     },
+     "name": {
+      "description": "Form name",
+      "type": "string"
+     },
+     "qr_id": {
+      "description": "A dynamic QR code's qrid to attach immediately on creation",
+      "type": "string"
+     },
+     "theme_id": {
+      "description": "An active theme's ID to style the form's public page",
+      "type": "integer"
+     },
+     "theme_overrides": {
+      "description": "Partial theme token overrides layered on theme_id",
+      "type": "object"
+     }
+    },
+    "required": [
+     "name",
+     "data"
+    ],
+    "type": "object"
+   },
+   "name": "create_form",
+   "outputSchema": {
+    "properties": {
+     "data": {
+      "type": "object"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "form_id": {
+      "type": "string"
+     },
+     "form_url": {
+      "type": "string"
+     },
+     "id": {
+      "type": "integer"
+     },
+     "is_active": {
+      "type": "boolean"
+     },
+     "linked_qrs": {
+      "type": "array"
+     },
+     "name": {
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Create form"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Update a form's name or active status",
+   "inputSchema": {
+    "properties": {
+     "form_id": {
+      "description": "Form ID",
+      "type": "string"
+     },
+     "is_active": {
+      "description": "Enable or disable the form",
+      "type": "boolean"
+     },
+     "name": {
+      "description": "New form name",
+      "type": "string"
+     }
+    },
+    "required": [
+     "form_id"
+    ],
+    "type": "object"
+   },
+   "name": "update_form",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "fields": {
+      "items": {
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "id": {
+      "type": "string"
+     },
+     "is_active": {
+      "type": "boolean"
+     },
+     "name": {
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Update form"
+  },
+  {
+   "annotations": {
+    "destructiveHint": true,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Permanently delete a form",
+   "inputSchema": {
+    "properties": {
+     "form_id": {
+      "description": "Form ID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "form_id"
+    ],
+    "type": "object"
+   },
+   "name": "delete_form",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "message": {
+      "type": "string"
+     },
+     "success": {
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Delete form"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Attach a lead capture form to a QR code",
+   "inputSchema": {
+    "properties": {
+     "form_id": {
+      "description": "ID of the form to attach",
+      "type": "integer"
+     },
+     "qrid": {
+      "description": "Scanova QR code ID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "qrid",
+     "form_id"
+    ],
+    "type": "object"
+   },
+   "name": "attach_form_to_qr",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "message": {
+      "type": "string"
+     },
+     "success": {
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Attach form to QR code"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Remove the lead capture form from a QR code",
+   "inputSchema": {
+    "properties": {
+     "qrid": {
+      "description": "Scanova QR code ID (e.g. Qc22580d20dd14c44)",
+      "type": "string"
+     }
+    },
+    "required": [
+     "qrid"
+    ],
+    "type": "object"
+   },
+   "name": "detach_form_from_qr",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "message": {
+      "type": "string"
+     },
+     "success": {
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Detach form from QR code"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "List all lead lists, optionally filtered by active status. Legacy feature \u2014 Forms is the recommended lead-capture tool going forward.",
+   "inputSchema": {
+    "properties": {
+     "is_active": {
+      "description": "Filter by active status (omit for all)",
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "name": "list_lead_lists",
+   "outputSchema": {
+    "properties": {
+     "data": {
+      "items": {
+       "properties": {
+        "error": {
+         "description": "Human-readable error message",
+         "type": "string"
+        },
+        "id": {
+         "type": "string"
+        },
+        "is_active": {
+         "type": "boolean"
+        },
+        "name": {
+         "type": "string"
+        },
+        "webhook_url": {
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "List lead lists"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "Get detailed information about a specific lead list including webhook config",
+   "inputSchema": {
+    "properties": {
+     "lead_list_id": {
+      "description": "Lead list string identifier \u2014 use the lead_id field (e.g. 'L3f4cc7db5bda42ee') returned by list_lead_lists. Do NOT use the numeric id field; the API only accepts the lead_id string.",
+      "type": "string"
+     }
+    },
+    "required": [
+     "lead_list_id"
+    ],
+    "type": "object"
+   },
+   "name": "retrieve_lead_list",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "id": {
+      "type": "string"
+     },
+     "is_active": {
+      "type": "boolean"
+     },
+     "name": {
+      "type": "string"
+     },
+     "webhook_url": {
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Retrieve lead list details"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Update a lead list's name or active status",
+   "inputSchema": {
+    "properties": {
+     "is_active": {
+      "description": "Enable or disable the lead list",
+      "type": "boolean"
+     },
+     "lead_list_id": {
+      "description": "Lead list string identifier \u2014 use the lead_id field (e.g. 'L3f4cc7db5bda42ee') returned by list_lead_lists. Do NOT use the numeric id field; the API only accepts the lead_id string.",
+      "type": "string"
+     },
+     "name": {
+      "description": "New lead list name",
+      "type": "string"
+     }
+    },
+    "required": [
+     "lead_list_id"
+    ],
+    "type": "object"
+   },
+   "name": "update_lead_list",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "id": {
+      "type": "string"
+     },
+     "is_active": {
+      "type": "boolean"
+     },
+     "name": {
+      "type": "string"
+     },
+     "webhook_url": {
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Update lead list"
+  },
+  {
+   "annotations": {
+    "destructiveHint": true,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Permanently delete a lead list",
+   "inputSchema": {
+    "properties": {
+     "lead_list_id": {
+      "description": "Lead list string identifier \u2014 use the lead_id field (e.g. 'L3f4cc7db5bda42ee') returned by list_lead_lists. Do NOT use the numeric id field; the API only accepts the lead_id string.",
+      "type": "string"
+     }
+    },
+    "required": [
+     "lead_list_id"
+    ],
+    "type": "object"
+   },
+   "name": "delete_lead_list",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "message": {
+      "type": "string"
+     },
+     "success": {
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Delete lead list"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Attach a lead list to a QR code for lead capture",
+   "inputSchema": {
+    "properties": {
+     "lead_list_id": {
+      "description": "ID of the lead list to attach",
+      "type": "integer"
+     },
+     "qrid": {
+      "description": "Scanova QR code ID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "qrid",
+     "lead_list_id"
+    ],
+    "type": "object"
+   },
+   "name": "attach_lead_list_to_qr",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "message": {
+      "type": "string"
+     },
+     "success": {
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Attach lead list to QR code"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Remove the lead list from a QR code",
+   "inputSchema": {
+    "properties": {
+     "qrid": {
+      "description": "Scanova QR code ID (e.g. Qc22580d20dd14c44)",
+      "type": "string"
+     }
+    },
+    "required": [
+     "qrid"
+    ],
+    "type": "object"
+   },
+   "name": "detach_lead_list_from_qr",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "message": {
+      "type": "string"
+     },
+     "success": {
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Detach lead list from QR code"
+  },
+  {
+   "_meta": {
+    "openai/outputTemplate": "ui://scanova/account-stats.html?v=24",
+    "ui": {
+     "resourceUri": "ui://scanova/account-stats.html?v=24"
+    }
+   },
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "Retrieve account-level usage counters (total QR codes, scans, users, etc.)",
+   "inputSchema": {
+    "properties": {
+     "fields": {
+      "description": "Fields to include (omit for all)",
+      "items": {
+       "enum": [
+        "total_qr_count",
+        "static_qr_count",
+        "dynamic_qr_count",
+        "total_scan_count",
+        "total_designer_qr_count",
+        "custom_domain_count",
+        "lead_list_count",
+        "shared_user_count"
+       ],
+       "type": "string"
+      },
+      "type": "array"
+     }
+    },
+    "type": "object"
+   },
+   "name": "get_account_stats",
+   "outputSchema": {
+    "description": "Account-level usage counters",
+    "properties": {
+     "active_qr_codes": {
+      "type": "integer"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "total_qr_codes": {
+      "type": "integer"
+     },
+     "total_scans": {
+      "type": "integer"
+     },
+     "total_users": {
+      "type": "integer"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Get account statistics"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "Retrieve QR code performance metrics broken down by device, geography, date, etc.",
+   "inputSchema": {
+    "properties": {
+     "exclude_bot_scan": {
+      "default": false,
+      "description": "Exclude bot scans",
+      "type": "boolean"
+     },
+     "filter_by": {
+      "description": "Filter by: 'qrid' = specific IDs, 'tags' = tag names, 'folder' = folder ID",
+      "enum": [
+       "qrid",
+       "tags",
+       "folder"
+      ],
+      "type": "string"
+     },
+     "from_date": {
+      "description": "Start date (YYYY-MM-DD)",
+      "type": "string"
+     },
+     "q": {
+      "description": "List of QR code IDs, tags, or folder IDs depending on filter_by",
+      "items": {
+       "type": "string"
+      },
+      "type": "array"
+     },
+     "to_date": {
+      "description": "End date (YYYY-MM-DD)",
+      "type": "string"
+     },
+     "types": {
+      "description": "Metric breakdowns to retrieve",
+      "items": {
+       "enum": [
+        "count",
+        "qr",
+        "device",
+        "os",
+        "browser",
+        "date",
+        "handset",
+        "geography",
+        "geo_location",
+        "age",
+        "day_time"
+       ],
+       "type": "string"
+      },
+      "type": "array"
+     }
+    },
+    "required": [
+     "filter_by",
+     "q",
+     "types",
+     "from_date",
+     "to_date"
+    ],
+    "type": "object"
+   },
+   "name": "get_qr_analytics",
+   "outputSchema": {
+    "description": "QR code scan metrics broken down by the requested dimension",
+    "properties": {
+     "data": {
+      "items": {
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "total": {
+      "type": "integer"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Get QR code analytics"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "Retrieve the account's active subscription plan \u2014 expiry, billing state, and the full quota list it grants",
+   "inputSchema": {
+    "properties": {},
+    "type": "object"
+   },
+   "name": "get_current_plan",
+   "outputSchema": {
+    "properties": {
+     "days_left": {
+      "type": "integer"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "expire": {
+      "description": "YYYY-MM-DD, or 'Lifetime'",
+      "type": "string"
+     },
+     "is_active": {
+      "type": "boolean"
+     },
+     "is_expired": {
+      "type": "boolean"
+     },
+     "is_free": {
+      "type": "boolean"
+     },
+     "plan": {
+      "properties": {
+       "id": {
+        "type": "integer"
+       },
+       "name": {
+        "type": "string"
+       },
+       "plan_type": {
+        "type": "string"
+       },
+       "quotas": {
+        "items": {
+         "type": "object"
+        },
+        "type": "array"
+       }
+      },
+      "type": "object"
+     },
+     "recurring_enabled": {
+      "type": "boolean"
+     },
+     "upcoming_plan": {
+      "type": [
+       "object",
+       "null"
+      ]
+     }
+    },
+    "type": "object"
+   },
+   "title": "Get current plan"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "List all users in the account",
+   "inputSchema": {
+    "properties": {},
+    "type": "object"
+   },
+   "name": "list_users",
+   "outputSchema": {
+    "properties": {
+     "data": {
+      "items": {
+       "properties": {
+        "email": {
+         "type": "string"
+        },
+        "error": {
+         "description": "Human-readable error message",
+         "type": "string"
+        },
+        "id": {
+         "type": "string"
+        },
+        "role": {
+         "type": "string"
+        },
+        "status": {
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "List users"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "Get details of a specific user",
+   "inputSchema": {
+    "properties": {
+     "user_id": {
+      "description": "User ID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "user_id"
+    ],
+    "type": "object"
+   },
+   "name": "get_user",
+   "outputSchema": {
+    "properties": {
+     "email": {
+      "type": "string"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "id": {
+      "type": "string"
+     },
+     "role": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Get user details"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Invite a new user to the account by email",
+   "inputSchema": {
+    "properties": {
+     "email": {
+      "description": "Email address to invite",
+      "format": "email",
+      "type": "string"
+     },
+     "role": {
+      "description": "Role to assign (use list_user_roles to see options)",
+      "type": "string"
+     }
+    },
+    "required": [
+     "email",
+     "role"
+    ],
+    "type": "object"
+   },
+   "name": "add_user",
+   "outputSchema": {
+    "properties": {
+     "email": {
+      "type": "string"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "id": {
+      "type": "string"
+     },
+     "role": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Add user"
+  },
+  {
+   "annotations": {
+    "destructiveHint": true,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Remove a user from the account",
+   "inputSchema": {
+    "properties": {
+     "user_id": {
+      "description": "User ID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "user_id"
+    ],
+    "type": "object"
+   },
+   "name": "remove_user",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "message": {
+      "type": "string"
+     },
+     "success": {
+      "type": "boolean"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Remove user"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": true
+   },
+   "description": "List all available user roles that can be assigned",
+   "inputSchema": {
+    "properties": {},
+    "type": "object"
+   },
+   "name": "list_user_roles",
+   "outputSchema": {
+    "properties": {
+     "data": {
+      "items": {
+       "properties": {
+        "description": {
+         "type": "string"
+        },
+        "id": {
+         "type": "string"
+        },
+        "name": {
+         "type": "string"
+        }
+       },
+       "type": "object"
+      },
+      "type": "array"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "List user roles"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Create a custom role/access-level (requires a dedicated plan quota \u2014 a 403 means the plan doesn't include it). Call list_user_roles first to see existing roles and valid permission IDs.",
+   "inputSchema": {
+    "description": "Create a custom role (requires a dedicated plan quota \u2014 a 403 means the plan doesn't include it).",
+    "properties": {
+     "name": {
+      "description": "Role name; must be unique among this account's roles",
+      "type": "string"
+     },
+     "permissions": {
+      "description": "Permission IDs to grant, from list_user_roles' permissions[].id values",
+      "items": {
+       "type": "integer"
+      },
+      "type": "array"
+     }
+    },
+    "required": [
+     "name",
+     "permissions"
+    ],
+    "type": "object"
+   },
+   "name": "create_custom_role",
+   "outputSchema": {
+    "properties": {
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "id": {
+      "type": "integer"
+     },
+     "is_custom": {
+      "type": "boolean"
+     },
+     "name": {
+      "type": "string"
+     },
+     "permissions": {
+      "items": {
+       "type": "object"
+      },
+      "type": "array"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Create custom role"
+  },
+  {
+   "annotations": {
+    "destructiveHint": false,
+    "openWorldHint": true,
+    "readOnlyHint": false
+   },
+   "description": "Change the role of an existing user",
+   "inputSchema": {
+    "properties": {
+     "access_level": {
+      "description": "New access level to assign",
+      "type": "string"
+     },
+     "user_id": {
+      "description": "User ID",
+      "type": "string"
+     }
+    },
+    "required": [
+     "user_id",
+     "access_level"
+    ],
+    "type": "object"
+   },
+   "name": "update_user_role",
+   "outputSchema": {
+    "properties": {
+     "email": {
+      "type": "string"
+     },
+     "error": {
+      "description": "Human-readable error message",
+      "type": "string"
+     },
+     "id": {
+      "type": "string"
+     },
+     "role": {
+      "type": "string"
+     },
+     "status": {
+      "type": "string"
+     }
+    },
+    "type": "object"
+   },
+   "title": "Update user role"
+  }
+ ]
+}

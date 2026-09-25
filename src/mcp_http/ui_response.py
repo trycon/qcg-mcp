@@ -1,6 +1,6 @@
 """
 UI response builder — the seam between a normalized tool result and the
-final JSON-RPC serialization done by protocol.py.
+final result built by sdk_server.call_tool.
 
 Owns: the decision of whether a tool call should carry UI metadata, and the
 shape of that metadata. Never touches the normalized envelope itself.

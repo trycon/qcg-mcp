@@ -1,5 +1,13 @@
 # Scanova MCP — UI Elements Feasibility & Architecture
 
+> **Superseded in part (SDK 2.x upgrade).** Production no longer runs a hand-rolled JSON-RPC
+> layer: `protocol.py` and `fastmcp_tools.py` are gone, and the MCP Python SDK 2.x serves the
+> protocol (dual-era: 2026-07-28 and the legacy `initialize` handshake) from
+> `src/mcp_http/sdk_server.py` via the SDK's lowlevel `Server`, with `registry.py` as the single
+> tool list. This is "Architecture B" below. The UI resource registry, `ui_response.py` `_meta`
+> attachment and the Bridge Contract are unchanged. Read references to `protocol.py` as
+> `sdk_server.py`.
+
 Status: **v3 — implementation-ready** · Repo: `scanova-mcp` @ `QCG-19750-mcp-add-ui-elements-in-ai`
 
 **v2 → v3 note:** this pass resolves five remaining implementation ambiguities identified as blocking clean implementation, without altering Architecture C, the phased roadmap, the migration/deployment/security strategy, the tool audit, or the UI complexity matrix — all of which are preserved unchanged from v2. Five sections were added: **Part 4A (Layer Ownership Model)**, an expansion of the resource-registry definition inside **Part 7**, **Part 5A (Response Building Abstraction)**, a formal **Bridge Contract** table inside **Part 9**, and **Part 9B (UI Error Model)**. Nothing else in the document was modified.

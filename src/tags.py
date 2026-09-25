@@ -1,5 +1,6 @@
 import requests
 from config import SCANOVA_BASE_URL
+from api_response import api_result
 
 _BASE = SCANOVA_BASE_URL.rstrip("/")
 
@@ -25,6 +26,6 @@ def list_tags(name: str = None, page: int = None, page_size: int = None, api_key
         params["page_size"] = page_size
     try:
         resp = requests.get(f"{_BASE}/tag/list/", headers=_headers(api_key), params=params)
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}

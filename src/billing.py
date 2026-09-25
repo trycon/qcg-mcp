@@ -1,5 +1,6 @@
 import requests
 from config import SCANOVA_BASE_URL
+from api_response import api_result
 
 _BASE = SCANOVA_BASE_URL.rstrip("/")
 
@@ -18,6 +19,6 @@ def get_current_plan(api_key: str = None) -> dict:
         return _auth_error()
     try:
         resp = requests.get(f"{_BASE}/plans/current/", headers=_headers(api_key))
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}

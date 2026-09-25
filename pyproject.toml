@@ -1,18 +1,18 @@
 [project]
 name = "scanova-mcp"
 version = "0.1.0"
-description = "Add your description here"
+description = "Scanova MCP server: QR codes, design, folders, forms, leads, analytics and users over MCP"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "mcp[cli]>=1.12.4",
+    "mcp[cli]>=2.2,<3",
     "requests>=2.32.4",
-    "fastapi>=0.116.1",
     "uvicorn[standard]>=0.32.1"
 ]
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28.1",
     "pytest>=9.1.1",
 ]
 

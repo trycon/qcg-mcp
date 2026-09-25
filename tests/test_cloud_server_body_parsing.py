@@ -1,18 +1,12 @@
-"""An empty or malformed request body to POST /mcp used to raise an
-uncaught json.JSONDecodeError, get logged at ERROR level, and return a
-500 — indistinguishable from an actual server bug. It's a client error
-(often just a bot/health-check probing the public endpoint), so it should
-be a 400 with a proper JSON-RPC Parse error, logged at warning."""
+"""Malformed requests to POST /mcp are client errors: HTTP 400 with a JSON-RPC
+parse error, never a 500 — the SDK's transport handles this since the 2.x
+upgrade; these keep it that way."""
 
-from fastapi.testclient import TestClient
-
-from cloud_server import app
-
-client = TestClient(app)
+from conftest import post_raw, rpc
 
 
 def test_empty_body_returns_400_parse_error():
-    resp = client.post("/mcp", content=b"", headers={"content-type": "application/json"})
+    resp = post_raw(b"")
     assert resp.status_code == 400
     body = resp.json()
     assert body["jsonrpc"] == "2.0"
@@ -21,12 +15,10 @@ def test_empty_body_returns_400_parse_error():
 
 
 def test_malformed_body_returns_400_parse_error():
-    resp = client.post("/mcp", content=b"not json", headers={"content-type": "application/json"})
+    resp = post_raw(b"not json")
     assert resp.status_code == 400
     assert resp.json()["error"]["code"] == -32700
 
 
 def test_valid_request_still_works():
-    resp = client.post("/mcp", json={"jsonrpc": "2.0", "id": 1, "method": "initialize"})
-    assert resp.status_code == 200
-    assert resp.json()["result"]["serverInfo"]["name"] == "scanova-mcp"
+    assert rpc("initialize", {"id": 1})["result"]["serverInfo"]["name"] == "scanova-mcp"

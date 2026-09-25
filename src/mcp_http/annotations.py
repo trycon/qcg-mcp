@@ -1,11 +1,9 @@
-from mcp.types import ToolAnnotations
+"""Tool annotations (MCP ToolAnnotations) used by registry.py's descriptors.
 
-READ_ONLY_TOOL_ANNOTATIONS = ToolAnnotations(
-    readOnlyHint=True, openWorldHint=True, destructiveHint=False
-)
-WRITE_TOOL_ANNOTATIONS = ToolAnnotations(
-    readOnlyHint=False, openWorldHint=True, destructiveHint=False
-)
+Hosts use them to decide what needs confirmation; the spec treats annotations
+as hints from a trusted server, so keep them accurate: anything that deletes
+or removes is destructive.
+"""
 
 READ_ONLY_TOOL_ANNOTATIONS_JSON = {
     "readOnlyHint": True,
@@ -17,9 +15,6 @@ WRITE_TOOL_ANNOTATIONS_JSON = {
     "openWorldHint": True,
     "destructiveHint": False,
 }
-DESTRUCTIVE_TOOL_ANNOTATIONS = ToolAnnotations(
-    readOnlyHint=False, openWorldHint=True, destructiveHint=True
-)
 DESTRUCTIVE_TOOL_ANNOTATIONS_JSON = {
     "readOnlyHint": False,
     "openWorldHint": True,

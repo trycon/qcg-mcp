@@ -2,6 +2,7 @@ import base64
 import json
 import requests
 from config import SCANOVA_BASE_URL
+from api_response import api_result
 
 _BASE = SCANOVA_BASE_URL.rstrip("/")
 
@@ -77,7 +78,7 @@ def create_qr_code(params=None, api_key=None):
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
         resp = requests.post(f"{_BASE}/qrcode/", headers=headers, json=params)
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -126,7 +127,7 @@ def list_qr_codes(params=None, api_key=None):
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
         resp = requests.get(f"{_BASE}/qrcode/", headers=headers, params=params)
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -154,7 +155,7 @@ def update_qr_code(qrid=None, params=None, api_key=None):
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
         resp = requests.put(f"{_BASE}/qrcode/{qrid}/", headers=headers, json=params)
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -179,7 +180,7 @@ def retrieve_qr_code(qrid=None, params=None, api_key=None):
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
         resp = requests.get(f"{_BASE}/qrcode/{qrid}/", headers=headers, params=params)
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -212,7 +213,7 @@ def download_qr_code(qrid=None, params=None, api_key=None):
                 "size_bytes": len(resp.content),
                 "data_base64": base64.b64encode(resp.content).decode("utf-8"),
             }
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -240,7 +241,7 @@ def activate_qr_code(qrid=None, params=None, api_key=None):
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
         resp = requests.patch(f"{_BASE}/qrcode/{qrid}/", headers=headers, json=params)
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -268,7 +269,7 @@ def deactivate_qr_code(qrid=None, params=None, api_key=None):
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
         resp = requests.patch(f"{_BASE}/qrcode/{qrid}/", headers=headers, json=params)
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -284,7 +285,7 @@ def delete_qr_code(qrid=None, api_key=None):
         resp = requests.delete(f"{_BASE}/qrcode/{qrid}/", headers=headers)
         if resp.status_code == 204:
             return {"success": True, "message": "QR code deleted"}
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -300,7 +301,7 @@ def get_qr_categories(view_type="all", api_key=None):
             headers=headers,
             params={"view_type": view_type},
         )
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -325,7 +326,7 @@ def download_qr_printable(qrid=None, size=600, name=None, api_key=None):
                 "size_bytes": len(resp.content),
                 "data_base64": base64.b64encode(resp.content).decode("utf-8"),
             }
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -606,7 +607,7 @@ def attach_form_to_qr(qrid=None, form_id=None, api_key=None):
         resp = requests.patch(
             f"{_BASE}/qrcode/{qrid}/", headers=headers, json={"form": form_id}
         )
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -622,7 +623,7 @@ def detach_form_from_qr(qrid=None, api_key=None):
         resp = requests.patch(
             f"{_BASE}/qrcode/{qrid}/", headers=headers, json={"form": None}
         )
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -640,7 +641,7 @@ def attach_lead_list_to_qr(qrid=None, lead_list_id=None, api_key=None):
         resp = requests.patch(
             f"{_BASE}/qrcode/{qrid}/", headers=headers, json={"lead_list": lead_list_id}
         )
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -656,6 +657,6 @@ def detach_lead_list_from_qr(qrid=None, api_key=None):
         resp = requests.patch(
             f"{_BASE}/qrcode/{qrid}/", headers=headers, json={"lead_list": None}
         )
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}

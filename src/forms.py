@@ -1,5 +1,6 @@
 import requests
 from config import SCANOVA_BASE_URL
+from api_response import api_result
 
 _BASE = SCANOVA_BASE_URL.rstrip("/")
 
@@ -21,7 +22,7 @@ def list_forms(is_active: bool = None, api_key: str = None) -> dict:
         params["is_active"] = is_active
     try:
         resp = requests.get(f"{_BASE}/forms/", headers=_headers(api_key), params=params)
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -44,7 +45,7 @@ def create_form(name: str, data: dict, qr_id: str = None, theme_id: int = None,
         body["theme_overrides"] = theme_overrides
     try:
         resp = requests.post(f"{_BASE}/forms/", headers=_headers(api_key), json=body)
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -57,7 +58,7 @@ def retrieve_form(form_id: str, api_key: str = None) -> dict:
         return {"error": "form_id is required"}
     try:
         resp = requests.get(f"{_BASE}/forms/{form_id}/", headers=_headers(api_key))
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -77,7 +78,7 @@ def update_form(form_id: str, name: str = None, is_active: bool = None, api_key:
         return {"error": "At least one of name or is_active must be provided"}
     try:
         resp = requests.patch(f"{_BASE}/forms/{form_id}/", headers=_headers(api_key), json=body)
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -92,6 +93,6 @@ def delete_form(form_id: str, api_key: str = None) -> dict:
         resp = requests.delete(f"{_BASE}/forms/{form_id}/", headers=_headers(api_key))
         if resp.status_code == 204:
             return {"success": True, "message": "Form deleted"}
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
