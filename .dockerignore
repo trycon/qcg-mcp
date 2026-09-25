@@ -10,3 +10,6 @@ __pycache__
 docker-compose.yml
 README.md
 LICENSE
+tests
+docs
+preview.html
