@@ -29,7 +29,7 @@ from starlette.routing import Route
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from config import ALLOWED_HOSTS, ALLOWED_ORIGINS, MCP_RESOURCE_URL, OAUTH_SERVER_URL, OPENAI_APPS_CHALLENGE
-from mcp_http.sdk_server import api_key_from_headers, build_server
+from mcp_http.sdk_server import SERVER_VERSION, api_key_from_headers, build_server
 
 log = logging.getLogger("mcp")
 
@@ -51,7 +51,7 @@ WWW_AUTHENTICATE = f'Bearer realm="Scanova MCP", resource_metadata="{RESOURCE_ME
 
 SERVICE_INFO = {
     "service": "Scanova MCP Server",
-    "version": "2.0.0",
+    "version": SERVER_VERSION,
     "endpoints": {"mcp": MCP_PATH, "health": "/health"},
     "authentication": {
         "required": "Scanova API Key or OAuth access token",

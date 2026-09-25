@@ -19,6 +19,7 @@ hand-written schemas in ``registry.py`` are served verbatim.
 
 import json
 import logging
+import os
 from typing import Any
 
 import anyio
@@ -39,7 +40,8 @@ from mcp_http.ui_response import attach_ui_metadata
 log = logging.getLogger("mcp")
 
 SERVER_NAME = "scanova-mcp"
-SERVER_VERSION = "2.0.0"
+# The release the image was built from (deploy.yml → Dockerfile APP_VERSION), e.g. "v2.1.0".
+SERVER_VERSION = os.getenv("APP_VERSION", "dev").removeprefix("v")
 
 # Headers a Scanova API key or OAuth access token may arrive in. The README has
 # always told users to put the raw key in Authorization (no "Bearer"), so every
