@@ -47,7 +47,7 @@ This is a review pass over the v1 report, prompted by a second, more adversarial
 
 **Remaining open questions (carried forward + new):**
 1. *(carried)* Target client(s) — ChatGPT (Apps SDK) vs. Claude (MCP-UI convention) vs. both.
-2. *(carried)* Is `preview.html` disposable, or mid-flight work needing preservation elsewhere?
+2. *(resolved)* `preview.html` was an unrelated email export; removed from the repo.
 3. *(carried)* Where does `mcp.scanova.io` terminate outside this repo (reverse proxy/CDN)?
 4. *(carried)* Should destructive tools ever get rich confirm-UI, or stay text-first by policy?
 5. **(new)** Confirm intent to fix the `2025-03-26` → SDK-actual protocol version mismatch as part of this work, or track it as a separate ticket — it's adjacent but not strictly required for UI Elements to function.

@@ -1,19 +1,13 @@
-version: "3.8"
-
+# Local run of the production image: docker compose up --build
 services:
   mcpserver:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        APP_VERSION: local
     container_name: mcpserver
     ports:
-      - "8000:8000"  # Expose port to host
-    healthcheck:
-      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:8000/health')"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - "8000:8000"
+    # The image's own HEALTHCHECK (fails unless /health answers 200) applies.
     restart: unless-stopped
-    environment:
-      ENV: "production"
-#    user: "scanova:scanova"  # Matches scanova user created in Dockerfile
