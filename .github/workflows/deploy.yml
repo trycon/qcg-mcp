@@ -18,6 +18,10 @@ concurrency:
 
 permissions:
   contents: read
+  # GitHub OIDC → AWS role qcg-mcp-github-deploy: no stored AWS keys. The role
+  # trusts only this repo's `production` environment, which only release tags
+  # (v*) may use, and can only push this image and update this one service.
+  id-token: write
 
 env:
   TAG: ${{ github.event.release.tag_name || github.ref_name }}
@@ -48,9 +52,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: us-west-2
 
       - name: Login to Amazon ECR
         id: ecr-login

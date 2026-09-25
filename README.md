@@ -256,6 +256,10 @@ image is built and tagged with the version, the `scanova-mcp` ECS Express servic
 and `/health` and `initialize` are checked. A merge to `main` does not deploy. To redeploy or roll
 back, run the Deploy workflow from the Actions tab with that release's tag as the ref.
 
+AWS access is GitHub OIDC → IAM role `qcg-mcp-github-deploy` (no stored keys): it trusts only this
+repository's `production` environment (release tags `v*` only) and can only push this image, update
+the `scanova-mcp` service and pass its task roles.
+
 ## Troubleshooting
 
 ### Common Issues
