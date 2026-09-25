@@ -1,11 +1,12 @@
 """MCP tools/list definitions for the HTTP JSON-RPC endpoint."""
 
 from mcp_http.annotations import (
+    annotations_for,
     DESTRUCTIVE_TOOL_ANNOTATIONS_JSON,
     READ_ONLY_TOOL_ANNOTATIONS_JSON,
     WRITE_TOOL_ANNOTATIONS_JSON,
 )
-from mcp_http.output_schemas import TOOL_OUTPUT_SCHEMAS
+from mcp_http.output_schemas import TOOL_OUTPUT_SCHEMAS, tool_output_schema
 from mcp_http.ui_response import tool_descriptor_meta
 from mcp_http.schemas import (
     # Docs bridge
@@ -58,16 +59,18 @@ from mcp_http.schemas import (
 
 
 def _tool(name, title, description, annotations, input_schema):
+    # The per-tool classification in annotations.py is authoritative; the
+    # argument only documents intent at the call site.
     descriptor = {
         "name": name,
         "title": title,
         "description": description,
-        "annotations": annotations,
+        "annotations": annotations_for(name),
         "inputSchema": input_schema,
     }
     output_schema = TOOL_OUTPUT_SCHEMAS.get(name)
     if output_schema:
-        descriptor["outputSchema"] = output_schema
+        descriptor["outputSchema"] = tool_output_schema(output_schema)
     meta = tool_descriptor_meta(name)
     if meta:
         descriptor["_meta"] = meta

@@ -32,3 +32,9 @@ ALLOWED_ORIGINS = (
 # Host header values accepted when Host/Origin checks are on (i.e. when
 # ALLOWED_ORIGINS is an explicit list). "host:*" allows any port.
 ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "mcp.scanova.io,localhost:*,127.0.0.1:*").split(",") if h.strip()]
+
+# Per-caller request limits on /mcp (see mcp_http/rate_limit.py). Tool calls
+# are limited per credential, public discovery requests per client IP.
+RATE_LIMIT_PER_MINUTE = int(os.getenv("RATE_LIMIT_PER_MINUTE", "120"))
+RATE_LIMIT_BURST = int(os.getenv("RATE_LIMIT_BURST", "40"))
+ANON_RATE_LIMIT_PER_MINUTE = int(os.getenv("ANON_RATE_LIMIT_PER_MINUTE", "60"))

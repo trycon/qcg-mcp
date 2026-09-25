@@ -29,6 +29,23 @@ _FS_TOOL = "query_docs_filesystem_scanova_api_documentation"
 
 log = logging.getLogger("mcp.docs_client")
 
+# A `cat` of a large page or spec can return hundreds of KB — too much for a
+# model's context. Longer results are cut, with a note on how to narrow down.
+MAX_RESULT_CHARS = 40_000
+
+
+def _capped(text: str) -> dict:
+    if len(text) <= MAX_RESULT_CHARS:
+        return {"result": text}
+    return {
+        "result": text[:MAX_RESULT_CHARS],
+        "truncated": True,
+        "note": (
+            f"Result cut at {MAX_RESULT_CHARS:,} of {len(text):,} characters. Narrow it down: "
+            "`head -n 200 <file>`, `rg -n <term> <file>`, or a more specific search."
+        ),
+    }
+
 
 def _parse_sse(raw: str) -> dict:
     """Extract the first JSON payload from an SSE response stream."""
@@ -61,7 +78,7 @@ def _call(tool_name: str, arguments: dict) -> dict:
         if "result" in parsed:
             content = parsed["result"].get("content", [])
             texts = [c["text"] for c in content if c.get("type") == "text"]
-            return {"ok": True, "result": "\n".join(texts)}
+            return {"ok": True, **_capped("\n".join(texts))}
 
         err = parsed.get("error", {})
         return {"ok": False, "error": err.get("message", str(err))}
@@ -86,36 +103,27 @@ def _call(tool_name: str, arguments: dict) -> dict:
 
 
 def probe() -> dict:
-    """
-    Check connectivity and list tools available on the docs MCP server.
-    Uses the MCP initialize handshake which returns capabilities in one round-trip.
-    """
-    payload = {
-        "jsonrpc": "2.0",
-        "id": 1,
-        "method": "initialize",
-        "params": {
-            "protocolVersion": "2024-11-05",
-            "capabilities": {},
-            "clientInfo": {"name": "scanova-mcp-bridge", "version": "1.0.0"},
-        },
-    }
-    headers = {
-        "Content-Type": "application/json",
-        "Accept": "application/json, text/event-stream",
-    }
+    """Check connectivity to the docs MCP server and list the tools it offers."""
+    headers = {"Content-Type": "application/json", "Accept": "application/json, text/event-stream"}
     try:
-        resp = requests.post(DOCS_MCP_URL, json=payload, headers=headers, timeout=TIMEOUT)
-        resp.raise_for_status()
-        data = _parse_sse(resp.text)
-        result = data.get("result", {})
-        tools = list(result.get("capabilities", {}).get("tools", {}).keys())
-        return {
-            "connected": True,
-            "server": result.get("serverInfo", {}),
-            "available_tools": tools,
-            "note": "Stateless server — no session management needed. POST only.",
-        }
+        init = requests.post(
+            DOCS_MCP_URL,
+            json={
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "initialize",
+                "params": {"protocolVersion": "2025-06-18", "capabilities": {}, "clientInfo": {"name": "scanova-mcp-bridge", "version": "2.0"}},
+            },
+            headers=headers,
+            timeout=TIMEOUT,
+        )
+        init.raise_for_status()
+        server = _parse_sse(init.text).get("result", {}).get("serverInfo", {})
+        # The tool list comes from tools/list — capabilities only says tools exist.
+        listed = requests.post(DOCS_MCP_URL, json={"jsonrpc": "2.0", "id": 2, "method": "tools/list"}, headers=headers, timeout=TIMEOUT)
+        listed.raise_for_status()
+        tools = [t.get("name") for t in _parse_sse(listed.text).get("result", {}).get("tools", [])]
+        return {"connected": True, "server": server, "available_tools": tools}
     except requests.Timeout:
         return {"connected": False, "error": f"Timed out after {TIMEOUT}s"}
     except requests.ConnectionError as e:

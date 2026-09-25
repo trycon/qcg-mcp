@@ -22,10 +22,29 @@ def _modern_call(name, headers=None, arguments=None):
 
 # --- parity -------------------------------------------------------------------
 
-def test_tools_list_is_identical_to_the_pre_upgrade_server_on_both_eras():
+# Reworked on purpose since the upgrade: annotations (tests/test_tool_annotations.py)
+# and output schemas, now the real result envelope (tests/test_output_schemas.py).
+_REWORKED = ("annotations", "outputSchema")
+
+
+def _without_annotations(tools):
+    return [{k: v for k, v in t.items() if k not in _REWORKED} for t in tools]
+
+
+def test_tools_list_matches_the_pre_upgrade_server_on_both_eras():
+    """Names, input schemas and UI _meta are unchanged since the upgrade."""
     for era in ("modern", "legacy"):
         tools = rpc("tools/list", {"id": 1}, era=era)["result"]["tools"]
-        assert tools == BASELINE["tools"], era
+        assert _without_annotations(tools) == _without_annotations(BASELINE["tools"]), era
+
+
+def test_annotation_changes_since_the_upgrade_only_add_caution():
+    before = {t["name"]: t["annotations"] for t in BASELINE["tools"]}
+    after = {t["name"]: t["annotations"] for t in rpc("tools/list", {"id": 1})["result"]["tools"]}
+    for name, a in after.items():
+        assert a["readOnlyHint"] == before[name]["readOnlyHint"], name
+        # A tool may become destructive, never the reverse.
+        assert a["destructiveHint"] >= before[name]["destructiveHint"], name
 
 
 def test_resources_list_is_identical_to_the_pre_upgrade_server():

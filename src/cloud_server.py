@@ -12,11 +12,13 @@ module adds what's specific to hosting Scanova's server:
   ``WWW-Authenticate`` challenge, so OAuth-capable clients start sign-in;
 - a keep-alive ``GET /mcp`` stream for legacy clients that treat a 405 there
   as the connector being down (claude.ai's connector proxy);
+- per-caller rate limits (HTTP 429 with Retry-After);
 - CORS, and optional Host/Origin checks (see config.ALLOWED_ORIGINS).
 """
 
 import json
 import logging
+import math
 import os
 
 import anyio
@@ -28,7 +30,17 @@ from starlette.responses import JSONResponse, PlainTextResponse
 from starlette.routing import Route
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
-from config import ALLOWED_HOSTS, ALLOWED_ORIGINS, MCP_RESOURCE_URL, OAUTH_SERVER_URL, OPENAI_APPS_CHALLENGE
+from config import (
+    ALLOWED_HOSTS,
+    ALLOWED_ORIGINS,
+    ANON_RATE_LIMIT_PER_MINUTE,
+    MCP_RESOURCE_URL,
+    OAUTH_SERVER_URL,
+    OPENAI_APPS_CHALLENGE,
+    RATE_LIMIT_BURST,
+    RATE_LIMIT_PER_MINUTE,
+)
+from mcp_http.rate_limit import RateLimiter, credential_key
 from mcp_http.sdk_server import SERVER_VERSION, api_key_from_headers, build_server
 
 log = logging.getLogger("mcp")
@@ -118,11 +130,35 @@ def _needs_credential(methods: list[str]) -> bool:
     return any(m not in PUBLIC_METHODS and not m.startswith("notifications/") for m in methods)
 
 
+def _client_ip(scope: Scope) -> str:
+    # Behind the load balancer the caller is the first X-Forwarded-For hop.
+    forwarded = Request(scope).headers.get("x-forwarded-for")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    client = scope.get("client")
+    return client[0] if client else "unknown"
+
+
+def _rate_limited(retry_after: float) -> JSONResponse:
+    seconds = max(1, math.ceil(retry_after))
+    return JSONResponse(
+        {
+            "jsonrpc": "2.0",
+            "id": None,
+            "error": {"code": -32000, "message": f"Rate limit exceeded; retry in {seconds}s", "data": {"retryAfter": seconds}},
+        },
+        status_code=429,
+        headers={"Retry-After": str(seconds)},
+    )
+
+
 class McpFrontMiddleware:
     """Runs in front of the SDK's /mcp endpoint; everything else passes through."""
 
     def __init__(self, app: ASGIApp) -> None:
         self.app = app
+        self.credential_limiter = RateLimiter(RATE_LIMIT_PER_MINUTE, RATE_LIMIT_BURST)
+        self.anonymous_limiter = RateLimiter(ANON_RATE_LIMIT_PER_MINUTE)
 
     async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
         if scope["type"] != "http" or scope["path"].rstrip("/") != MCP_PATH:
@@ -148,7 +184,9 @@ class McpFrontMiddleware:
         body = b"".join(chunks)
 
         methods = _methods(body)
-        if methods is not None and _needs_credential(methods) and not api_key_from_headers(Request(scope).headers):
+        credential = api_key_from_headers(Request(scope).headers)
+        needs_credential = methods is not None and _needs_credential(methods)
+        if needs_credential and not credential:
             log.warning("Unauthorized MCP request: %s", ",".join(methods))
             response = JSONResponse(
                 {"error": "unauthorized", "message": "Valid Bearer token required"},
@@ -156,6 +194,17 @@ class McpFrontMiddleware:
                 headers={"WWW-Authenticate": WWW_AUTHENTICATE},
             )
             await response(scope, receive, send)
+            return
+
+        # A batch costs one token per message; a malformed body still costs one.
+        cost = max(1, len(methods or []))
+        if needs_credential:
+            wait = self.credential_limiter.acquire(credential_key(credential), cost)
+        else:
+            wait = self.anonymous_limiter.acquire("ip:" + _client_ip(scope), cost)
+        if wait:
+            log.warning("Rate limited MCP request: %s", ",".join(methods or ["?"]))
+            await _rate_limited(wait)(scope, receive, send)
             return
 
         replayed = False
