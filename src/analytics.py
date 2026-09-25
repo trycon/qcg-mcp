@@ -1,6 +1,7 @@
 import base64
 import requests
 from config import SCANOVA_BASE_URL
+from api_response import api_result
 
 _BASE = SCANOVA_BASE_URL.rstrip("/")
 
@@ -22,7 +23,7 @@ def get_account_stats(fields: list = None, api_key: str = None) -> dict:
         params["fields"] = ",".join(fields)
     try:
         resp = requests.get(f"{_BASE}/auth/stats/", headers=_headers(api_key), params=params)
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -41,7 +42,7 @@ def get_qr_analytics(filter_by: str, q: list, types: list, from_date: str, to_da
     body = {"filter_by": filter_by, "q": q}
     try:
         resp = requests.post(f"{_BASE}/analytics/qr/", headers=_headers(api_key), params=params, json=body)
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -69,7 +70,7 @@ def export_analytics(filter_by: str, q: list, from_date: str, to_date: str,
                 "size_bytes": len(resp.content),
                 "data_base64": base64.b64encode(resp.content).decode("utf-8"),
             }
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -98,6 +99,6 @@ def export_raw_scans(filter_by: str, q: list, from_date: str, to_date: str,
                 "size_bytes": len(resp.content),
                 "data_base64": base64.b64encode(resp.content).decode("utf-8"),
             }
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}

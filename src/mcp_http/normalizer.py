@@ -111,6 +111,10 @@ _STATUS_HINTS = [
 def _infer_status_code(raw: dict, ok: bool) -> int:
     if ok:
         return 200
+    # The real HTTP status, when the API module kept it (api_response.api_result).
+    status = raw.get("status_code")
+    if isinstance(status, int) and 400 <= status <= 599:
+        return status
     err = raw.get("error") or raw.get("detail") or ""
     if isinstance(err, dict):
         # DRF / JSON-RPC error object

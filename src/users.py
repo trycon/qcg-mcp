@@ -1,5 +1,6 @@
 import requests
 from config import SCANOVA_BASE_URL
+from api_response import api_result
 
 _BASE = SCANOVA_BASE_URL.rstrip("/")
 
@@ -18,7 +19,7 @@ def list_users(api_key: str = None) -> dict:
         return _auth_error()
     try:
         resp = requests.get(f"{_BASE}/multi-users/", headers=_headers(api_key))
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -31,7 +32,7 @@ def get_user(user_id: str, api_key: str = None) -> dict:
         return {"error": "user_id is required"}
     try:
         resp = requests.get(f"{_BASE}/multi-users/{user_id}/", headers=_headers(api_key))
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -50,7 +51,7 @@ def add_user(email: str, role: str, api_key: str = None) -> dict:
             headers=_headers(api_key),
             json={"email": email, "role": role},
         )
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -65,7 +66,7 @@ def remove_user(user_id: str, api_key: str = None) -> dict:
         resp = requests.delete(f"{_BASE}/multi-users/{user_id}/", headers=_headers(api_key))
         if resp.status_code == 204:
             return {"success": True, "message": "User removed"}
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -76,7 +77,7 @@ def list_user_roles(api_key: str = None) -> dict:
         return _auth_error()
     try:
         resp = requests.get(f"{_BASE}/multi-users/access-levels/", headers=_headers(api_key))
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -95,7 +96,7 @@ def create_custom_role(name: str, permissions: list, api_key: str = None) -> dic
             headers=_headers(api_key),
             json={"name": name, "permissions": permissions},
         )
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -114,6 +115,6 @@ def update_user_role(user_id: str, access_level: str, api_key: str = None) -> di
             headers=_headers(api_key),
             json={"access_level": access_level},
         )
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}

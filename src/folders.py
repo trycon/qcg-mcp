@@ -1,5 +1,6 @@
 import requests
 from config import SCANOVA_BASE_URL
+from api_response import api_result
 
 _BASE = SCANOVA_BASE_URL.rstrip("/")
 
@@ -22,7 +23,7 @@ def create_folder(name: str, folder_type: str, api_key: str = None) -> dict:
             headers=_headers(api_key),
             json={"name": name, "folder_type": folder_type},
         )
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -37,7 +38,7 @@ def list_folders(folder_type: str, api_key: str = None) -> dict:
             headers=_headers(api_key),
             params={"folder_type": folder_type},
         )
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -52,7 +53,7 @@ def update_folder(folder_id: int, name: str, api_key: str = None) -> dict:
             headers=_headers(api_key),
             json={"name": name},
         )
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -73,7 +74,7 @@ def delete_folder(folder_id: int, move_to_uncategorized: bool = True,
         )
         if resp.status_code == 204:
             return {"success": True, "message": "Folder deleted"}
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -90,7 +91,7 @@ def move_qr_codes_to_folder(folder_id: int, qr_code_ids: list,
             headers=_headers(api_key),
             json=body,
         )
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
@@ -105,6 +106,6 @@ def unassign_qr_codes_from_folder(folder_id: int, qr_code_ids: list, api_key: st
             headers=_headers(api_key),
             json={"qr_code_ids": qr_code_ids},
         )
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}

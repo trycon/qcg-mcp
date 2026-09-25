@@ -9,6 +9,7 @@ import json
 import requests
 
 from config import SCANOVA_BASE_URL
+from api_response import api_result
 
 _BASE = SCANOVA_BASE_URL.rstrip("/")
 
@@ -269,6 +270,6 @@ def apply_design(qrid: str, pattern_info_json: str, api_key: str) -> dict:
             headers=headers,
             json={"pattern_info": pattern_info_json},
         )
-        return resp.json()
+        return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
