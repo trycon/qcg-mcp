@@ -161,9 +161,31 @@ The server provides the following MCP tools that you can use in your MCP-compati
 
 The deployed server provides these endpoints:
 
-- **POST `/mcp`** - Main MCP JSON-RPC endpoint
+- **POST `/mcp`** - Main MCP endpoint (Streamable HTTP)
 - **GET `/health`** - Health check endpoint
 - **GET `/`** - Service information and documentation
+- **GET `/.well-known/oauth-protected-resource`** - OAuth protected-resource metadata
+
+## Protocol
+
+Built on the [MCP Python SDK](https://github.com/modelcontextprotocol/python-sdk) 2.x, which serves
+the protocol. The server is **dual-era**:
+
+- **MCP 2026-07-28** (stateless): every request carries its protocol version; `server/discover`,
+  cache hints, `resultType` and request-header validation are supported.
+- **Earlier revisions** (2025-11-25 and before): clients that open with `initialize` — today's
+  Cursor, VS Code, Claude Desktop, claude.ai and ChatGPT connectors — keep working unchanged.
+
+**Authentication.** Send your Scanova API key (or an OAuth access token from Scanova's
+authorization server) in `Authorization` — `Bearer <key>` or the bare key — or in `X-API-Key`.
+Listing tools and UI resources needs no key; calling a tool without one returns
+`401` with a `WWW-Authenticate` challenge pointing at the protected-resource metadata.
+
+Tool failures (for example a Scanova API error) come back as tool results with `isError: true`,
+so the assistant can read and explain them.
+
+UI widgets use the [MCP Apps](https://modelcontextprotocol.io/extensions/apps/overview)
+extension (`io.modelcontextprotocol/ui`), plus `openai/outputTemplate` for ChatGPT.
 
 ## Local Development (Optional)
 
@@ -184,11 +206,11 @@ If you want to run the server locally for development:
 
 3. **Run locally**:
    ```bash
-   # HTTP server mode
-   uv run cloud_server.py
-   
-   # Or stdio mode for local MCP testing
-   uv run main.py
+   # HTTP server mode (same app as production)
+   uv run src/cloud_server.py
+
+   # Or stdio mode for local MCP testing (uses MCP_ACCESS_TOKEN for the Scanova API)
+   MCP_ACCESS_TOKEN=your-key uv run src/main.py --stdio
    ```
 
 4. **Configure for local testing**:

@@ -14,7 +14,7 @@ Runbook per `docs/mcp-ui-architecture.md` Part 16. Follow these steps for every 
    - `tests/test_ui_resources.py` — the new URI appears in `list_resources()`, and `get_resource_for_tool` resolves for each tool name.
    - `tests/test_ui_response.py` — `attach_ui_metadata` returns the expected `_meta` for the tool once enabled.
    - Re-run `tests/test_sdk_contract.py` unmodified — it validates every `tools/call`/`resources/read` shape against the SDK's own Pydantic models regardless of which tool triggered it.
-6. Before merging, check the standing PR guardrail: **does this change alter the `content[0]` `TextContent` shape for any existing tool?** It should always be "no." `attach_ui_metadata` (`ui_response.py`) is the only place `_meta` gets attached — if you find yourself editing `protocol.py`'s `tools_call_result` to add UI behavior, stop; that logic belongs in `ui_response.py` (Part 5A).
+6. Before merging, check the standing PR guardrail: **does this change alter the `content[0]` `TextContent` shape for any existing tool?** It should always be "no." `attach_ui_metadata` (`ui_response.py`) is the only place `_meta` gets attached — if you find yourself editing `sdk_server.py`'s `call_tool` to add UI behavior, stop; that logic belongs in `ui_response.py` (Part 5A).
 
 ## Naming convention
 

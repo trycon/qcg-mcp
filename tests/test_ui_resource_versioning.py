@@ -4,7 +4,8 @@ conversation/connector. Bumping the version must make externally-emitted
 URIs change while keeping internal lookups working for both the old
 (unversioned or previously-versioned) and new URI forms."""
 
-import mcp_http.protocol as protocol
+import mcp_http.sdk_server as sdk_server
+from conftest import rpc
 import mcp_http.ui_resources as ui_resources
 from mcp_http.ui_resources import get_resource_by_uri, get_resource_for_tool
 
@@ -22,7 +23,7 @@ def test_lookup_resolves_versioned_and_unversioned_uri_the_same_way():
 
 
 def test_resources_list_emits_versioned_uris():
-    result = protocol.handle_tool_method("resources/list", {"id": 1}, api_key=None)
+    result = rpc("resources/list", {"id": 1}, api_key=None)
     uris = {r["uri"] for r in result["result"]["resources"]}
     for resource in ui_resources.list_resources():
         assert resource.versioned_uri in uris
@@ -32,7 +33,7 @@ def test_resources_list_emits_versioned_uris():
 def test_resources_read_echoes_versioned_uri():
     resource = get_resource_for_tool("set_qr_design")
     body = {"id": 2, "params": {"uri": resource.uri}}
-    result = protocol.handle_tool_method("resources/read", body, api_key=None)
+    result = rpc("resources/read", body, api_key=None)
     assert result["result"]["contents"][0]["uri"] == resource.versioned_uri
 
 

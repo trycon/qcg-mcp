@@ -5,7 +5,8 @@ pre-fill itself, and open_qr_code_creation_form always shows the form for
 when the user hasn't given enough information to create yet."""
 
 import mcp_http.dispatcher as dispatcher
-import mcp_http.protocol as protocol
+import mcp_http.sdk_server as sdk_server
+from conftest import rpc
 import mcp_http.registry as registry
 from mcp_http.ui_resources import get_resource_for_tool
 
@@ -106,16 +107,17 @@ def test_open_form_handler_returns_prefill():
 def test_tools_call_no_meta_on_successful_create(monkeypatch):
     import mcp_http.ui_response as ui_response
     monkeypatch.setattr(ui_response, "UI_ELEMENTS_ENABLED", True, raising=False)
-    monkeypatch.setattr(protocol, "execute_tool", lambda name, args, key: {"qrid": "Qabc", "name": "Test"})
+    monkeypatch.setattr(sdk_server, "execute_tool", lambda name, args, key: {"qrid": "Qabc", "name": "Test"})
     body = {"id": 1, "params": {"name": "create_qr_code", "arguments": {"params": {"name": "Test"}}}}
-    result = protocol.handle_tool_method("tools/call", body, api_key="k")
-    assert "_meta" not in result["result"]
+    result = rpc("tools/call", body, api_key="k")
+    meta = result["result"].get("_meta", {})
+    assert "ui" not in meta and "openai/outputTemplate" not in meta
 
 
 def test_tools_call_has_meta_on_failed_create(monkeypatch):
     import mcp_http.ui_response as ui_response
     monkeypatch.setattr(ui_response, "UI_ELEMENTS_ENABLED", True, raising=False)
-    monkeypatch.setattr(protocol, "execute_tool", lambda name, args, key: {"error": "bad request", "attempted_params": {"name": "Test"}})
+    monkeypatch.setattr(sdk_server, "execute_tool", lambda name, args, key: {"error": "bad request", "attempted_params": {"name": "Test"}})
     body = {"id": 2, "params": {"name": "create_qr_code", "arguments": {"params": {"name": "Test"}}}}
-    result = protocol.handle_tool_method("tools/call", body, api_key="k")
+    result = rpc("tools/call", body, api_key="k")
     assert result["result"]["_meta"]["openai/outputTemplate"] == get_resource_for_tool("create_qr_code").versioned_uri

@@ -3,7 +3,8 @@ dispatched correctly, and the 4 moved attach/detach tools are unaffected by
 their move to the Forms/Lead Lists sections."""
 
 import mcp_http.dispatcher as dispatcher
-import mcp_http.protocol as protocol
+import mcp_http.sdk_server as sdk_server
+from conftest import rpc
 import mcp_http.registry as registry
 
 NEW_TOOLS = {
@@ -30,7 +31,7 @@ def test_registry_and_dispatcher_stay_in_sync():
 
 
 def test_new_tools_present_in_tools_list():
-    result = protocol.handle_tool_method("tools/list", {"id": 1}, api_key="k")
+    result = rpc("tools/list", {"id": 1}, api_key="k")
     names = {t["name"] for t in result["result"]["tools"]}
     assert NEW_TOOLS <= names
 

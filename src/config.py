@@ -29,3 +29,6 @@ ALLOWED_ORIGINS = (
     ["*"] if _allowed_origins_raw == "*"
     else [o.strip() for o in _allowed_origins_raw.split(",") if o.strip()]
 )
+# Host header values accepted when Host/Origin checks are on (i.e. when
+# ALLOWED_ORIGINS is an explicit list). "host:*" allows any port.
+ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "mcp.scanova.io,localhost:*,127.0.0.1:*").split(",") if h.strip()]
