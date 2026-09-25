@@ -1,0 +1,36 @@
+name: PR title
+
+# Release notes and version numbers come from PR titles, so they must follow
+# Conventional Commits (feat:, fix:, docs:, chore:, feat!: …).
+on:
+  pull_request_target:
+    types: [opened, edited, synchronize, reopened]
+
+permissions:
+  pull-requests: read
+
+jobs:
+  semantic-title:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          ignoreLabels: |
+            dependencies
+            skip-changelog
+          types: |
+            feat
+            enhancement
+            fix
+            hotfix
+            perf
+            docs
+            style
+            refactor
+            test
+            build
+            ci
+            chore
+            revert

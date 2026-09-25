@@ -1,0 +1,114 @@
+name: Deploy
+
+# Production deploys happen only when a release is published (from the draft
+# release-drafter keeps up to date — GitHub → Releases → Edit → Publish, or
+# `gh release edit vX.Y.Z --draft=false`). A merge to main no longer deploys.
+#
+# Redeploy an existing release (e.g. to roll back): run this workflow from
+# Actions → Deploy → Run workflow, choosing the release tag as the ref.
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+# One deploy at a time, never cancelled halfway.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  TAG: ${{ github.event.release.tag_name || github.ref_name }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release tags only
+        run: |
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "::error::Deploys run from a release tag like v1.2.3, not '$TAG'."; exit 1; }
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ env.TAG }}
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --frozen
+      - run: uv run pytest -q
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ env.TAG }}
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push image
+        id: image
+        env:
+          REPOSITORY: ${{ steps.ecr-login.outputs.registry }}/${{ secrets.ECR_REPOSITORY }}
+        run: |
+          # The release version is the image tag (and APP_VERSION inside it); the
+          # commit sha tag keeps the old convention for tracing.
+          docker build --build-arg APP_VERSION="$TAG" -t "$REPOSITORY:$TAG" -t "$REPOSITORY:${GITHUB_SHA}" .
+          docker push "$REPOSITORY:$TAG"
+          docker push "$REPOSITORY:${GITHUB_SHA}"
+          echo "uri=$REPOSITORY:$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to the ECS Express service
+        env:
+          ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
+          ECS_SERVICE: ${{ secrets.ECS_SERVICE }}
+          IMAGE: ${{ steps.image.outputs.uri }}
+        run: |
+          arn=$(aws ecs describe-services --cluster "$ECS_CLUSTER" --services "$ECS_SERVICE" --query 'services[0].serviceArn' --output text)
+          # Keep the running container's configuration (port, environment,
+          # secrets, logging) and change only the image.
+          aws ecs describe-express-gateway-service --service-arn "$arn" \
+            --query 'service.activeConfigurations[0].primaryContainer' --output json > current.json
+          jq --arg image "$IMAGE" '.image = $image' current.json > container.json
+          echo "Deploying $IMAGE (was $(jq -r .image current.json))"
+          aws ecs update-express-gateway-service --service-arn "$arn" --primary-container file://container.json > /dev/null
+
+      - name: Wait for the rollout
+        env:
+          ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
+          ECS_SERVICE: ${{ secrets.ECS_SERVICE }}
+        run: aws ecs wait services-stable --cluster "$ECS_CLUSTER" --services "$ECS_SERVICE"
+
+      - name: Smoke check
+        run: |
+          curl -fsS --retry 5 --retry-delay 5 https://mcp.scanova.io/health
+          code=$(curl -s -o /dev/null -w "%{http_code}" -X POST https://mcp.scanova.io/mcp \
+            -H 'content-type: application/json' -H 'accept: application/json, text/event-stream' \
+            -d '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"deploy-check","version":"1"}}}')
+          echo "initialize: $code"
+          [ "$code" = "200" ] || { echo "::error::MCP endpoint answered $code"; exit 1; }
+          echo "Deployed **$TAG** to https://mcp.scanova.io" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Notify Slack
+        if: always()
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        run: |
+          if [ -z "$SLACK_WEBHOOK" ]; then
+            echo "SLACK_WEBHOOK not set, skipping notification"
+            exit 0
+          fi
+          if [ "${{ job.status }}" = "success" ]; then emoji=":white_check_mark:"; text="deployed"; else emoji=":x:"; text="deploy failed"; fi
+          curl -sf -X POST -H 'Content-type: application/json' \
+            --data "{\"text\": \"$emoji scanova-mcp $TAG $text (by ${{ github.actor }})\"}" \
+            "$SLACK_WEBHOOK"
