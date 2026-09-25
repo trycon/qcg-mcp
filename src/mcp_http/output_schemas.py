@@ -92,6 +92,8 @@ QUERY_DOCS_OUTPUT = {
     "properties": {
         "ok": {"type": "boolean", "description": "True when the docs server returned a result"},
         "result": {"type": "string", "description": "Text content from the documentation"},
+        "truncated": {"type": "boolean", "description": "True when the result was cut to fit a model's context"},
+        "note": {"type": "string", "description": "How to narrow down a truncated result"},
         "error": {"type": "string", "description": "Error message when ok is false"},
     },
 }
@@ -583,3 +585,102 @@ TOOL_OUTPUT_SCHEMAS: dict[str, dict] = {
     "create_custom_role": CREATE_CUSTOM_ROLE_OUTPUT,
     "update_user_role": UPDATE_USER_ROLE_OUTPUT,
 }
+
+
+# ── The envelope every tool call actually returns ─────────────────────────── #
+#
+# call_tool returns normalizer.normalize()'s envelope as structuredContent, and
+# MCP requires structured results to conform to the tool's outputSchema. The
+# per-tool schemas above describe the Scanova payload; tool_output_schema()
+# wraps one in the envelope, with the payload under `data`.
+#
+# The payload is described leniently on purpose: every field may be null, and a
+# list may arrive bare, paginated ({count, results}) or wrapped ({data: [...]}),
+# depending on the endpoint. A schema that rejects a real response breaks the
+# call in clients that validate (the TypeScript SDK does).
+
+_PAGINATION = {
+    "type": "object",
+    "properties": {
+        "count": {"type": "integer"},
+        "next": {"type": ["integer", "null"]},
+        "previous": {"type": ["integer", "null"]},
+    },
+}
+
+
+def _any_id(key, schema):
+    # Scanova ids are integers on some endpoints and strings on others.
+    if key == "id" and isinstance(schema, dict) and schema.get("type") in ("integer", "string"):
+        return {**schema, "type": ["integer", "string"]}
+    return schema
+
+
+def _nullable(schema):
+    if not isinstance(schema, dict):
+        return schema
+    out = dict(schema)
+    kind = out.get("type")
+    if isinstance(kind, str) and kind != "null":
+        out["type"] = [kind, "null"]
+    elif isinstance(kind, list) and "null" not in kind:
+        out["type"] = [*kind, "null"]
+    if "enum" in out:
+        out["enum"] = [*out["enum"], None] if None not in out["enum"] else out["enum"]
+    if isinstance(out.get("properties"), dict):
+        out["properties"] = {k: _nullable(_any_id(k, v)) for k, v in out["properties"].items()}
+    if isinstance(out.get("items"), dict):
+        out["items"] = _nullable(out["items"])
+    for key in ("anyOf", "oneOf"):
+        if isinstance(out.get(key), list):
+            out[key] = [_nullable(v) for v in out[key]]
+    return out
+
+
+def _list_shapes(item, extra=None):
+    items = {"type": "array", "items": item}
+    return {
+        "anyOf": [
+            items,
+            {"type": "object", "properties": {"count": {"type": "integer"}, "results": items}},
+            {"type": "object", "properties": {"data": items, **(extra or {})}},
+        ]
+    }
+
+
+def _payload(schema: dict) -> dict:
+    props = schema.get("properties", {})
+    data = props.get("data", {})
+    if "pagination" in props:
+        # Already written as the paginated envelope: its `data` is the payload.
+        results = data.get("properties", {}).get("results", {})
+        return _list_shapes(results.get("items", {"type": "object"}))
+    if data.get("type") == "array":
+        extra = {k: v for k, v in props.items() if k not in ("data", "error")}
+        return _list_shapes(data.get("items", {"type": "object"}), extra)
+    payload = {k: v for k, v in schema.items() if k != "properties"}
+    payload["properties"] = {k: v for k, v in props.items() if k != "error"}
+    return payload
+
+
+def tool_output_schema(schema: dict) -> dict:
+    payload = _nullable(_payload(schema))
+    return {
+        "type": "object",
+        "description": schema.get("description", "Result envelope; the tool's result is in `data`"),
+        "required": ["ok", "status_code"],
+        "properties": {
+            "ok": {"type": "boolean", "description": "True when the call succeeded"},
+            "status_code": {"type": "integer", "description": "HTTP-style status of the Scanova call"},
+            "endpoint": {"type": ["string", "null"]},
+            "request_id": {},
+            "data": {"description": "The result on success; null on failure", "anyOf": [payload, {"type": "null"}]},
+            "pagination": {"anyOf": [_PAGINATION, {"type": "null"}]},
+            "error": {"description": "Null on success; the error message or the API's error object on failure"},
+            "raw": {"description": "The unmodified API response"},
+            "parse_error": {"type": "string"},
+            "raw_text": {"type": "string"},
+            "content_type": {"type": "string"},
+            "suggested_fix": {"type": "string"},
+        },
+    }

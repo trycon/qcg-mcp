@@ -6,8 +6,16 @@ the JSON-RPC response dict. Modern (2026-07-28) requests by default; `initialize
 and `era="legacy"` use the pre-2026 handshake-era wire.
 """
 
+import os
+
 import pytest
 from starlette.testclient import TestClient
+
+# The suite sends hundreds of requests from one client; rate limits are tested
+# separately (test_rate_limit.py) with their own limiter settings.
+os.environ.setdefault("RATE_LIMIT_PER_MINUTE", "100000")
+os.environ.setdefault("RATE_LIMIT_BURST", "100000")
+os.environ.setdefault("ANON_RATE_LIMIT_PER_MINUTE", "100000")
 
 MODERN = "2026-07-28"
 LEGACY = "2025-06-18"
