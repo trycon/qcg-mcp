@@ -243,6 +243,23 @@ If you want to run the server locally for development:
    docker stop mcpserver && docker rm mcpserver
    ```
 
+## Releases and deploys
+
+Pull request titles follow [Conventional Commits](https://www.conventionalcommits.org/)
+(`feat: …`, `fix: …`, `docs: …`, `chore: …`; add `!` — `feat!: …` — for a breaking change).
+Merging adds the PR to the **draft release**, versioned by
+[release-drafter](https://github.com/release-drafter/release-drafter) with semantic versioning:
+`feat` → minor, `fix` and the rest → patch, breaking → major.
+
+**Publishing the draft release deploys it** (`.github/workflows/deploy.yml`): tests run, the
+image is built and tagged with the version, the `scanova-mcp` ECS Express service is updated to it,
+and `/health` and `initialize` are checked. A merge to `main` does not deploy. To redeploy or roll
+back, run the Deploy workflow from the Actions tab with that release's tag as the ref.
+
+AWS access is GitHub OIDC → IAM role `qcg-mcp-github-deploy` (no stored keys): it trusts only this
+repository's `production` environment (release tags `v*` only) and can only push this image, update
+the `scanova-mcp` service and pass its task roles.
+
 ## Troubleshooting
 
 ### Common Issues
