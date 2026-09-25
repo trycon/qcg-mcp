@@ -12,6 +12,10 @@ RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
 # Set working directory
 WORKDIR /app
 
+# The release this image was built from (deploy.yml passes the release tag).
+ARG APP_VERSION=dev
+ENV APP_VERSION=$APP_VERSION
+
 # Copy project files
 COPY pyproject.toml uv.lock ./
 COPY . .
