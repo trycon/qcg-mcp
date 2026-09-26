@@ -2,7 +2,9 @@ import os
 from pathlib import Path
 
 # Base URL for Scanova API
-SCANOVA_BASE_URL = os.getenv("API_BASE_URL", "https://management.scanova.io/")
+# api.scanova.io is the Management API's public name (docs' server URL);
+# management.scanova.io serves the same routes but is being retired.
+SCANOVA_BASE_URL = os.getenv("API_BASE_URL", "https://api.scanova.io/")
 
 # Optional: Access token for MCP server authentication (if needed)
 MCP_ACCESS_TOKEN = os.getenv("MCP_ACCESS_TOKEN")

@@ -51,6 +51,7 @@ def api(monkeypatch):
 CASES = [
     ("list_form_responses", {"form_id": "F1", "created_from": "2026-09-01", "qr_code_id": "Qa", "page": 2}, "GET", "forms/F1/responses/", {"created_from": "2026-09-01", "qr_code_id": "Qa", "page": 2}, None),
     ("get_form_analytics", {"form_id": "F1", "from": "2026-09-01", "to": "2026-09-26"}, "GET", "forms/F1/analytics/", {"from": "2026-09-01", "to": "2026-09-26"}, None),
+    ("get_form_question_analytics", {"form_id": "F1", "from": "2026-09-01", "qr_code_id": "Qa"}, "GET", "forms/F1/analytics/questions/", {"from": "2026-09-01", "qr_code_id": "Qa"}, None),
     ("list_form_templates", {}, "GET", "forms/template/", {}, None),
     ("list_form_notifications", {}, "GET", "forms/notification/", {}, None),
     ("create_form_notification", {"name": "Sales", "to": "a@b.co", "frequency": "daily", "form_ids": ["F1"]}, "POST", "forms/notification/", {}, {"name": "Sales", "to": "a@b.co", "frequency": 2, "form_ids": ["F1"]}),
@@ -236,3 +237,32 @@ def test_create_form_from_questions_sends_blocks_as_a_json_string(monkeypatch):
     blocks = json.loads(sent["data"])
     assert blocks[0]["data"]["questions"][0]["answer"] == {"type": "emoji"}
     _form_validator().validate(blocks)
+
+
+# ── attach_form_to_qr ──────────────────────────────────────────────────────── #
+
+def test_attach_form_by_numeric_id_patches_the_qr_code(monkeypatch):
+    import qrcode as qr_module
+
+    calls = []
+    monkeypatch.setattr(qr_module.requests, "get", lambda *a, **k: calls.append(("GET", a[0])) or _Resp())
+    monkeypatch.setattr(qr_module.requests, "patch", lambda url, headers=None, json=None, timeout=None: calls.append(("PATCH", url, json)) or _Resp(body={"qrid": "Qa"}))
+    execute_tool("attach_form_to_qr", {"qrid": "Qa", "form_id": 42}, KEY)
+    assert calls == [("PATCH", "https://api.scanova.io/qr/Qa/", {"form": 42})]
+
+
+def test_attach_form_by_form_id_looks_up_its_numeric_id(monkeypatch):
+    import qrcode as qr_module
+
+    calls = []
+    monkeypatch.setattr(qr_module.requests, "get", lambda url, headers=None, timeout=None: calls.append(("GET", url)) or _Resp(body={"id": 42, "form_id": "F1a2b"}))
+    monkeypatch.setattr(qr_module.requests, "patch", lambda url, headers=None, json=None, timeout=None: calls.append(("PATCH", url, json)) or _Resp(body={"qrid": "Qa"}))
+    execute_tool("attach_form_to_qr", {"qrid": "Qa", "form_id": "F1a2b"}, KEY)
+    assert calls == [("GET", "https://api.scanova.io/forms/F1a2b/"), ("PATCH", "https://api.scanova.io/qr/Qa/", {"form": 42})]
+    assert "isn't a valid id" in execute_tool("attach_form_to_qr", {"qrid": "Qa", "form_id": "../x"}, KEY)["error"]
+
+
+def test_the_api_host_is_api_scanova_io():
+    import config
+
+    assert config.SCANOVA_BASE_URL.startswith("https://api.scanova.io")

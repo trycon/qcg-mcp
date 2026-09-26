@@ -2,7 +2,7 @@ from mcp_http.dispatcher import _list_qr_params
 
 
 def test_limit_argument_maps_to_page_size_query_param():
-    """The Scanova API's qrcode/ list endpoint uses page_size, not limit —
+    """The Scanova API's qr/ list endpoint uses page_size, not limit —
     https://docs.scanova.io/api-reference/management-api/qr/list"""
     params = _list_qr_params({"limit": 15})
     assert params == {"page_size": 15}

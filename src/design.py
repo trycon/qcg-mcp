@@ -258,7 +258,7 @@ def extract_design_args(pi: dict) -> dict:
 
 
 def apply_design(qrid: str, pattern_info_json: str, api_key: str) -> dict:
-    """PATCH /qrcode/{qrid}/ — update only the pattern_info field."""
+    """PATCH /qr/{qrid}/ — update only the pattern_info field."""
     if not api_key:
         return {"error": "API key is required. Please configure your Scanova API key in your MCP client."}
     if not qrid:
@@ -266,7 +266,7 @@ def apply_design(qrid: str, pattern_info_json: str, api_key: str) -> dict:
     headers = {"Authorization": api_key, "Content-Type": "application/json"}
     try:
         resp = requests.patch(
-            f"{_BASE}/qrcode/{qrid}/",
+            f"{_BASE}/qr/{qrid}/",
             headers=headers,
             json={"pattern_info": pattern_info_json},
         )

@@ -802,7 +802,7 @@ ATTACH_FORM_TO_QR_SCHEMA = {
     "type": "object",
     "properties": {
         "qrid": {"type": "string", "description": "Scanova QR code ID"},
-        "form_id": {"type": "integer", "description": "ID of the form to attach"},
+        "form_id": {"type": ["integer", "string"], "description": "The form to attach: its numeric id, or its form_id (e.g. F1a2b3c)"},
     },
     "required": ["qrid", "form_id"],
 }

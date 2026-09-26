@@ -256,6 +256,25 @@ MORE_TOOLS: list[MoreTool] = [
         _get("forms/{form_id}/analytics/", lambda a: {"from": a.get("from"), "to": a.get("to")}, ("form_id",)),
     ),
     MoreTool(
+        "get_form_question_analytics", "Get per-question form analytics", (
+            "How each question of a form was answered, in the form's order: how many responses answered it "
+            "(and the rate), and for choice, rating and scale questions how often each answer was given. "
+            "Filter by date range or source QR code."
+        ), "Forms", "forms/{form_id}/analytics/questions/",
+        _input({
+            "form_id": {"type": "string", "description": "The form's form_id"},
+            "from": _date("Start of the period"),
+            "to": _date("End of the period"),
+            "qr_code_id": {"type": "string", "description": "Only responses that came through this QR code"},
+        }, ("form_id",)),
+        _list_of({
+            "question": {"type": "string"}, "type": {"type": "string"},
+            "answered": {"type": "integer"}, "response_rate": {"type": "number"},
+            "distribution": {"type": "array", "items": {"type": "object", "properties": {"label": {"type": "string"}, "count": {"type": "integer"}}}},
+        }),
+        _get("forms/{form_id}/analytics/questions/", lambda a: {"from": a.get("from"), "to": a.get("to"), "qr_code_id": a.get("qr_code_id")}, ("form_id",)),
+    ),
+    MoreTool(
         "list_form_templates", "List form templates",
         "List ready-made form templates (name, description and their blocks), to start a new form from with create_form.",
         "Forms", "forms/template/", _input(),

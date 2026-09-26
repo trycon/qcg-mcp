@@ -75,7 +75,7 @@ Add the following configuration to your IDE's MCP settings:
 
 ## Tools
 
-81 tools. **Type** is the tool's MCP annotation: read-only, write (only adds), or destructive (can change or switch off something live — hosts should confirm first).
+82 tools. **Type** is the tool's MCP annotation: read-only, write (only adds), or destructive (can change or switch off something live — hosts should confirm first).
 
 ### Documentation
 
@@ -147,6 +147,7 @@ Add the following configuration to your IDE's MCP settings:
 | `detach_form_from_qr` | Destructive | Remove the lead capture form from a QR code |
 | `list_form_responses` | Read-only | List the responses a form has collected, newest first: each with its answers, when it came in and which QR code it came from |
 | `get_form_analytics` | Read-only | A form's performance: total responses and skips (with the change against the previous period), responses and skips by date, and responses by source QR code |
+| `get_form_question_analytics` | Read-only | How each question of a form was answered, in the form's order: how many responses answered it (and the rate), and for choice, rating and scale questions how often each answer was given |
 | `list_form_templates` | Read-only | List ready-made form templates (name, description and their blocks), to start a new form from with create_form |
 | `list_form_notifications` | Read-only | List the email alerts set up for new form responses: who they go to, how often, which forms, and whether each is on |
 | `create_form_notification` | Write | Email someone when forms get new responses — for every response, or as a daily, weekly or monthly digest |

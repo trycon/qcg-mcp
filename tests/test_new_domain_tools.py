@@ -42,7 +42,7 @@ def test_validate_qr_info_success(monkeypatch):
     monkeypatch.setattr(qrcode.requests, "post", fake_post)
     result = qrcode.validate_qr_info(category=1, info={"type": "url", "data": {"url": "https://x.com"}}, api_key="k")
     assert result == {"valid": True, "message": "QR code info data is valid"}
-    assert captured["url"].endswith("/qrcode/validate-info/")
+    assert captured["url"].endswith("/qr/validate-info/")
     assert captured["data"]["category"] == "1"
     assert '"url": "https://x.com"' in captured["data"]["info"] or "url" in captured["data"]["info"]
     assert "Content-Type" not in captured["headers"]

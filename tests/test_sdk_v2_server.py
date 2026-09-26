@@ -39,7 +39,9 @@ _NEW_INPUTS = {"set_qr_design": {"accept_risk"}}
 # Rewritten on purpose: create_form's old `data` ({"fields": [...]}, an object)
 # never matched the API, which takes a list of blocks as a JSON string, so every
 # call failed. It now takes title + questions (tests/test_more_tools.py).
-_REWRITTEN = {"create_form"}
+# attach_form_to_qr's form_id also accepts the string form_id now (it only
+# took the numeric id, while every other tool's form_id is the string one).
+_REWRITTEN = {"create_form", "attach_form_to_qr"}
 
 
 def test_tools_list_matches_the_pre_upgrade_server_on_both_eras():
