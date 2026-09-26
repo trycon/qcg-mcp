@@ -700,9 +700,36 @@ SET_QR_DESIGN_SCHEMA = {
             "type": "integer",
             "description": "Quiet zone (empty margin) around the QR code.",
         },
+        "accept_risk": {
+            "type": "boolean",
+            "description": (
+                "The design is checked before saving (colour contrast, logo and error correction, and a real "
+                "scan test). One that fails isn't saved unless this is true — only set it when the user has seen "
+                "the warning and still wants it."
+            ),
+        },
     },
     "required": ["qrid"],
 }
+
+# Same design fields, for a preview that's never saved.
+PREVIEW_QR_DESIGN_SCHEMA = {
+    "type": "object",
+    "description": (
+        "Preview a QR design without saving it: returns the design (pattern_info), scan-safety checks, a real "
+        "scan test and a rendered image. With qrid, the changes apply over that code's current design; for a new "
+        "code pass content (what it will encode, e.g. its URL). Show the preview and checks before set_qr_design."
+    ),
+    "properties": {
+        **{k: v for k, v in SET_QR_DESIGN_SCHEMA["properties"].items() if k not in ("qrid", "accept_risk")},
+        "qrid": {"type": "string", "description": "An existing QR code to preview a new design for (optional)."},
+        "content": {"type": "string", "description": "What a new QR code will encode, e.g. https://example.com (when there's no qrid)."},
+        "render": {"type": "boolean", "description": "Include a rendered image (default true). Apps that draw QR designs themselves can pass false.", "default": True},
+        "format": {"type": "string", "enum": ["png", "svg"], "description": "Image format of the preview (default png).", "default": "png"},
+    },
+}
+
+LIST_CUSTOM_DOMAINS_SCHEMA = {"type": "object", "properties": {}}
 
 # ---------------------------------------------------------------------------
 # Additional QR Code Operations

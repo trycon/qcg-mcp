@@ -19,6 +19,8 @@ from mcp_http.schemas import (
     VALIDATE_QR_INFO_SCHEMA,
     # QR Code Design
     SET_QR_DESIGN_SCHEMA,
+    PREVIEW_QR_DESIGN_SCHEMA,
+    LIST_CUSTOM_DOMAINS_SCHEMA,
     # QR Code Lifecycle & Retrieval / Export
     DOWNLOAD_QR_PARAMS_SCHEMA,
     LIST_QR_CODES_INPUT_SCHEMA,
@@ -193,6 +195,24 @@ def list_mcp_tools():
             ),
             WRITE_TOOL_ANNOTATIONS_JSON,
             SET_QR_DESIGN_SCHEMA,
+        ),
+        _tool(
+            "preview_qr_design",
+            "Preview a QR design",
+            (
+                "Preview a QR code design without saving it: the design, scan-safety checks (colour contrast, "
+                "logo and error correction), a real scan test, and a rendered image. Works for an existing code "
+                "(qrid) or a new one (content). Use it to show options and changes before set_qr_design."
+            ),
+            READ_ONLY_TOOL_ANNOTATIONS_JSON,
+            PREVIEW_QR_DESIGN_SCHEMA,
+        ),
+        _tool(
+            "list_custom_domains",
+            "List custom domains",
+            "List the account's custom short-link domains (e.g. qr.example.com), which is the default, and whether each is verified.",
+            READ_ONLY_TOOL_ANNOTATIONS_JSON,
+            LIST_CUSTOM_DOMAINS_SCHEMA,
         ),
         # ------------------------------------------------------------------ #
         # QR Code Lifecycle & Retrieval

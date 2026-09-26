@@ -4,6 +4,8 @@ import json
 
 import docs_client
 from design import DESIGN_OPTIONS, apply_design, build_pattern_info, extract_design_args
+from design_checks import check_design, data_uri, render, summary, verify_scans
+from domains import list_custom_domains
 from analytics import get_account_stats, get_qr_analytics
 from billing import get_current_plan
 from folders import (
@@ -45,43 +47,132 @@ from users import (
 )
 
 
-def _set_qr_design_handler(arguments: dict, api_key: str) -> dict:
+_DESIGN_KEYS = {
+    "pattern", "start_color", "end_color", "gradient_style", "dot_scale",
+    "background_color", "eye_shape", "eye_inner_color", "eye_outer_color",
+    "frame_id", "frame_primary_color", "frame_secondary_color",
+    "frame_text_color", "frame_bg_color", "frame_category",
+    "frame_text", "frame_text_placement", "frame_text_font",
+    "shape_id", "shape_stroke_color", "shape_bg_color", "shape_pattern_color",
+    "shape_stroke_width", "shape_margin", "error_correction", "logo_url", "padding",
+}
+
+
+def _encoded_content(qr: dict) -> str:
+    """What the QR image encodes: a dynamic code's short URL (as the backend encodes it), else its URL."""
+    duo = qr.get("dynamic_url_object") or {}
+    if duo.get("complete_url"):
+        url = duo["complete_url"]
+        return url if "?" in url else f"{url}?qr=1"
+    info = qr.get("info")
+    try:
+        data = (json.loads(info) if isinstance(info, str) else info or {}).get("data", {})
+    except (json.JSONDecodeError, AttributeError):
+        data = {}
+    return data.get("url") or "https://scnv.io/preview"
+
+
+def _merged_design(arguments: dict, api_key: str) -> tuple:
     """
-    Build pattern_info from friendly params then PATCH the QR code.
-    Fetches the existing design first so only the specified fields are changed —
-    all other design settings (eye shape, pattern, colors, frame, etc.) are preserved.
+    The design after applying the caller's changes over the QR code's current
+    one (when a qrid is given), and the content its image encodes.
+    Returns (pattern_info dict, content, error dict or None).
     """
     qrid = arguments.get("qrid")
-    if not qrid:
-        return {"error": "qrid is required"}
-
-    # Fetch existing QR to extract current design as base defaults
     existing_design_args: dict = {}
-    existing_qr = retrieve_qr_code(qrid, api_key=api_key)
-    if isinstance(existing_qr, dict):
+    content = arguments.get("content")
+    if qrid:
+        existing_qr = retrieve_qr_code(qrid, api_key=api_key)
+        if not isinstance(existing_qr, dict) or existing_qr.get("error"):
+            return None, None, existing_qr if isinstance(existing_qr, dict) else {"error": "QR code not found"}
         pi_str = existing_qr.get("pattern_info")
         if pi_str:
             try:
                 existing_design_args = extract_design_args(json.loads(pi_str))
             except (json.JSONDecodeError, TypeError):
                 pass
+        content = content or _encoded_content(existing_qr)
+    user_args = {k: v for k, v in arguments.items() if k in _DESIGN_KEYS and v is not None}
+    pattern_info = json.loads(build_pattern_info(**{**existing_design_args, **user_args}))
+    return pattern_info, content or "https://scnv.io/preview", None
 
-    # Collect only the design args the caller explicitly provided
-    design_keys = {
-        "pattern", "start_color", "end_color", "gradient_style", "dot_scale",
-        "background_color", "eye_shape", "eye_inner_color", "eye_outer_color",
-        "frame_id", "frame_primary_color", "frame_secondary_color",
-        "frame_text_color", "frame_bg_color", "frame_category",
-        "frame_text", "frame_text_placement", "frame_text_font",
-        "shape_id", "shape_stroke_color", "shape_bg_color", "shape_pattern_color",
-        "shape_stroke_width", "shape_margin", "error_correction", "logo_url", "padding",
-    }
-    user_args = {k: v for k, v in arguments.items() if k in design_keys and v is not None}
 
-    # Merge: existing design as base, user overrides on top
-    merged_args = {**existing_design_args, **user_args}
-    pattern_info = build_pattern_info(**merged_args)
-    return apply_design(qrid, pattern_info, api_key)
+def _design_report(pattern_info: dict, content: str, render_image: bool, fmt: str = "png") -> dict:
+    """Checks, a scan test and (optionally) the rendered image, for a design."""
+    checks = check_design(pattern_info)
+    image = None
+    png = None
+    if render_image or fmt == "png":
+        try:
+            png = render(content, pattern_info, "png", 400)
+        except Exception:
+            png = None
+    scan = verify_scans(content, pattern_info, png) if png else {"scannable": None, "message": "Couldn't render the design for a scan test just now."}
+    if render_image:
+        if fmt == "svg":
+            try:
+                image = data_uri(render(content, pattern_info, "svg", 400), "svg")
+            except Exception:
+                image = None
+        elif png:
+            image = data_uri(png, "png")
+    report = {"checks": checks, "scan": scan, "summary": summary(checks, scan)}
+    if image:
+        report["image"] = image
+    return report
+
+
+def _preview_qr_design_handler(arguments: dict, api_key: str) -> dict:
+    """
+    A design, checked and (optionally) rendered — never saved. With a qrid,
+    changes apply over that code's current design; for a code that doesn't
+    exist yet, pass `content` (what it will encode). An app that renders QR
+    designs itself can pass render: false and draw `pattern_info` locally.
+    """
+    if not arguments.get("qrid") and not arguments.get("content"):
+        return {"error": "give a qrid (an existing QR code) or content (what a new one will encode)"}
+    if arguments.get("qrid") and not api_key:
+        return {"error": "API key is required. Please configure your Scanova API key in your MCP client."}
+    pattern_info, content, error = _merged_design(arguments, api_key)
+    if error:
+        return error
+    render_image = arguments.get("render", True) is not False
+    report = _design_report(pattern_info, content, render_image, arguments.get("format", "png"))
+    return {"preview": True, "saved": False, "content": content, "pattern_info": pattern_info, **report}
+
+
+def _set_qr_design_handler(arguments: dict, api_key: str) -> dict:
+    """
+    Build pattern_info from friendly params then PATCH the QR code.
+    Fetches the existing design first so only the specified fields are changed —
+    all other design settings (eye shape, pattern, colors, frame, etc.) are preserved.
+    Refuses a design that fails the scan-safety checks or the scan test unless
+    accept_risk is true.
+    """
+    qrid = arguments.get("qrid")
+    if not qrid:
+        return {"error": "qrid is required"}
+    pattern_info, content, error = _merged_design(arguments, api_key)
+    if error:
+        return error
+    report = _design_report(pattern_info, content, render_image=False)
+    if not report["summary"]["safe"] and arguments.get("accept_risk") is not True:
+        problems = [c["message"] for c in report["checks"] if c["level"] == "fail"]
+        if report["scan"].get("scannable") is False:
+            problems.append(report["scan"]["message"])
+        return {
+            "error": "Not saved: this design may not scan. " + " ".join(problems) + " Change it, or set accept_risk to save anyway.",
+            "checks": report["checks"],
+            "scan": report["scan"],
+        }
+    result = apply_design(qrid, json.dumps(pattern_info), api_key)
+    if isinstance(result, dict) and not result.get("error"):
+        result = {**result, "design_checks": report["summary"], "scan": report["scan"]}
+    return result
+
+
+def _list_custom_domains_handler(arguments: dict, api_key: str) -> dict:
+    return list_custom_domains(api_key=api_key)
 
 
 # QR category IDs whose `info` shape is a page-builder-style nested/typed
@@ -197,6 +288,8 @@ _DISPATCH = {
     # ------------------------------------------------------------------ #
     "get_qr_design_options": lambda a, k: DESIGN_OPTIONS,
     "set_qr_design": lambda a, k: _set_qr_design_handler(a, k),
+    "preview_qr_design": lambda a, k: _preview_qr_design_handler(a, k),
+    "list_custom_domains": lambda a, k: _list_custom_domains_handler(a, k),
     # ------------------------------------------------------------------ #
     # QR Code Lifecycle & Retrieval
     # ------------------------------------------------------------------ #

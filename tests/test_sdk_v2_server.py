@@ -31,17 +31,33 @@ def _without_annotations(tools):
     return [{k: v for k, v in t.items() if k not in _REWORKED} for t in tools]
 
 
+# Tools added since the upgrade, and tools that gained optional inputs (none removed or changed).
+_ADDED = {"preview_qr_design", "list_custom_domains"}
+_NEW_INPUTS = {"set_qr_design": {"accept_risk"}}
+
+
 def test_tools_list_matches_the_pre_upgrade_server_on_both_eras():
-    """Names, input schemas and UI _meta are unchanged since the upgrade."""
+    """Every original tool keeps its name, input schema and UI _meta; additions are listed above."""
     for era in ("modern", "legacy"):
         tools = rpc("tools/list", {"id": 1}, era=era)["result"]["tools"]
-        assert _without_annotations(tools) == _without_annotations(BASELINE["tools"]), era
+        assert {t["name"] for t in tools} - {t["name"] for t in BASELINE["tools"]} == _ADDED, era
+        current = {t["name"]: t for t in _without_annotations(tools)}
+        for before in _without_annotations(BASELINE["tools"]):
+            after = current[before["name"]]
+            added = _NEW_INPUTS.get(before["name"], set())
+            if added:
+                props = {k: v for k, v in after["inputSchema"]["properties"].items() if k not in added}
+                after = {**after, "inputSchema": {**after["inputSchema"], "properties": props}}
+                assert set(after["inputSchema"].get("required", [])) == set(before["inputSchema"].get("required", [])), before["name"]
+            assert after == before, (era, before["name"])
 
 
 def test_annotation_changes_since_the_upgrade_only_add_caution():
     before = {t["name"]: t["annotations"] for t in BASELINE["tools"]}
     after = {t["name"]: t["annotations"] for t in rpc("tools/list", {"id": 1})["result"]["tools"]}
     for name, a in after.items():
+        if name in _ADDED:
+            continue
         assert a["readOnlyHint"] == before[name]["readOnlyHint"], name
         # A tool may become destructive, never the reverse.
         assert a["destructiveHint"] >= before[name]["destructiveHint"], name

@@ -17,7 +17,7 @@ IDEMPOTENT tools can be retried with the same arguments without further effect.
 READ_ONLY = frozenset({
     "probe_docs_mcp", "query_docs",
     "list_qr_codes", "retrieve_qr_code", "download_qr_code", "get_qr_categories", "get_qr_category_fields",
-    "validate_qr_info", "open_qr_code_creation_form", "get_qr_design_options",
+    "validate_qr_info", "open_qr_code_creation_form", "get_qr_design_options", "preview_qr_design", "list_custom_domains",
     "list_folders", "list_forms", "retrieve_form", "list_lead_lists", "retrieve_lead_list", "list_tags",
     "get_account_stats", "get_qr_analytics", "get_current_plan",
     "list_users", "get_user", "list_user_roles",
