@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Emoji Rating question",
+  "description": "5-point emoji scale question",
+  "allOf": [
+    { "$ref": "base_question.json" },
+    {
+      "properties": {
+        "answer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": { "const": "emoji" },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "formatting": { "$ref": "style/feedback.json" }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

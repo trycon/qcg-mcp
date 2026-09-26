@@ -1,3 +1,4 @@
+import json
 """Unit tests for the 6 new domain-gap backend functions added alongside the
 tool restructuring: validate_qr_info, get_qr_category_fields, create_form,
 list_tags, get_current_plan, create_custom_role."""
@@ -101,11 +102,18 @@ def test_create_form_success(monkeypatch):
         return _FakeResponse(status_code=201, json_data={"id": 1, "form_id": "F1", "name": "Signup"})
 
     monkeypatch.setattr(forms.requests, "post", fake_post)
-    result = forms.create_form(name="Signup", data={"fields": []}, qr_id="Qabc", api_key="k")
+    blocks = [{"type": "form_details", "data": {"title": "Signup", "questions": []}}]
+    result = forms.create_form(name="Signup", data=blocks, qr_id="Qabc", api_key="k")
     assert result["form_id"] == "F1"
     assert captured["url"].endswith("/forms/")
     assert captured["json"]["name"] == "Signup"
     assert captured["json"]["qr_id"] == "Qabc"
+    # The API stores Form.data as text: blocks go as a JSON string.
+    assert json.loads(captured["json"]["data"]) == blocks
+
+
+def test_create_form_rejects_an_object_for_data():
+    assert "error" in forms.create_form(name="Signup", data={"fields": []}, api_key="k")
 
 
 # --------------------------------------------------------------------------- #

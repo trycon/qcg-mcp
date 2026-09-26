@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Short Answer question",
+  "description": "Single-line text response question",
+  "allOf": [
+    { "$ref": "base_question.json" },
+    {
+      "properties": {
+        "answer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": { "const": "shortAnswer" },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "placeholder": { "type": "string" },
+                "pattern": { "type": "string", "description": "Optional regex the live input must match (HTML pattern attribute)." },
+                "patternMessage": { "type": "string", "description": "Message shown when the value doesn't match pattern." }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

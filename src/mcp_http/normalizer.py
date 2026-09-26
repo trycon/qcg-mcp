@@ -28,6 +28,8 @@ import ast
 import json
 import re
 
+from mcp_http.more_tools import MORE_TOOLS
+
 # Map tool names to the Scanova API endpoint path (informational, not used for routing)
 _TOOL_ENDPOINTS = {
     # QR codes
@@ -79,6 +81,8 @@ _TOOL_ENDPOINTS = {
     # Docs bridge
     "probe_docs_mcp":          "docs.scanova.io/mcp",
     "query_docs":              "docs.scanova.io/mcp",
+    # One-endpoint tools declared in more_tools.py
+    **{t.name: t.endpoint for t in MORE_TOOLS},
 }
 
 # Keys containing large binary payloads — excluded from `raw` to avoid doubling the payload

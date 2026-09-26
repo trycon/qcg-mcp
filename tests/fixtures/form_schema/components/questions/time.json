@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Time question",
+  "description": "Time response question",
+  "allOf": [
+    { "$ref": "base_question.json" },
+    {
+      "properties": {
+        "answer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": { "const": "timeFormat" },
+            "data": {
+              "type": "string",
+              "enum": ["12h", "24h"]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

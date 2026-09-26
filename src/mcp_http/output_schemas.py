@@ -1,5 +1,7 @@
 """Output schema definitions for all MCP tools (JSON Schema format)."""
 
+from mcp_http.more_tools import MORE_TOOLS
+
 # ── Shared building blocks ─────────────────────────────────────────────────── #
 
 _ERROR = {"error": {"type": "string", "description": "Human-readable error message"}}
@@ -636,6 +638,8 @@ TOOL_OUTPUT_SCHEMAS: dict[str, dict] = {
     "list_user_roles": LIST_USER_ROLES_OUTPUT,
     "create_custom_role": CREATE_CUSTOM_ROLE_OUTPUT,
     "update_user_role": UPDATE_USER_ROLE_OUTPUT,
+    # One-endpoint tools declared in more_tools.py
+    **{t.name: t.output_schema for t in MORE_TOOLS},
 }
 
 

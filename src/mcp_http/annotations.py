@@ -21,12 +21,25 @@ READ_ONLY = frozenset({
     "list_folders", "list_forms", "retrieve_form", "list_lead_lists", "retrieve_lead_list", "list_tags",
     "get_account_stats", "get_qr_analytics", "get_current_plan",
     "list_users", "get_user", "list_user_roles",
+    # more_tools.py
+    "list_form_responses", "get_form_analytics", "list_form_templates", "list_form_notifications",
+    "list_trashed_qr_codes", "get_qr_health", "list_gs1_recalls",
+    "get_analytics_overview", "list_analytics_reports",
+    "list_available_plans", "get_downgrade_impact", "list_payments", "list_orders", "list_quota_topups",
+    "get_activity_feed", "get_activity_summary",
+    "get_custom_domain", "list_bulk_operations", "get_bulk_operation_stats", "list_media",
+    "get_integrations_overview", "list_webhooks", "list_tracking_sites", "list_tracking_funnels",
+    "list_page_templates",
 })
 
 ADDITIVE = frozenset({
     "create_qr_code", "create_folder", "create_form", "create_custom_role", "add_user",
     "activate_qr_code", "attach_form_to_qr", "attach_lead_list_to_qr",
     "move_qr_codes_to_folder", "unassign_qr_codes_from_folder", "update_folder",
+    # more_tools.py — create_form_notification emails respondents' answers to
+    # the address given; resend_user_invitation sends an email.
+    "create_form_notification", "restore_qr_codes", "create_gs1_recall",
+    "create_analytics_report", "resend_user_invitation",
 })
 
 DESTRUCTIVE = frozenset({
@@ -34,6 +47,9 @@ DESTRUCTIVE = frozenset({
     "update_qr_code", "set_qr_design", "deactivate_qr_code",
     "update_form", "update_lead_list", "detach_form_from_qr", "detach_lead_list_from_qr",
     "update_user_role",
+    # more_tools.py — replaces all of a code's tags; changes or switches off
+    # what scanners of a recalled product see; changes or stops an alert.
+    "update_qr_tags", "update_gs1_recall", "update_form_notification",
 })
 
 IDEMPOTENT = frozenset({
@@ -42,6 +58,7 @@ IDEMPOTENT = frozenset({
     "update_folder", "update_form", "update_lead_list", "update_user_role",
     "attach_form_to_qr", "attach_lead_list_to_qr", "detach_form_from_qr", "detach_lead_list_from_qr",
     "move_qr_codes_to_folder", "unassign_qr_codes_from_folder",
+    "update_qr_tags", "update_gs1_recall", "update_form_notification", "restore_qr_codes",
 })
 
 

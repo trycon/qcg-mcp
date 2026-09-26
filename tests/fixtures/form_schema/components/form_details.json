@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Form Details component",
+  "description": "Form title, description, and question list",
+  "type": "object",
+  "required": ["title"],
+  "additionalProperties": false,
+  "properties": {
+    "title": { "type": "string" },
+    "description": { "type": "string" },
+    "questions": {
+      "type": "array",
+      "maxItems": 40,
+      "$comment": "A maximum of 40 questions can be added.",
+      "items": {
+        "oneOf": [
+          { "$ref": "questions/short_answer.json" },
+          { "$ref": "questions/paragraph.json" },
+          { "$ref": "questions/email.json" },
+          { "$ref": "questions/phone_number.json" },
+          { "$ref": "questions/number.json" },
+          { "$ref": "questions/multiple_choice.json" },
+          { "$ref": "questions/checkboxes.json" },
+          { "$ref": "questions/dropdown.json" },
+          { "$ref": "questions/linear_scale.json" },
+          { "$ref": "questions/date.json" },
+          { "$ref": "questions/time.json" },
+          { "$ref": "questions/star_rating.json" },
+          { "$ref": "questions/emoji_rating.json" },
+          { "$ref": "questions/like_dislike.json" },
+          { "$ref": "questions/file_upload.json" },
+          { "$ref": "questions/signature.json" },
+          { "$ref": "questions/content.json" }
+        ]
+      }
+    },
+    "submissionBehaviour": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "submissionOption": { "type": "string", "enum": ["message", "url"] },
+        "message": { "type": "string", "maxLength": 1000 },
+        "url": {
+          "type": "string",
+          "anyOf": [{ "format": "uri" }, { "const": "" }]
+        }
+      }
+    }
+  }
+}

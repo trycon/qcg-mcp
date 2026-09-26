@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Skip Button component",
+  "description": "Optional form skip button — label and colours",
+  "type": "object",
+  "required": ["label"],
+  "additionalProperties": false,
+  "properties": {
+    "label": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "icon": {
+      "$ref": "style/icon_ref.json"
+    },
+    "iconPosition": {
+      "type": "string",
+      "enum": ["left", "right"],
+      "description": "Position of the icon relative to the button label"
+    },
+    "color": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "button": { "$ref": "style/hex-color.json" },
+        "label": { "$ref": "style/hex-color.json" },
+        "border": { "$ref": "style/hex-color.json" }
+      }
+    },
+    "buttonStyle": { "$ref": "style/button.json" },
+    "textStyle": { "$ref": "style/text.json" },
+    "cardStyle": { "$ref": "style/card.json" },
+    "layout": { "$ref": "style/layout.json" }
+  }
+}

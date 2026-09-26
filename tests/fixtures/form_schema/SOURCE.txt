@@ -1,0 +1,2 @@
+Copied from qcg-backend src/forms/json_schema/ at origin/master 9e352a597 (2026-09-26).
+The contract create_form must satisfy; refresh it when the backend schema changes.
