@@ -159,6 +159,56 @@ SET_QR_DESIGN_OUTPUT = {
     },
 }
 
+_CHECK = {
+    "type": "object",
+    "properties": {
+        "check": {"type": "string"},
+        "level": {"type": "string", "enum": ["ok", "warn", "fail"]},
+        "message": {"type": "string"},
+        "ratio": {"type": "number"},
+    },
+}
+
+PREVIEW_QR_DESIGN_OUTPUT = {
+    "type": "object",
+    "description": "A design that was checked and rendered but not saved",
+    "properties": {
+        "preview": {"type": "boolean"},
+        "saved": {"type": "boolean"},
+        "content": {"type": "string", "description": "What the image encodes"},
+        "pattern_info": {"type": "object", "description": "The design, as set_qr_design would save it"},
+        "checks": {"type": "array", "items": _CHECK},
+        "scan": {"type": "object", "properties": {"scannable": {"type": ["boolean", "null"]}, "message": {"type": "string"}}},
+        "summary": {
+            "type": "object",
+            "properties": {"safe": {"type": "boolean"}, "verdict": {"type": "string"}, "failures": {"type": "integer"}, "warnings": {"type": "integer"}},
+        },
+        "image": {"type": "string", "description": "data: URI of the rendered preview"},
+        **_ERROR,
+    },
+}
+
+LIST_CUSTOM_DOMAINS_OUTPUT = {
+    "type": "object",
+    "properties": {
+        "count": {"type": "integer"},
+        "results": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "id": {"type": "integer"},
+                    "domain": {"type": "string"},
+                    "is_default": {"type": "boolean"},
+                    "is_txt_verified": {"type": "boolean"},
+                    "is_cname_verified": {"type": "boolean"},
+                },
+            },
+        },
+        **_ERROR,
+    },
+}
+
 # ── QR Code Creation & Validation ──────────────────────────────────────────── #
 
 GET_QR_CATEGORY_FIELDS_OUTPUT = {
@@ -535,6 +585,8 @@ TOOL_OUTPUT_SCHEMAS: dict[str, dict] = {
     # QR Code Design
     "get_qr_design_options": GET_QR_DESIGN_OPTIONS_OUTPUT,
     "set_qr_design": SET_QR_DESIGN_OUTPUT,
+    "preview_qr_design": PREVIEW_QR_DESIGN_OUTPUT,
+    "list_custom_domains": LIST_CUSTOM_DOMAINS_OUTPUT,
     # QR Code Lifecycle & Retrieval
     "list_qr_codes": LIST_QR_CODES_OUTPUT,
     "retrieve_qr_code": RETRIEVE_QR_CODE_OUTPUT,

@@ -38,3 +38,7 @@ ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "mcp.scanova.io,l
 RATE_LIMIT_PER_MINUTE = int(os.getenv("RATE_LIMIT_PER_MINUTE", "120"))
 RATE_LIMIT_BURST = int(os.getenv("RATE_LIMIT_BURST", "40"))
 ANON_RATE_LIMIT_PER_MINUTE = int(os.getenv("ANON_RATE_LIMIT_PER_MINUTE", "60"))
+
+# Scanova's QR renderer (qcg-generator): the same one downloads use. Design
+# previews and scan tests render through it (design_checks.py).
+QCG_GENERATOR_URL = os.getenv("QCG_GENERATOR_URL", "https://generator.scanova.io")
