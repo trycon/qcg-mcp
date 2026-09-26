@@ -1,5 +1,7 @@
 import base64
 import json
+import re
+
 import requests
 from config import SCANOVA_BASE_URL
 from api_response import api_result
@@ -77,7 +79,7 @@ def create_qr_code(params=None, api_key=None):
         params = {**params, "info": json.dumps(params["info"])}
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
-        resp = requests.post(f"{_BASE}/qrcode/", headers=headers, json=params)
+        resp = requests.post(f"{_BASE}/qr/", headers=headers, json=params)
         return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
@@ -126,7 +128,7 @@ def list_qr_codes(params=None, api_key=None):
 
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
-        resp = requests.get(f"{_BASE}/qrcode/", headers=headers, params=params)
+        resp = requests.get(f"{_BASE}/qr/", headers=headers, params=params)
         return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
@@ -154,7 +156,7 @@ def update_qr_code(qrid=None, params=None, api_key=None):
     
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
-        resp = requests.put(f"{_BASE}/qrcode/{qrid}/", headers=headers, json=params)
+        resp = requests.put(f"{_BASE}/qr/{qrid}/", headers=headers, json=params)
         return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
@@ -179,7 +181,7 @@ def retrieve_qr_code(qrid=None, params=None, api_key=None):
 
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
-        resp = requests.get(f"{_BASE}/qrcode/{qrid}/", headers=headers, params=params)
+        resp = requests.get(f"{_BASE}/qr/{qrid}/", headers=headers, params=params)
         return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
@@ -240,7 +242,7 @@ def activate_qr_code(qrid=None, params=None, api_key=None):
     
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
-        resp = requests.patch(f"{_BASE}/qrcode/{qrid}/", headers=headers, json=params)
+        resp = requests.patch(f"{_BASE}/qr/{qrid}/", headers=headers, json=params)
         return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
@@ -268,21 +270,21 @@ def deactivate_qr_code(qrid=None, params=None, api_key=None):
 
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
-        resp = requests.patch(f"{_BASE}/qrcode/{qrid}/", headers=headers, json=params)
+        resp = requests.patch(f"{_BASE}/qr/{qrid}/", headers=headers, json=params)
         return api_result(resp)
     except requests.RequestException as e:
         return {"error": f"API request failed: {str(e)}"}
 
 
 def delete_qr_code(qrid=None, api_key=None):
-    """DELETE /qrcode/{qrid}/ — permanently delete a QR code."""
+    """DELETE /qr/{qrid}/ — permanently delete a QR code."""
     if not api_key:
         return {"error": "API key is required. Please configure your Scanova API key in your MCP client."}
     if not qrid:
         return {"error": "QR code ID is required for delete operation"}
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
-        resp = requests.delete(f"{_BASE}/qrcode/{qrid}/", headers=headers)
+        resp = requests.delete(f"{_BASE}/qr/{qrid}/", headers=headers)
         if resp.status_code == 204:
             return {"success": True, "message": "QR code deleted"}
         return api_result(resp)
@@ -291,13 +293,13 @@ def delete_qr_code(qrid=None, api_key=None):
 
 
 def get_qr_categories(view_type="all", api_key=None):
-    """GET /qrcode/category/ — list available QR code categories."""
+    """GET /qr/category/ — list available QR code categories."""
     if not api_key:
         return {"error": "API key is required. Please configure your Scanova API key in your MCP client."}
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
         resp = requests.get(
-            f"{_BASE}/qrcode/category/",
+            f"{_BASE}/qr/category/",
             headers=headers,
             params={"view_type": view_type},
         )
@@ -333,7 +335,7 @@ def download_qr_printable(qrid=None, size=600, name=None, api_key=None):
 
 def validate_qr_info(category=None, info=None, api_key=None):
     """
-    POST /qrcode/validate-info/ (form-data) — validate a category + info payload
+    POST /qr/validate-info/ (form-data) — validate a category + info payload
     before calling create_qr_code/update_qr_code, catching malformed `info` JSON,
     missing required fields, or invalid URLs/emails ahead of time.
     """
@@ -348,7 +350,7 @@ def validate_qr_info(category=None, info=None, api_key=None):
     headers = {"Authorization": f"{api_key}"}
     try:
         resp = requests.post(
-            f"{_BASE}/qrcode/validate-info/",
+            f"{_BASE}/qr/validate-info/",
             headers=headers,
             data={"category": str(category), "info": info_str},
         )
@@ -595,17 +597,30 @@ def get_qr_category_fields(category=None):
 
 
 def attach_form_to_qr(qrid=None, form_id=None, api_key=None):
-    """PATCH /qrcode/{qrid}/ — attach a lead capture form to a QR code."""
+    """PATCH /qr/{qrid}/ — attach a lead capture form to a QR code."""
     if not api_key:
         return {"error": "API key is required. Please configure your Scanova API key in your MCP client."}
     if not qrid:
         return {"error": "QR code ID is required"}
-    if form_id is None:
+    if form_id in (None, ""):
         return {"error": "form_id is required"}
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
+        form_pk = form_id
+        if not str(form_id).isdigit():
+            if not re.match(r"^[A-Za-z0-9_-]{1,64}$", str(form_id)):
+                return {"error": "form_id isn't a valid id"}
+            # The QR code's `form` field takes the form's numeric id; a
+            # form_id (e.g. "F1a2b3") is looked up first.
+            found = requests.get(f"{_BASE}/forms/{form_id}/", headers=headers, timeout=20)
+            form = api_result(found)
+            if isinstance(form, dict) and "error" in form:
+                return form
+            form_pk = form.get("id") if isinstance(form, dict) else None
+            if not str(form_pk or "").isdigit():
+                return {"error": "Couldn't find that form's id."}
         resp = requests.patch(
-            f"{_BASE}/qrcode/{qrid}/", headers=headers, json={"form": form_id}
+            f"{_BASE}/qr/{qrid}/", headers=headers, json={"form": int(form_pk)}, timeout=20
         )
         return api_result(resp)
     except requests.RequestException as e:
@@ -613,7 +628,7 @@ def attach_form_to_qr(qrid=None, form_id=None, api_key=None):
 
 
 def detach_form_from_qr(qrid=None, api_key=None):
-    """PATCH /qrcode/{qrid}/ — remove the lead capture form from a QR code."""
+    """PATCH /qr/{qrid}/ — remove the lead capture form from a QR code."""
     if not api_key:
         return {"error": "API key is required. Please configure your Scanova API key in your MCP client."}
     if not qrid:
@@ -621,7 +636,7 @@ def detach_form_from_qr(qrid=None, api_key=None):
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
         resp = requests.patch(
-            f"{_BASE}/qrcode/{qrid}/", headers=headers, json={"form": None}
+            f"{_BASE}/qr/{qrid}/", headers=headers, json={"form": None}
         )
         return api_result(resp)
     except requests.RequestException as e:
@@ -629,7 +644,7 @@ def detach_form_from_qr(qrid=None, api_key=None):
 
 
 def attach_lead_list_to_qr(qrid=None, lead_list_id=None, api_key=None):
-    """PATCH /qrcode/{qrid}/ — attach a lead list to a QR code."""
+    """PATCH /qr/{qrid}/ — attach a lead list to a QR code."""
     if not api_key:
         return {"error": "API key is required. Please configure your Scanova API key in your MCP client."}
     if not qrid:
@@ -639,7 +654,7 @@ def attach_lead_list_to_qr(qrid=None, lead_list_id=None, api_key=None):
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
         resp = requests.patch(
-            f"{_BASE}/qrcode/{qrid}/", headers=headers, json={"lead_list": lead_list_id}
+            f"{_BASE}/qr/{qrid}/", headers=headers, json={"lead_list": lead_list_id}
         )
         return api_result(resp)
     except requests.RequestException as e:
@@ -647,7 +662,7 @@ def attach_lead_list_to_qr(qrid=None, lead_list_id=None, api_key=None):
 
 
 def detach_lead_list_from_qr(qrid=None, api_key=None):
-    """PATCH /qrcode/{qrid}/ — remove the lead list from a QR code."""
+    """PATCH /qr/{qrid}/ — remove the lead list from a QR code."""
     if not api_key:
         return {"error": "API key is required. Please configure your Scanova API key in your MCP client."}
     if not qrid:
@@ -655,7 +670,7 @@ def detach_lead_list_from_qr(qrid=None, api_key=None):
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
         resp = requests.patch(
-            f"{_BASE}/qrcode/{qrid}/", headers=headers, json={"lead_list": None}
+            f"{_BASE}/qr/{qrid}/", headers=headers, json={"lead_list": None}
         )
         return api_result(resp)
     except requests.RequestException as e:

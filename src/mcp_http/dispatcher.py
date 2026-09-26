@@ -261,7 +261,7 @@ def _list_qr_params(arguments: dict) -> dict | None:
     if arguments.get("page"):
         qr_params["page"] = arguments["page"]
     if arguments.get("limit"):
-        # Scanova API's qrcode/ list endpoint expects "page_size", not "limit" —
+        # Scanova API's qr/ list endpoint expects "page_size", not "limit" —
         # https://docs.scanova.io/api-reference/management-api/qr/list
         # Enforced here (not just the schema's "maximum") so a client that
         # ignores the input schema can't request more than one page's worth

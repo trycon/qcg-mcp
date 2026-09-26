@@ -22,7 +22,7 @@ READ_ONLY = frozenset({
     "get_account_stats", "get_qr_analytics", "get_current_plan",
     "list_users", "get_user", "list_user_roles",
     # more_tools.py
-    "list_form_responses", "get_form_analytics", "list_form_templates", "list_form_notifications",
+    "list_form_responses", "get_form_analytics", "get_form_question_analytics", "list_form_templates", "list_form_notifications",
     "list_trashed_qr_codes", "get_qr_health", "list_gs1_recalls",
     "get_analytics_overview", "list_analytics_reports",
     "list_available_plans", "get_downgrade_impact", "list_payments", "list_orders", "list_quota_topups",
