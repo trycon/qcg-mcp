@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Like/Dislike question",
+  "description": "Thumbs up/down question",
+  "allOf": [
+    { "$ref": "base_question.json" },
+    {
+      "properties": {
+        "answer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": { "const": "likeDislike" },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "formatting": { "$ref": "style/feedback.json" },
+                "buttonStyle": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "showLabel":    { "type": "boolean", "description": "Show the \"Like\"/\"Dislike\" text next to the icon." },
+                    "fullWidth":    { "type": "boolean", "description": "Stretch both buttons to fill the row." },
+                    "color":        { "$ref": "style/hex-color.json", "description": "Selected-state background colour." },
+                    "textColor":    { "$ref": "style/hex-color.json", "description": "Icon/label colour. Empty string means use theme default." },
+                    "borderColor":  { "$ref": "style/hex-color.json" },
+                    "borderRadius": { "type": "integer", "minimum": 0 },
+                    "borderWidth":  { "type": "integer", "minimum": 0 }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Form content block",
+  "description": "Freeform rich-text divider placed between questions — not a question, carries no answer. Serialized by apps/web's saveForm() from a description_box block.",
+  "type": "object",
+  "required": ["type"],
+  "additionalProperties": false,
+  "properties": {
+    "type": { "const": "content" },
+    "text": { "type": "string" },
+    "align": { "type": "string", "enum": ["left", "center", "right"] },
+    "cardStyle": { "$ref": "style/card.json" },
+    "textStyle": { "$ref": "style/text.json" }
+  }
+}

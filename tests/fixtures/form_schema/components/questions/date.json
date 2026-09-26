@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Date question",
+  "description": "Date response question",
+  "allOf": [
+    { "$ref": "base_question.json" },
+    {
+      "properties": {
+        "answer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": { "const": "dateFormat" },
+            "data": {
+              "type": "string",
+              "enum": ["MM-dd-yyyy", "dd-MM-yyyy", "yyyy-MM-dd", "M/dd/yyyy", "MMM d, yyyy"]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

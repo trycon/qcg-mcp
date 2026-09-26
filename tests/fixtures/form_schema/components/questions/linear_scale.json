@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Linear Scale question",
+  "description": "Numeric range scale question",
+  "allOf": [
+    { "$ref": "base_question.json" },
+    {
+      "properties": {
+        "answer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": { "const": "linearScale" },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "lowerLimit": { "type": "number" },
+                "lowerLimitLabel": { "type": "string", "maxLength": 50 },
+                "upperLimit": { "type": "number" },
+                "upperLimitLabel": { "type": "string", "maxLength": 50 }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Form data",
+  "description": "Top-level array of form blocks stored in Form.data: page_layout and design_info are legacy/back-compat (loosely typed, kept for Angular readers during the transition); form_details, submit_button, and skip_button are fully validated.",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["type", "data"],
+    "additionalProperties": false,
+    "properties": {
+      "type": {
+        "type": "string",
+        "enum": ["page_layout", "design_info", "form_details", "submit_button", "skip_button"]
+      },
+      "data": { "type": "object" }
+    },
+    "allOf": [
+      {
+        "if": { "properties": { "type": { "const": "form_details" } } },
+        "then": { "properties": { "data": { "$ref": "components/form_details.json" } } }
+      },
+      {
+        "if": { "properties": { "type": { "const": "submit_button" } } },
+        "then": { "properties": { "data": { "$ref": "components/submit_button.json" } } }
+      },
+      {
+        "if": { "properties": { "type": { "const": "skip_button" } } },
+        "then": { "properties": { "data": { "$ref": "components/skip_button.json" } } }
+      }
+    ]
+  }
+}

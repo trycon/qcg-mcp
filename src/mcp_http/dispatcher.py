@@ -6,6 +6,7 @@ import docs_client
 from design import DESIGN_OPTIONS, apply_design, build_pattern_info, extract_design_args
 from design_checks import check_design, data_uri, render, summary, verify_scans
 from domains import list_custom_domains
+from mcp_http.more_tools import MORE_TOOLS
 from analytics import get_account_stats, get_qr_analytics
 from billing import get_current_plan
 from folders import (
@@ -16,7 +17,7 @@ from folders import (
     unassign_qr_codes_from_folder,
     update_folder,
 )
-from forms import create_form, delete_form, list_forms, retrieve_form, update_form
+from forms import build_form_blocks, create_form, delete_form, list_forms, retrieve_form, update_form
 from leads import delete_lead_list, list_lead_lists, retrieve_lead_list, update_lead_list
 from qrcode import (
     activate_qr_code,
@@ -169,6 +170,29 @@ def _set_qr_design_handler(arguments: dict, api_key: str) -> dict:
     if isinstance(result, dict) and not result.get("error"):
         result = {**result, "design_checks": report["summary"], "scan": report["scan"]}
     return result
+
+
+def _create_form_handler(arguments: dict, api_key: str) -> dict:
+    """create_form from title + questions (built into Scanova's form blocks), or from raw `data` blocks."""
+    data = arguments.get("data")
+    if not data:
+        data, err = build_form_blocks(
+            arguments.get("title") or arguments.get("name"),
+            arguments.get("questions") or [],
+            description=arguments.get("description"),
+            submit_label=arguments.get("submit_label"),
+            thank_you=arguments.get("thank_you"),
+        )
+        if err:
+            return {"error": err}
+    return create_form(
+        name=arguments.get("name"),
+        data=data,
+        qr_id=arguments.get("qr_id"),
+        theme_id=arguments.get("theme_id"),
+        theme_overrides=arguments.get("theme_overrides"),
+        api_key=api_key,
+    )
 
 
 def _list_custom_domains_handler(arguments: dict, api_key: str) -> dict:
@@ -340,14 +364,7 @@ _DISPATCH = {
     # ------------------------------------------------------------------ #
     "list_forms": lambda a, k: list_forms(is_active=a.get("is_active"), api_key=k),
     "retrieve_form": lambda a, k: retrieve_form(form_id=a["form_id"], api_key=k),
-    "create_form": lambda a, k: create_form(
-        name=a["name"],
-        data=a["data"],
-        qr_id=a.get("qr_id"),
-        theme_id=a.get("theme_id"),
-        theme_overrides=a.get("theme_overrides"),
-        api_key=k,
-    ),
+    "create_form": lambda a, k: _create_form_handler(a, k),
     "update_form": lambda a, k: update_form(
         form_id=a["form_id"],
         name=a.get("name"),
@@ -415,6 +432,8 @@ _DISPATCH = {
     "update_user_role": lambda a, k: update_user_role(
         user_id=a["user_id"], access_level=a["access_level"], api_key=k
     ),
+    # One-endpoint tools declared in more_tools.py
+    **{t.name: t.handler for t in MORE_TOOLS},
 }
 
 

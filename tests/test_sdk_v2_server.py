@@ -32,8 +32,14 @@ def _without_annotations(tools):
 
 
 # Tools added since the upgrade, and tools that gained optional inputs (none removed or changed).
-_ADDED = {"preview_qr_design", "list_custom_domains"}
+from mcp_http.more_tools import MORE_TOOLS  # noqa: E402
+
+_ADDED = {"preview_qr_design", "list_custom_domains", *(t.name for t in MORE_TOOLS)}
 _NEW_INPUTS = {"set_qr_design": {"accept_risk"}}
+# Rewritten on purpose: create_form's old `data` ({"fields": [...]}, an object)
+# never matched the API, which takes a list of blocks as a JSON string, so every
+# call failed. It now takes title + questions (tests/test_more_tools.py).
+_REWRITTEN = {"create_form"}
 
 
 def test_tools_list_matches_the_pre_upgrade_server_on_both_eras():
@@ -43,6 +49,9 @@ def test_tools_list_matches_the_pre_upgrade_server_on_both_eras():
         assert {t["name"] for t in tools} - {t["name"] for t in BASELINE["tools"]} == _ADDED, era
         current = {t["name"]: t for t in _without_annotations(tools)}
         for before in _without_annotations(BASELINE["tools"]):
+            if before["name"] in _REWRITTEN:
+                assert before["name"] in current, era
+                continue
             after = current[before["name"]]
             added = _NEW_INPUTS.get(before["name"], set())
             if added:

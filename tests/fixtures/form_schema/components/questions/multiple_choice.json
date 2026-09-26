@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Multiple Choice question",
+  "description": "Single-select choice-list question",
+  "allOf": [
+    { "$ref": "base_question.json" },
+    {
+      "properties": {
+        "answer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": { "const": "multipleChoice" },
+            "data": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["option"],
+                "properties": {
+                  "option": { "type": "string", "minLength": 1, "maxLength": 200 },
+                  "_id": { "type": "string", "description": "Stable client-generated key for this choice row, same purpose as base_question.json's top-level id -- optional for backward compatibility with forms saved before this field existed." }
+                }
+              }
+            },
+            "allowOther": {
+              "type": "boolean",
+              "description": "Not yet implemented in the builder UI -- reserved for an eventual free-text \"Other\" option."
+            }
+          }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

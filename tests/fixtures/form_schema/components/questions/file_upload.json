@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "File Upload question",
+  "description": "File upload question",
+  "allOf": [
+    { "$ref": "base_question.json" },
+    {
+      "properties": {
+        "answer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": { "const": "uploadFile" }
+          }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Star Rating question",
+  "description": "1-5 star rating question",
+  "allOf": [
+    { "$ref": "base_question.json" },
+    {
+      "properties": {
+        "answer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": { "const": "starRating" },
+            "data": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "formatting": { "$ref": "style/feedback.json" }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

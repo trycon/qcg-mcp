@@ -407,16 +407,51 @@ LIST_FORMS_SCHEMA = {
 CREATE_FORM_SCHEMA = {
     "type": "object",
     "properties": {
-        "name": {"type": "string", "description": "Form name"},
+        "name": {"type": "string", "description": "Form name (for the account's list of forms)"},
+        "title": {"type": "string", "description": "The title people see at the top of the form"},
+        "description": {"type": "string", "description": "Text under the title"},
+        "questions": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 40,
+            "description": "The questions, in order",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "question": {"type": "string", "maxLength": 200},
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "shortAnswer", "paragraph", "email", "phoneNumber", "number",
+                            "multipleChoice", "checkbox", "dropdown", "linearScale",
+                            "dateFormat", "timeFormat", "starRating", "emoji", "likeDislike",
+                        ],
+                        "default": "shortAnswer",
+                        "description": "The answer type; multipleChoice, checkbox and dropdown need options",
+                    },
+                    "options": {"type": "array", "items": {"type": "string", "maxLength": 200}, "description": "Choices, for multipleChoice/checkbox/dropdown"},
+                    "required": {"type": "boolean", "default": False},
+                    "description": {"type": "string", "description": "Help text under the question"},
+                },
+                "required": ["question"],
+            },
+        },
+        "submit_label": {"type": "string", "maxLength": 100, "description": "The submit button's text (default Submit)"},
+        "thank_you": {"type": "string", "description": "Message shown after someone submits"},
         "data": {
-            "type": "object",
-            "description": "The form's field schema, e.g. {\"fields\": [{\"type\": \"text\", \"label\": \"Full name\", \"required\": true}]}",
+            "type": "array",
+            "items": {"type": "object"},
+            "description": (
+                "Advanced, instead of title/questions: the form's blocks as Scanova stores them, "
+                "e.g. [{\"type\": \"form_details\", \"data\": {\"title\": ..., \"questions\": [...]}}, "
+                "{\"type\": \"submit_button\", \"data\": {\"label\": \"Send\"}}]"
+            ),
         },
         "qr_id": {"type": "string", "description": "A dynamic QR code's qrid to attach immediately on creation"},
         "theme_id": {"type": "integer", "description": "An active theme's ID to style the form's public page"},
         "theme_overrides": {"type": "object", "description": "Partial theme token overrides layered on theme_id"},
     },
-    "required": ["name", "data"],
+    "required": ["name"],
 }
 
 UPDATE_FORM_SCHEMA = {

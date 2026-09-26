@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Checkboxes question",
+  "description": "Multi-select choice-list question",
+  "allOf": [
+    { "$ref": "base_question.json" },
+    {
+      "properties": {
+        "answer": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type"],
+          "properties": {
+            "type": { "const": "checkbox" },
+            "data": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["option"],
+                "properties": {
+                  "option": { "type": "string", "minLength": 1, "maxLength": 200 },
+                  "_id": { "type": "string", "description": "Stable client-generated key for this choice row, same purpose as base_question.json's top-level id -- optional for backward compatibility with forms saved before this field existed." }
+                }
+              }
+            },
+            "maxSelections": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Caps how many options a respondent may check. 0 or omitted means no limit."
+            }
+          }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

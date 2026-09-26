@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Base question fields",
+  "description": "Fields common to every form question type. Not used standalone -- each question type in this directory extends this via allOf and declares only its answer shape (and any type-specific top-level fields like checkboxes.json's maxSelections).",
+  "type": "object",
+  "required": ["question", "isRequired", "answer"],
+  "properties": {
+    "id": { "type": "string", "description": "Stable client-generated id used to key form responses -- optional for backward compatibility with forms saved before this field existed." },
+    "question": { "type": "string", "maxLength": 200 },
+    "isRequired": { "type": "boolean" },
+    "questionDescription": { "type": "string" },
+    "privacyNote": { "type": "string", "maxLength": 300 },
+    "textStyle": { "$ref": "style/text.json" },
+    "cardStyle": { "$ref": "style/card.json" }
+  }
+}

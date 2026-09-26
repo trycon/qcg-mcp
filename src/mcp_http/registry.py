@@ -6,6 +6,7 @@ from mcp_http.annotations import (
     READ_ONLY_TOOL_ANNOTATIONS_JSON,
     WRITE_TOOL_ANNOTATIONS_JSON,
 )
+from mcp_http.more_tools import MORE_TOOLS
 from mcp_http.output_schemas import TOOL_OUTPUT_SCHEMAS, tool_output_schema
 from mcp_http.ui_response import tool_descriptor_meta
 from mcp_http.schemas import (
@@ -370,8 +371,10 @@ def list_mcp_tools():
             "create_form",
             "Create form",
             (
-                "Create a new lead-capture form. Optionally pass qr_id to attach it to a dynamic QR "
-                "code immediately, or use attach_form_to_qr afterward."
+                "Create a new lead-capture form from a title and its questions (each with an answer type — "
+                "short answer, email, multiple choice, rating… — and options for choice questions). "
+                "Optionally pass qr_id to attach it to a dynamic QR code immediately, or use attach_form_to_qr afterward. "
+                "list_form_templates has ready-made forms to start from."
             ),
             WRITE_TOOL_ANNOTATIONS_JSON,
             CREATE_FORM_SCHEMA,
@@ -543,6 +546,11 @@ def list_mcp_tools():
             WRITE_TOOL_ANNOTATIONS_JSON,
             UPDATE_USER_ROLE_SCHEMA,
         ),
+        # ------------------------------------------------------------------ #
+        # One-endpoint tools (forms, trash, health, GS1 recalls, reports,
+        # billing history, activity, integrations…): declared in more_tools.py
+        # ------------------------------------------------------------------ #
+        *(_tool(t.name, t.title, t.description, None, t.input_schema) for t in MORE_TOOLS),
     ]
 
 
