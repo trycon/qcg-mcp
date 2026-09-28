@@ -8,6 +8,7 @@ from mcp_http.annotations import (
 )
 from mcp_http.more_tools import MORE_TOOLS
 from mcp_http.output_schemas import TOOL_OUTPUT_SCHEMAS, tool_output_schema
+from mcp_http.toolsets import TOOLSET_META_KEY, toolset_for
 from mcp_http.ui_response import tool_descriptor_meta
 from mcp_http.schemas import (
     # Docs bridge
@@ -74,9 +75,8 @@ def _tool(name, title, description, annotations, input_schema):
     output_schema = TOOL_OUTPUT_SCHEMAS.get(name)
     if output_schema:
         descriptor["outputSchema"] = tool_output_schema(output_schema)
-    meta = tool_descriptor_meta(name)
-    if meta:
-        descriptor["_meta"] = meta
+    # Its toolset (toolsets.py), plus the UI resource link for UI-enabled tools.
+    descriptor["_meta"] = {TOOLSET_META_KEY: toolset_for(name), **(tool_descriptor_meta(name) or {})}
     return descriptor
 
 
