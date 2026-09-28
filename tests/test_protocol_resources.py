@@ -91,14 +91,15 @@ def test_tools_list_declares_meta_for_ui_enabled_tool():
 def test_tools_list_omits_meta_for_non_ui_tool():
     result = rpc("tools/list", {"id": 8}, api_key="k")
     tools = {t["name"]: t for t in result["result"]["tools"]}
-    assert "_meta" not in tools["query_docs"]
+    # Only its toolset tag: no UI resource link.
+    assert set(tools["query_docs"]["_meta"]) == {"io.scanova/toolset"}
 
 
 def test_tools_list_omits_meta_for_list_qr_codes():
     """Deliberately disabled — tested and working fine as plain text."""
     result = rpc("tools/list", {"id": 10}, api_key="k")
     tools = {t["name"]: t for t in result["result"]["tools"]}
-    assert "_meta" not in tools["list_qr_codes"]
+    assert set(tools["list_qr_codes"]["_meta"]) == {"io.scanova/toolset"}
 
 
 def test_tools_call_attaches_meta_for_ui_enabled_tool(monkeypatch):

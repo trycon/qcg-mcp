@@ -28,11 +28,19 @@ _REWORKED = ("annotations", "outputSchema")
 
 
 def _without_annotations(tools):
-    return [{k: v for k, v in t.items() if k not in _REWORKED} for t in tools]
+    # The toolset tag (toolsets.py) is new in every descriptor's _meta; the UI part must not change.
+    out = []
+    for t in tools:
+        t = {k: v for k, v in t.items() if k not in _REWORKED}
+        meta = {k: v for k, v in t.get("_meta", {}).items() if k != TOOLSET_META_KEY}
+        t.pop("_meta", None)
+        out.append({**t, **({"_meta": meta} if meta else {})})
+    return out
 
 
 # Tools added since the upgrade, and tools that gained optional inputs (none removed or changed).
 from mcp_http.more_tools import MORE_TOOLS  # noqa: E402
+from mcp_http.toolsets import TOOLSET_META_KEY  # noqa: E402
 
 _ADDED = {"preview_qr_design", "list_custom_domains", *(t.name for t in MORE_TOOLS)}
 _NEW_INPUTS = {"set_qr_design": {"accept_risk"}}
