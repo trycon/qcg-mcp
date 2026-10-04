@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "File Upload Schema",
+  "description": "File upload component.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["file", "button"],
+  "properties": {
+    "file": {
+      "type": "object",
+      "required": ["url"],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "anyOf": [
+            { "const": "" },
+            { "format": "uri", "pattern": "(https?://.*\\.(png|jpeg|jpg|svg|gif|mp3|wav|aac|m4a|pdf|doc|docx|xls|xlsx|ppt|pptx|odt|ods|odp|txt|csv|js|PNG|JPEG|JPG|SVG|GIF|MP3|WAV|AAC|M4A|PDF|DOC|DOCX|XLS|XLSX|PPT|PPTX|ODT|ODS|ODP|TXT|CSV|JS))$" }
+          ]
+        },
+        "type": { "type": "string", "description": "Type of the file" },
+        "mime": { "type": "string", "description": "MIME type of the file" },
+        "name": { "type": "string", "description": "Name of the file" }
+      }
+    },
+    "button":      { "$ref": "_base_button.json" },
+    "title":       { "type": "string" },
+    "description": { "type": "string" },
+    "formatting": { "$ref": "style/formatting.json" }
+  }
+}

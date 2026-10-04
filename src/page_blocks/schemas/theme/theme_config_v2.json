@@ -1,0 +1,340 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "ThemeConfigV2",
+  "description": "Canonical schema for Theme.config_json \u2014 mirrors theme_manager/schema.py's dataclasses and apps/web/lib/page-builder/theme-schema.ts's TypeScript interfaces. All groups optional (partial overrides cascade with DEFAULT_THEME); _v=2 is the version discriminant.",
+  "type": "object",
+  "required": [
+    "_v"
+  ],
+  "additionalProperties": false,
+  "definitions": {
+    "colorTokens": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "background": {
+          "$ref": "style/hex-color.json"
+        },
+        "surface": {
+          "$ref": "style/hex-color.json"
+        },
+        "surfaceAlt": {
+          "$ref": "style/hex-color.json"
+        },
+        "title": {
+          "$ref": "style/hex-color.json"
+        },
+        "body": {
+          "$ref": "style/hex-color.json"
+        },
+        "muted": {
+          "$ref": "style/hex-color.json"
+        },
+        "accent": {
+          "$ref": "style/hex-color.json"
+        },
+        "accentFg": {
+          "$ref": "style/hex-color.json"
+        },
+        "border": {
+          "$ref": "style/hex-color.json"
+        },
+        "overlay": {
+          "type": "string"
+        }
+      }
+    },
+    "typographyRole": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "family": {
+          "type": "string"
+        },
+        "weight": {
+          "type": "string"
+        },
+        "size": {
+          "type": "string"
+        },
+        "lineHeight": {
+          "type": "string"
+        },
+        "tracking": {
+          "type": "string"
+        },
+        "transform": {
+          "type": "string"
+        }
+      }
+    },
+    "backgroundEffect": {
+      "description": "Unlike style/effect.json (border-beam/neon-glow/shine-border, targets: card|button), a background's effect draws from a disjoint set of animated-background effects (packages/blocks/src/effects/background/*) \u2014 reusing style/effect.json's enum here would reject every legitimate background effect.",
+      "type": [
+        "object",
+        "null"
+      ],
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "animated-gradient",
+            "meteor",
+            "particles"
+          ]
+        },
+        "config": {
+          "type": "object"
+        }
+      }
+    }
+  },
+  "properties": {
+    "_v": {
+      "const": 2
+    },
+    "color": {
+      "$ref": "#/definitions/colorTokens"
+    },
+    "typography": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "$ref": "#/definitions/typographyRole"
+        },
+        "body": {
+          "$ref": "#/definitions/typographyRole"
+        },
+        "label": {
+          "$ref": "#/definitions/typographyRole"
+        }
+      }
+    },
+    "radius": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "card": {
+          "$ref": "style/css-length.json"
+        },
+        "button": {
+          "$ref": "style/css-length.json"
+        },
+        "image": {
+          "$ref": "style/css-length.json"
+        },
+        "input": {
+          "$ref": "style/css-length.json"
+        },
+        "badge": {
+          "$ref": "style/css-length.json"
+        }
+      }
+    },
+    "shadow": {
+      "description": "Free-form CSS box-shadow strings (e.g. '0 1px 3px rgba(0,0,0,0.08)'). Intentionally NOT constrained by style/css-length.json \u2014 a box-shadow is a composite value, not a single length, so a length pattern would reject every valid shadow.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "card": {
+          "type": "string"
+        },
+        "elevated": {
+          "type": "string"
+        },
+        "button": {
+          "type": "string"
+        }
+      }
+    },
+    "spacing": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "section": {
+          "$ref": "style/css-length.json"
+        },
+        "card": {
+          "$ref": "style/css-length.json"
+        },
+        "gap": {
+          "$ref": "style/css-length.json"
+        },
+        "inline": {
+          "$ref": "style/css-length.json"
+        },
+        "scale": {
+          "type": "number",
+          "minimum": 0.5,
+          "maximum": 2.0
+        }
+      }
+    },
+    "background": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "solid",
+            "gradient",
+            "image",
+            "video"
+          ]
+        },
+        "solid": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "color": {
+              "$ref": "style/hex-color.json"
+            }
+          }
+        },
+        "gradient": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "angle": {
+              "type": "string"
+            },
+            "stops": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "color",
+                  "at"
+                ],
+                "properties": {
+                  "color": {
+                    "type": "string"
+                  },
+                  "at": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "image": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "fit": {
+              "type": "string"
+            },
+            "position": {
+              "type": "string"
+            },
+            "opacity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "video": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "opacity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "loop": {
+              "type": "boolean"
+            },
+            "muted": {
+              "type": "boolean"
+            }
+          }
+        },
+        "effect": {
+          "$ref": "#/definitions/backgroundEffect"
+        },
+        "blockOpacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "cover": {
+          "type": "object",
+          "description": "Decorative HEADER artwork, SEPARATE from the page background above. Consumed by category looks that paint their own header rather than the page ground: the classic real-estate arc (url), the audio header's tiling pattern over a colour (url + color), and the document header's vector band (shape + color) \u2014 the three things Angular's per-category \"Edit Header\" / \"Edit Background\" panels controlled. Emitted as the --lp-cover-* CSS variables; a theme that sets none renders those headers plain.",
+          "additionalProperties": false,
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "fit": {
+              "type": "string"
+            },
+            "position": {
+              "type": "string"
+            },
+            "color": {
+              "$ref": "style/hex-color.json",
+              "description": "Colour painted behind the header artwork \u2014 Angular's patternBgColor / pageHeader.shapeColor."
+            },
+            "shape": {
+              "type": "string",
+              "enum": [
+                "none",
+                "wave",
+                "diagonal",
+                "rectangle",
+                "triangle",
+                "restaurant"
+              ],
+              "description": "Named vector header band \u2014 Angular's design_info.pageHeader.shapeName."
+            }
+          }
+        }
+      }
+    },
+    "effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "card": {
+          "$ref": "style/effect.json"
+        },
+        "button": {
+          "$ref": "style/effect.json"
+        }
+      }
+    },
+    "cardStyle": {
+      "description": "Card surface material + which named shadow slot ordinary cards use by default (packages/blocks/src/materials/ materialRegistry). Distinct from `effects` above \u2014 material governs the card's own background/border/shadow substance, effects are an additive overlay.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "material": {
+          "$ref": "style/material.json"
+        },
+        "shadowVariant": {
+          "type": "string",
+          "enum": [
+            "standard",
+            "elevated"
+          ]
+        }
+      }
+    }
+  }
+}

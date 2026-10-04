@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "type": "object",
+  "required": [],
+  "additionalProperties": false,
+  "properties": {
+    "displayStyle": {
+      "type": "string",
+      "enum": ["centered", "side-by-side", "banner"],
+      "description": "Renamed from 'layout' (.ai/block-card-appearance-plan.md, qcg-frontend-next) to free the layout.* namespace for the shared appearance/transparent/fullWidth system below."
+    },
+    "image": {
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "anyOf": [
+            { "pattern": "^(https?://.*\\.(png|jpg|jpeg|svg|gif|PNG|JPEG|JPG|SVG|GIF))$" },
+            { "const": "" }
+          ]
+        }
+      }
+    },
+    "title": {
+      "type": "string"
+    },
+    "cardStyle": {
+      "$ref": "style/card.json",
+      "description": "Root-level, distinct from formatting.cardStyle: WithCardEffect (shell/with-effect.tsx) always reads this cardStyle.effect regardless of where backgroundColor lives — see design-field-presets.ts's cardEffectField() comment."
+    },
+    "formatting": { "$ref": "style/formatting.json" },
+    "layout": { "$ref": "style/layout.json" },
+    "logoStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "size": {
+          "type": "string",
+          "enum": ["sm", "md", "lg"]
+        }
+      }
+    }
+  }
+}

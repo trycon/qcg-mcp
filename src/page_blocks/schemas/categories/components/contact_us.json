@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Contact us component",
+  "description": "Validate contact us component schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "icon": {
+      "$ref": "style/icon_ref.json"
+    },
+    "blocks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "label",
+          "value"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "contact_number",
+              "email",
+              "address",
+              "website",
+              "custom"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "showOnMap": {
+            "type": "boolean"
+          },
+          "location": {
+            "$ref": "_base_map.json#/properties/location"
+          },
+          "tracking": {
+            "$ref": "event_tracking.json"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "address"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "showOnMap": { "const": false }
+              },
+              "not": {
+                "required": [
+                  "location"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    },
+    "cardBackground": {
+      "type": "boolean"
+    },
+    "hasCard": {
+      "type": "boolean"
+    },
+    "showIcons": {
+      "type": "boolean"
+    },
+    "displayStyle": {
+      "type": "string",
+      "enum": ["list", "compact"],
+      "description": "Renamed from 'layout' (.ai/block-card-appearance-plan.md, qcg-frontend-next) to free the layout.* namespace for the shared appearance/transparent/fullWidth system below."
+    },
+    "cardStyle": {
+      "$ref": "style/card.json",
+      "description": "Root-level, distinct from formatting.cardStyle: WithCardEffect (shell/with-effect.tsx) always reads this cardStyle.effect regardless of where backgroundColor lives — see design-field-presets.ts's cardEffectField() comment."
+    },
+    "layout": { "$ref": "style/layout.json" },
+    "formatting": { "$ref": "style/formatting.json" }
+  }
+}

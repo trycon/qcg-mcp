@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AI page data",
+  "description": "Content shape for an ai-typed page's `data` object (only validated when present — a freshly-added ai page with no generation yet has no `data` key at all, see qr_landing-slice.ts's addPage('ai', [])). `ai_session_id` is optional: a page can be AI-generated once and never refined again.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["html"],
+  "properties": {
+    "html": { "type": "string" },
+    "ai_session_id": { "type": "string" }
+  }
+}

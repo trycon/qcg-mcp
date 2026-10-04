@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "v2 Page",
+  "description": "A single page within a v2 multi-page QR code. IMPORTANT — this models the real clean_page shape built in QRCodeSerializer.validate (qr_manager/serializers.py), not the builder's in-memory page shape: component/audio/image/document/intro pages carry their content in the top-level `blocks` array (structurally validated per exact page type via page-types/<type>-page.json, which also dispatches each block's `data` by block type — intro's own enum is deliberately narrow, see page-types/intro-page.json); ai pages carry their content in `data.html` (+ optional `data.ai_session_id`, since a page can be AI-generated once and never refined again) and always have an empty-or-absent-content `blocks` array. `blocks` is never nested under `data` in the real published shape — a prior version of this file modeled `data.blocks` and was consequently never usable to validate a real clean_page (see schema_validator.py history / test_page_security.py's ValidateV2EnvelopeSecuritySchemaTests docstring).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "name", "type", "blocks"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "name": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "type": {
+      "type": "string",
+      "enum": ["component", "audio", "image", "document", "ai", "intro"]
+    },
+    "icon": { "type": "string" },
+    "theme_id": { "type": ["integer", "null"] },
+    "theme_overrides": { "type": ["object", "null"] },
+    "blocks": {
+      "type": "array",
+      "description": "Structurally validated per exact page type below; component/audio/image/document/intro pages route through page-types/<type>-page.json, ai pages are left unconstrained here (their real content lives in `data`, and Stage-1's historical blank-page guard has always skipped ai-typed pages)."
+    },
+    "data": {
+      "type": "object",
+      "description": "Only meaningful for ai-typed pages (data.html + optional data.ai_session_id, see page-types/ai-page.json). Absent for component/audio/image/document/intro pages, whose content lives in `blocks` instead."
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "urlSlug": { "type": "string", "maxLength": 128 },
+        "seo": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "title": { "type": "string", "maxLength": 200 },
+            "description": { "type": "string", "maxLength": 500 },
+            "ogImage": { "type": "string", "format": "uri" }
+          }
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "description": "Per-page access-control gates. Absent or empty means the page has no gate. Adding a new gate type means adding one more property here.",
+      "additionalProperties": false,
+      "properties": {
+        "password": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["hash"],
+          "properties": {
+            "hash": { "type": "string", "minLength": 1 },
+            "updatedAt": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "type": { "const": "ai" } } },
+      "then": { "properties": { "data": { "$ref": "page-types/ai-page.json" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "component" } } },
+      "then": { "properties": { "blocks": { "$ref": "page-types/component-page.json" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "audio" } } },
+      "then": { "properties": { "blocks": { "$ref": "page-types/audio-page.json" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "image" } } },
+      "then": { "properties": { "blocks": { "$ref": "page-types/image-page.json" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "document" } } },
+      "then": { "properties": { "blocks": { "$ref": "page-types/document-page.json" } } }
+    },
+    {
+      "if": { "properties": { "type": { "const": "intro" } } },
+      "then": { "properties": { "blocks": { "$ref": "page-types/intro-page.json" } } }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Hex color",
+  "description": "Optional HEX color. Empty string means use theme default.",
+  "type": "string",
+  "pattern": "^(#([a-fA-F0-9]{8}|[a-fA-F0-9]{6}|[a-fA-F0-9]{3}))?$"
+}

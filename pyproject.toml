@@ -5,6 +5,7 @@ description = "Scanova MCP server: QR codes, design, folders, forms, leads, anal
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
+    "jsonschema>=4.25.0",
     "mcp[cli]>=2.2,<3",
     "pillow>=12.3.0",
     "requests>=2.33.0",
@@ -15,7 +16,6 @@ dependencies = [
 [dependency-groups]
 dev = [
     "httpx>=0.28.1",
-    "jsonschema>=4.25.0",
     "pytest>=9.1.1",
 ]
 

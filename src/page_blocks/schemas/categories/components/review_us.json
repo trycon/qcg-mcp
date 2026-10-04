@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Review Us block",
+  "description": "Links to review platforms (Google, Tripadvisor, Yelp, etc.) with optional click tracking",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "platforms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Platform identifier e.g. google, tripadvisor, yelp"
+          },
+          "data": {
+            "type": "string",
+            "maxLength": 100,
+            "anyOf": [
+              { "pattern": "(http://www\\.|https://www\\.|http://|https://)?[a-z0-9]+([\\-.][a-z0-9]+)*\\.[a-z]{2,10}(:[0-9]{1,5})?(/.*)?(\\?.*)?$" },
+              { "const": "" }
+            ]
+          },
+          "icon": {
+            "type": "string",
+            "description": "URL or SVG string for the platform icon"
+          },
+          "tracking": {
+            "$ref": "event_tracking.json"
+          }
+        }
+      }
+    },
+    "ctaLabel": {
+      "type": "string"
+    },
+    "showRating": {
+      "type": "boolean"
+    },
+    "cardStyle": {
+      "$ref": "style/card.json"
+    },
+    "layout": {
+      "$ref": "style/layout.json"
+    }
+  }
+}

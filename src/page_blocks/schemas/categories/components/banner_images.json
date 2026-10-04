@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Banner images component",
+  "description": "Validate banner images component",
+  "type": "object",
+  "required": [
+    "images"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "images": {
+      "type": "array",
+      "maxItems": 8,
+      "$comment": "Allows 8 items in the list",
+      "items": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "url": {
+            "type": "string",
+            "pattern": "(https?://.*\\.(png|jpeg|jpg|svg|gif|PNG|JPEG|JPG|SVG|GIF))$"
+          },
+          "id": {
+            "type": "number"
+          },
+          "text": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "textBgColor": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "displayStyle": {
+      "type": "string",
+      "enum": [
+        "carousel",
+        "grid1",
+        "grid2",
+        "list",
+        "sliderWithText"
+      ],
+      "description": "Renamed from 'layout' (.ai/block-card-appearance-plan.md Phase 4, qcg-frontend-next) — the old flat-string 'layout' collided with the shared layout.appearance/transparent/fullWidth object below."
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "autoplay": {
+      "type": "boolean"
+    },
+    "autoplayInterval": {
+      "type": "number"
+    },
+    "aspectRatio": {
+      "type": "string",
+      "enum": ["auto", "1/1", "4/3", "16/9", "3/2"]
+    },
+    "formatting": { "$ref": "style/formatting.json" },
+    "cardStyle": { "$ref": "style/card.json" },
+    "layout": {
+      "$ref": "style/layout.json"
+    },
+    "viewType": {
+      "type": "string",
+      "enum": [
+        "carousel",
+        "grid1",
+        "grid2",
+        "list",
+        "sliderWithText"
+      ],
+      "description": "[legacy-angular-only] The legacy Angular app's name for what this schema calls displayStyle (banner-image.model.ts) — remove once all QR codes are migrated off this shape."
+    },
+    "hasCard": {
+      "type": "boolean",
+      "description": "[legacy-angular-only] Removed from the new app in favor of the shared layout.appearance field (818392dc7), but the legacy Angular app still sends it (banner-image.model.ts) — remove once all QR codes are migrated off this shape."
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Event Schedule component",
+  "description": "Validate event schedule component schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "startDate",
+    "timeZone"
+  ],
+  "properties": {
+    "title": {
+      "type": "string",
+      "maxLength": 50,
+      "description": "Title of the event"
+    },
+    "startDate": {
+      "type": "string"
+    },
+    "endDate": {
+      "type": "string"
+    },
+    "timeZone": {
+      "type": "string"
+    },
+    "repeat": {
+      "type": "boolean"
+    },
+    "recurrence": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly",
+        "yearly"
+      ]
+    },
+    "allDayEvent": {
+      "type": "boolean",
+      "default": false
+    },
+    "timeFormat": {
+      "type": "string",
+      "default": "24h",
+      "enum": [
+        "12h",
+        "24h"
+      ]
+    },
+    "dateFormat": {
+          "type": "string",
+          "default": "MM-dd-yyyy",
+          "enum": [
+            "MM-dd-yyyy",
+            "dd-MM-yyyy",
+            "yyyy-MM-dd",
+            "M/dd/yyyy",
+            "MMM d, yyyy"
+          ]
+    },
+    "separator": {
+      "$ref": "separator.json"
+    },
+    "addToCalendar": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Renamed from \"addToCalender\" (typo). Already-published QRCode.info/draft_info rows using the old key need a one-time SQL data migration renaming it in place before/with this deploy — see the PR description for the exact statement. Groups the \"Add to Calendar\" CTA's visibility, label, and tracking under one object.",
+      "properties": {
+        "show": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether the \"Add to Calendar\" button renders at all"
+        },
+        "label": {
+          "type": "string",
+          "default": "Add to Calendar",
+          "description": "CTA label for the \"Add to Calendar\" button"
+        },
+        "tracking": {
+          "$ref": "event_tracking.json"
+        }
+      }
+    },
+    "formatting": { "$ref": "style/formatting.json" },
+    "cardStyle": {
+      "$ref": "style/card.json",
+      "description": "Root-level, distinct from formatting.cardStyle: WithCardEffect (shell/with-effect.tsx) always reads this cardStyle.effect regardless of where backgroundColor lives — see design-field-presets.ts's cardEffectField() comment."
+    },
+    "layout": { "$ref": "style/layout.json" }
+  },
+  "if": {
+    "properties": {
+      "allDayEvent": {
+        "const": false
+      }
+    },
+    "required": [
+      "allDayEvent"
+    ]
+  },
+  "then": {
+    "required": [
+      "endDate"
+    ]
+  }
+}

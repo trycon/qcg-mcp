@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Social Media Profiles block",
+  "description": "List of social media links with optional header, card styling and grid/list layout",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "profiles": {
+      "$ref": "social_profile.json"
+    },
+    "headerText": {
+      "type": "string",
+      "maxLength": 30
+    },
+    "headerStyle": {
+      "type": "string",
+      "enum": ["text", "pill"]
+    },
+    "description": {
+      "type": "string"
+    },
+    "hasCard": {
+      "type": "boolean",
+      "description": "This block's own full-width background, on the outer container and behind each item. Distinct from layout.appearance, which is the shared inset-card box."
+    },
+    "layout": { "$ref": "style/layout.json" },
+    "headerAlign": {
+      "type": "string",
+      "enum": ["left", "center"],
+      "description": "Text alignment for header and description"
+    },
+    "viewType": {
+      "type": "string",
+      "enum": ["list", "grid", "linear", "circle", "icons", "bands", "tiles", "discs"],
+      "description": "Visual layout of the profile icons. bands/tiles/discs are 1:1 ports of the Classic sMedia linear/square/circle templates."
+    },
+    "cardStyle": {
+      "$ref": "style/card.json"
+    },
+    "iconStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "size": {
+          "type": "string",
+          "enum": ["sm", "md", "lg"]
+        },
+        "showLabels": {
+          "type": "boolean"
+        },
+        "shape": {
+          "type": "string",
+          "enum": ["circle", "rounded", "square"]
+        },
+        "transparent": {
+          "type": "boolean",
+          "description": "Drop the per-profile accent disc behind each logo, leaving the platform artwork on the block's own surface."
+        },
+        "colorMode": {
+          "type": "string",
+          "enum": ["default", "brand"],
+          "description": "brand: Classic brand-coloured disc behind a white glyph (legacy parity)."
+        }
+      }
+    }
+  }
+}

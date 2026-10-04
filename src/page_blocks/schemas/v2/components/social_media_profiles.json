@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Social Media Profiles block (v2)",
+  "description": "v2 builder sends { profiles, headerText, viewType } — v1 used bare array social_profile format",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "profiles": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["data", "field", "key"],
+        "additionalProperties": false,
+        "properties": {
+          "data":  { "type": "string", "minLength": 2 },
+          "key":   { "type": "string", "minLength": 2 },
+          "name":  { "type": "string" },
+          "field": { "type": "string", "enum": ["url", "handle", "id", "tel", "email"] },
+          "label": { "type": "string" },
+          "color": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "button": { "type": "string" },
+              "label":  { "type": "string" },
+              "border": { "type": "string" }
+            }
+          },
+          "icon": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "url": { "type": "string" }
+            }
+          },
+          "tracking": { "$ref": "../../categories/components/event_tracking.json" }
+        }
+      }
+    },
+    "headerText":  { "type": "string" },
+    "headerStyle": { "type": "string", "enum": ["text", "pill"] },
+    "description": { "type": "string" },
+    "headerAlign": { "type": "string", "enum": ["left", "center"] },
+    "hasCard": {
+      "type": "boolean",
+      "description": "This block's own full-width background, on the outer container and behind each item. Distinct from layout.appearance, which is the shared inset-card box."
+    },
+    "layout": { "$ref": "../../categories/components/style/layout.json" },
+    "viewType":    { "type": "string", "enum": ["linear", "list", "grid", "circle", "icons", "bands", "tiles", "discs"] },
+    "cardStyle":   { "$ref": "../../categories/components/style/card.json" },
+    "iconStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "size":       { "type": "string", "enum": ["sm", "md", "lg"] },
+        "showLabels": { "type": "boolean" },
+        "shape":      { "type": "string", "enum": ["circle", "rounded", "square"] },
+        "transparent": {
+          "type": "boolean",
+          "description": "Drop the per-profile accent disc behind each logo, leaving the platform artwork on the block's own surface."
+        },
+        "colorMode":  { "type": "string", "enum": ["default", "brand"], "description": "brand: Classic brand-coloured disc behind a white glyph (legacy parity)." }
+      }
+    }
+  }
+}

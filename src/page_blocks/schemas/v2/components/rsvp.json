@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "RSVP block (v2)",
+  "description": "v2 builder rsvp block — permissive schema; detailed validation handled by the builder UI",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "heading": { "type": "string" },
+    "description": { "type": "string" },
+    "receiverEmail": { "type": "string" },
+    "inviteeDetails": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name":  { "type": "boolean" },
+        "email": { "type": "boolean" },
+        "phone": { "type": "boolean" }
+      }
+    },
+    "numberOfGuests": { "type": "number" },
+    "limitAttendance": { "type": "boolean" },
+    "maxAttendees":   { "type": "number" },
+    "fullMessage":    { "type": "string" },
+    "successMessage": { "type": "string" },
+    "rsvpBy": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "endDate":    { "type": "string" },
+        "timeZone":   { "type": "string" },
+        "timeFormat": { "type": "string", "enum": ["12h", "24h"] },
+        "dateFormat": { "type": "string", "enum": ["MM-dd-yyyy", "dd-MM-yyyy", "yyyy-MM-dd", "M/dd/yyyy", "MMM d, yyyy"] }
+      }
+    },
+    "questions": {
+      "type": "array",
+      "maxItems": 3,
+      "items": { "type": "object" }
+    },
+    "submitButton": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string" },
+        "color": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "button": { "type": "string" },
+            "label":  { "type": "string" },
+            "border": { "type": "string" }
+          }
+        },
+        "buttonStyle": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "borderWidth":  { "type": "number" },
+            "borderRadius": { "type": "number" }
+          }
+        },
+        "textStyle": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "fontFamily": { "type": "string" },
+            "fontSize":   { "type": "number" },
+            "textColor":  { "type": "string" }
+          }
+        },
+        "tracking": { "$ref": "../../categories/components/event_tracking.json" }
+      }
+    },
+    "formatting": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "textStyle": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "textColor":  { "type": "string" },
+            "fontFamily": { "type": "string" },
+            "fontSize":   { "type": "number" }
+          }
+        },
+        "cardStyle": { "$ref": "../../categories/components/style/card.json" }
+      }
+    },
+    "submissionBehaviour": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "submissionOption": { "type": "string", "enum": ["message", "url"] },
+        "message": { "type": "string" },
+        "url":     { "type": "string" }
+      }
+    },
+    "cardStyle": { "type": "object" },
+    "layout": { "$ref": "../../categories/components/style/layout.json" }
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "RSVP Component",
+  "description": "Validate RSVP component schema",
+  "type": "object",
+  "required": [
+    "inviteeDetails"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "receiverEmail": {
+      "type": "string",
+      "anyOf": [
+        { "pattern": "^\\S+@\\S+\\.\\S+$" },
+        { "const": "" }
+      ],
+      "description": "Email where RSVP will be sent"
+    },
+    "inviteeDetails": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "boolean",
+          "default": true,
+          "description": "Name will be always asked"
+        },
+        "email": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, email will be asked from the invitee"
+        },
+        "phone": {
+          "type": "boolean",
+          "default": false,
+          "description": "If true, phone number will be asked from the invitee"
+        }
+      }
+    },
+    "rsvpBy": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Rsvp end date.",
+      "required": [
+        "endDate",
+        "timeZone"
+      ],
+      "properties": {
+        "endDate": {
+          "type": "string"
+        },
+        "timeZone": {
+          "type": "string"
+        },
+        "timeFormat": {
+           "type": "string",
+           "default": "24h",
+           "enum": [
+              "12h",
+              "24h"
+            ]
+        },
+        "dateFormat": {
+          "type": "string",
+          "default": "MM-dd-yyyy",
+          "enum": [
+            "MM-dd-yyyy",
+            "dd-MM-yyyy",
+            "yyyy-MM-dd",
+            "M/dd/yyyy",
+            "MMM d, yyyy"
+          ]
+        }
+      }
+    },
+    "numberOfGuests": {
+      "type": "number",
+      "minimum": 0,
+      "default": 0,
+      "maximum": 50,
+      "$comment": "A maximum of 50 guest can be added.",
+      "description": "Additional number to guests invitee an bring with them"
+    },
+    "answerFormat": {
+      "type": "string",
+      "description": "** This JSON OBJECT IS DEPRECATED ** ",
+      "enum": [
+        "option",
+        "paragraph"
+      ]
+    },
+    "askFromGuests": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to ask the question from quests as well. ** This JSON OBJECT IS DEPRECATED **"
+    },
+    "askFromInvitee": {
+      "type": "boolean",
+      "description": "Whether to ask the question from quests as well. ** This JSON OBJECT IS DEPRECATED **"
+    },
+    "question": {
+      "type": "string",
+      "maxLength": 1000,
+      "description": "Question to ask from invitee or guests ** This JSON OBJECT IS DEPRECATED ** "
+    },
+    "options": {
+      "type": "array",
+      "description": "Array of strings to use when answerFormat is set to option. ** This JSON OBJECT IS DEPRECATED ** ",
+      "maxItems": 50,
+      "$comment": "A maximum of 50 options can be added",
+      "items": {
+        "type": "object",
+        "required": [
+          "option"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "option": {
+            "type": "string",
+            "maxLength": 500
+          }
+        }
+      }
+    },
+    "questions": {
+      "$ref": "rsvp_form.json"
+    },
+    "submitButton": {
+      "$ref": "_base_button.json"
+    },
+    "formatting": { "$ref": "style/formatting.json" },
+    "cardStyle": {
+      "$ref": "style/card.json",
+      "description": "Root-level, distinct from formatting.cardStyle: WithCardEffect (shell/with-effect.tsx) always reads this cardStyle.effect regardless of where backgroundColor lives — see design-field-presets.ts's cardEffectField() comment. Pre-existing gap: cardEffectField() has been in rsvp/definition.ts's designFields but this root cardStyle property was missing here, so a strict publish with a card effect set would have 400'd — fixed alongside the layout property below (.ai/block-card-appearance-plan.md, qcg-frontend-next)."
+    },
+    "layout": { "$ref": "style/layout.json" },
+    "submissionBehaviour": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "submissionOption": {
+          "type": "string",
+          "enum": ["message", "url"],
+          "default": "message"
+        },
+        "message": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

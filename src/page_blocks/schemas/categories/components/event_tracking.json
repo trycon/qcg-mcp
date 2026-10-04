@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Event Tracking",
+  "description": "Event tracking on button action like Click. An empty object ({}) means 'tracking not configured' — several block defaults send this. If either id or tag is present, both are required; the landing app treats a tracking object missing id/tag as inactive rather than a validation error.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^E[a-zA-Z0-9_]{5}$"
+    },
+    "tag": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "isOpen": {
+      "type": "boolean",
+      "description": "Whether the tracked link opens in a new tab — written by some legacy Angular tracking forms."
+    }
+  },
+  "if": {
+    "anyOf": [
+      { "required": ["id"] },
+      { "required": ["tag"] }
+    ]
+  },
+  "then": {
+    "required": ["id", "tag"]
+  }
+}

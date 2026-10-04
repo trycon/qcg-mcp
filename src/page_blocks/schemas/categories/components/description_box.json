@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Description box component",
+  "description": "Validate description box component",
+  "type": "object",
+  "required": [
+    "text"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "text": {
+      "type": "string"
+    },
+    "align": {
+      "type": "string",
+      "enum": ["left", "center", "right"]
+    },
+    "cardStyle": {
+      "$ref": "style/card.json"
+    },
+    "textStyle": {
+      "$ref": "style/text.json"
+    },
+    "layout": {
+      "$ref": "style/layout.json"
+    }
+  }
+}

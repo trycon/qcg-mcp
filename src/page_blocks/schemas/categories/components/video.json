@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "type": "object",
+  "title": "Video Component",
+  "description": "Video component",
+  "additionalProperties": false,
+  "required": ["video"],
+  "properties": {
+    "video": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url"],
+      "properties": {
+        "url": {
+          "type": "string",
+          "maxLength": 2000,
+          "anyOf": [
+            { "const": "" },
+            { "pattern": "(http://www\\.|https://www\\.|http://|https://)?[a-z0-9]+([\\-.][a-z0-9]+)*\\.[a-z]{2,10}(:[0-9]{1,5})?(/.*)?(\\?.*)?$" }
+          ]
+        },
+        "name": { "type": "string" }
+      }
+    },
+    "thumbnail": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "maxLength": 2000,
+          "anyOf": [
+            { "const": "" },
+            { "pattern": "(http://www\\.|https://www\\.|http://|https://)?[a-z0-9]+([\\-.][a-z0-9]+)*\\.[a-z]{2,10}(:[0-9]{1,5})?(/.*)?(\\?.*)?$" }
+          ]
+        },
+        "name": { "type": "string" }
+      }
+    },
+    "isUploaded": {
+      "type": "boolean",
+      "default": false,
+      "description": "Is uploaded on our server ?"
+    },
+    "title":       { "type": "string" },
+    "description": { "type": "string" },
+    "hasCard":     { "type": "boolean" },
+    "caption":     { "type": "string" },
+    "autoplay":    { "type": "boolean" },
+    "loop":        { "type": "boolean" },
+    "showControls": { "type": "boolean", "default": true, "description": "Show native player controls (uploaded videos only)" },
+    "formatting": { "$ref": "style/formatting.json" },
+    "layout": { "$ref": "style/layout.json" }
+  }
+}

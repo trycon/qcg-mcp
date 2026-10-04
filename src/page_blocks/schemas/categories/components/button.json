@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Button component schema",
+  "description": "Schema to validate button component",
+  "allOf": [
+    { "$ref": "_base_button.json" },
+    {
+      "properties": {
+        "link": {
+          "type": "string",
+          "maxLength": 2000,
+          "anyOf": [
+            { "minLength": 5 },
+            { "const": "" }
+          ]
+        },
+        "type": {
+          "type": "string",
+          "enum": ["url", "email", "phone", "sms", "page", "qr"]
+        },
+        "qrTarget": {
+          "type": "string",
+          "maxLength": 64,
+          "description": "Display-only — lets the builder re-show which QR is currently selected when type is 'qr'. Carries no link meaning of its own; `link` (the resolved public short_url) is what the button actually navigates to. Mirrors auto_redirect.json's own qrTarget field."
+        },
+        "conditions": { "$ref": "conditional_urls.json" },
+        "utm": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "enabled":  { "type": "boolean" },
+            "source":   { "type": "string" },
+            "medium":   { "type": "string" },
+            "campaign": { "type": "string" },
+            "term":     { "type": "string" },
+            "content":  { "type": "string" },
+            "custom":   { "type": "object" }
+          }
+        },
+        "defaultMessage": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Always allowed regardless of type — the frontend's own defaults unconditionally include this key (empty string) even when type isn't 'sms'. Declared unconditionally here (not only inside the type==sms if/then below) so unevaluatedProperties:false doesn't reject it for every non-sms button."
+        },
+        "layout": {
+          "$ref": "style/layout.json",
+          "description": "Declared here (button.json), not _base_button.json — this is the standalone button BLOCK's own appearance, not the nested submit/directions button config _base_button.json is shared by (rsvp/custom_form/file/map), which don't have this field."
+        },
+        "cardStyle": {
+          "$ref": "style/card.json",
+          "description": "Card surface material + shadow slot, written by the block's own designFields cardSurfaceField(). Every other block using that preset already declares this; button was missed, so unevaluatedProperties:false rejected any button whose Card Surface was set. Declared here rather than _base_button.json for the same reason `layout` is: the nested submit/directions buttons that shared base describes have no card of their own."
+        }
+      },
+      "required": ["link"],
+      "if": { "properties": { "type": { "const": "sms" } } },
+      "then": {
+        "properties": {
+          "defaultMessage": { "type": "string", "maxLength": 500 }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

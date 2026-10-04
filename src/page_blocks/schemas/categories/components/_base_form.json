@@ -1,0 +1,303 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Custom Form Component",
+  "type": "object",
+  "required": [
+    "questions"
+  ],
+  "properties": {
+    "title": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 100,
+      "description": "Form title"
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500,
+      "anyOf": [
+        { "minLength": 2 },
+        { "const": "" }
+      ],
+      "description": "Form description"
+    },
+    "questions": {
+      "type": "array",
+      "maxItems": 40,
+      "additionalProperties": false,
+      "description": "Question block component",
+      "$comment": "Allow upto 20 questions.",
+      "items": {
+        "type": "object",
+        "required": [
+          "question",
+          "answer"
+        ],
+        "additionalProperties": false,
+        "minProperties": 1,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable client-generated id used to key form responses -- optional for backward compatibility with forms saved before this field existed."
+          },
+          "question": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 3
+          },
+          "questionDescription": {
+            "type": "string"
+          },
+          "privacyNote": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "answer": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "shortAnswer",
+                  "paragraph",
+                  "multipleChoice",
+                  "checkbox",
+                  "dropdown",
+                  "linearScale",
+                  "dateFormat",
+                  "timeFormat",
+                  "email",
+                  "phoneNumber",
+                  "starRating",
+                  "emoji",
+                  "likeDislike",
+                  "uploadFile",
+                  "signature",
+                  "number"
+                ]
+              },
+              "data": {
+                "type": [
+                  "string",
+                  "object",
+                  "array"
+                ]
+              },
+              "maxSelections": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "checkbox only. Caps how many options a respondent may check. 0 or omitted means no limit."
+              },
+              "allowOther": {
+                "type": "boolean",
+                "description": "multipleChoice only. Not yet implemented in the builder UI -- reserved for an eventual free-text \"Other\" option."
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "multipleChoice"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "$ref": "form_input.json#/properties/multipleOptions"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "checkbox"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "$ref": "form_input.json#/properties/multipleOptions"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "dropdown"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "$ref": "form_input.json#/properties/multipleOptions"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "linearScale"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "$ref": "form_input.json#/properties/linearScale"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "dateFormat"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "$ref": "form_input.json#/properties/dateFormat"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "timeFormat"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "$ref": "form_input.json#/properties/timeFormat"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "starRating"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "$ref": "form_input.json#/properties/feedback"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "emoji"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "$ref": "form_input.json#/properties/feedback"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "likeDislike"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "$ref": "form_input.json#/properties/likeDislike"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "uploadFile"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "$ref": "form_input.json#/properties/uploadFile"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "type": {
+                      "const": "signature"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "data": {
+                      "$ref": "form_input.json#/properties/signature"
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "isRequired": {
+            "type": "boolean",
+            "default": false
+          }
+        }
+      }
+    },
+    "formatting": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "textStyle": {
+          "$ref": "style/text.json"
+        },
+        "cardStyle": {
+          "$ref": "style/card.json"
+        },
+        "iconStyle": {
+          "$ref": "style/icon.json"
+        }
+      }
+    }
+  }
+}

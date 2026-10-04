@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Separator styling",
+  "description": "Separator style properties",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "color": {
+      "$ref": "hex-color.json",
+      "description": "Separator HEX color. Empty string means use theme default."
+    }
+  }
+}

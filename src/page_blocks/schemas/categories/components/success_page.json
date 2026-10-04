@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Success page schema",
+  "description": "",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "logo": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "Logo URL",
+           "anyOf": [
+              { "pattern": "^(https?:\/\/.*\\.(png|jpeg|jpg|svg|gif|PNG|JPEG|JPG|SVG|GIF))$" },
+              { "const": "" }
+           ]
+        }
+      }
+    },
+    "title": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 100,
+      "description": "Page title"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 200,
+      "description": "Page description"
+    },
+    "social_media_profiles": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Written by Angular and the new builder as { headerText, profiles } — not a bare array.",
+      "properties": {
+        "headerText": {
+          "type": "string"
+        },
+        "profiles": {
+          "$ref": "social_profile.json"
+        }
+      }
+    }
+  }
+}

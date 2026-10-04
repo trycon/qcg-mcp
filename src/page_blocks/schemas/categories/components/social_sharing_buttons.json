@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Social Sharing component",
+  "description": "Validate social sharing component schema",
+  "type": "object",
+  "required": [],
+  "additionalProperties": false,
+  "properties": {
+    "headerText": {
+      "type": "string",
+      "maxLength": 50
+    },
+    "facebook": {
+      "type": "boolean"
+    },
+    "whatsApp": {
+      "type": "boolean"
+    },
+    "instagram": {
+      "type": "boolean"
+    },
+    "twitter": {
+      "type": "boolean",
+      "description": "Written directly by the live Angular form and by the schema's original naming."
+    },
+    "x": {
+      "type": "boolean",
+      "description": "Written by the new builder block (X/Twitter rebrand). Kept alongside 'twitter'."
+    },
+    "email": {
+      "type": "boolean"
+    },
+    "layout": {
+      "type": "string",
+      "enum": ["both", "icon", "label"]
+    },
+    "blockLayout": {
+      "$ref": "style/layout.json",
+      "description": "The shared per-block box-model object. Named blockLayout, not layout, because this block's 'layout' already means its icon/label variant (above) and is persisted on live records — renaming that key would need a data migration. resolveBlockLayout in qcg-frontend-next reads this block's box model from here."
+    },
+    "iconStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "transparent": {
+          "type": "boolean",
+          "description": "Drop the fill behind each share button, leaving only its border. Distinct from layout.transparent, which is the whole block's surface."
+        }
+      }
+    },
+    "copyLink": {
+      "type": "boolean"
+    },
+    "systemShare": {
+      "type": "boolean"
+    },
+    "tracking": {
+      "type": "array",
+      "description": "Extend event tracking core and add additional property. see: https://json-schema.org/understanding-json-schema/structuring.html#id5",
+      "additionalItems": false,
+      "items": {
+        "allOf": [
+          {
+            "$ref": "event_tracking.json"
+          },
+          {
+            "properties": {
+              "name": {
+                "type": "string",
+                "enum": [
+                  "facebook",
+                  "whatsApp",
+                  "twitter",
+                  "x",
+                  "email",
+                  "instagram"
+                ]
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        ],
+        "unevaluatedProperties": false
+      }
+    },
+    "formatting": { "$ref": "style/formatting.json" }
+  }
+}

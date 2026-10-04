@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Page header component",
+  "description": "Validate page header component schema",
+  "type": "object",
+  "required": [
+    "layout"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "layout": {
+      "type": "string",
+      "enum": [
+        "profile",
+        "banner",
+        "cover",
+        "minimal"
+      ]
+    },
+    "profileImage": {
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "coverImage": {
+      "type": "object",
+      "required": [
+        "url"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "fullWidth": {
+          "type": "boolean"
+        }
+      }
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "showContactLinks": {
+      "type": "boolean"
+    },
+    "contactLinks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "value"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "email",
+              "mobile",
+              "sms",
+              "location",
+              "phone",
+              "website"
+            ]
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "formatting": { "$ref": "style/formatting.json" },
+    "tracking": { "$ref": "event_tracking.json" }
+  }
+}

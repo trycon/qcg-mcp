@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Coupon Details block",
+  "description": "Coupon or discount code with optional offer title, details, validity dates and styling",
+  "type": "object",
+  "required": ["couponCode"],
+  "additionalProperties": false,
+  "properties": {
+    "couponCode": {
+      "type": "string",
+      "anyOf": [
+        { "minLength": 4 },
+        { "const": "" }
+      ]
+    },
+    "offerTitle": {
+      "type": "string"
+    },
+    "offerDetails": {
+      "type": "string"
+    },
+    "scanLimit": {
+      "type": "number"
+    },
+    "startDate": {
+      "type": "string"
+    },
+    "endDate": {
+      "type": "string"
+    },
+    "timeZone": {
+      "type": "string"
+    },
+    "showCountdown": {
+      "type": "boolean"
+    },
+    "copyButtonLabel": {
+      "type": "string"
+    },
+    "formatting": { "$ref": "style/formatting.json" },
+    "cardStyle": {
+      "$ref": "style/card.json",
+      "description": "Root-level, distinct from formatting.cardStyle: WithCardEffect (shell/with-effect.tsx) always reads this cardStyle.effect regardless of where backgroundColor lives — see design-field-presets.ts's cardEffectField() comment."
+    },
+    "tracking": { "$ref": "event_tracking.json" },
+    "layout": {
+      "$ref": "style/layout.json"
+    }
+  }
+}

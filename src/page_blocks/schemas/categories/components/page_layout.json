@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "x-deprecated-fields": ["backgroundColor", "backgroundImage", "backgroundImageSetting", "templateName"],
+  "x-deprecated-since": "2026-06-14",
+  "x-replacement": "QRCode.theme_overrides.background.* (DB-driven theme system; merged with theme.config_json at render time)",
+  "x-removal-phase": "Phase 6 — after Angular UI cutover and migrate_design_info command",
+  "definitions": {},
+  "title": "Page layout component",
+  "description": "Validate page payload component",
+  "type": "object",
+  "required": [],
+  "properties": {
+    "backgroundColor": {
+      "type": "string"
+    },
+    "backgroundImage": {
+      "type": "string"
+    },
+    "backgroundImageSetting": {
+      "type": "string",
+      "enum": [
+        "fit-to-screen",
+        "fit-to-width",
+        "fit-to-height",
+        "repeating",
+        "original-size"
+      ]
+    },
+    "contactButtonPosition": {
+      "type": "string",
+      "enum": ["top", "bottom"]
+    },
+    "floatingContactButton": {
+      "type": "boolean"
+    },
+    "templateName": {
+      "type": "string"
+    }
+  },
+  "additionalProperties": false
+}

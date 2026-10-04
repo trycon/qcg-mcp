@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "x-deprecated": true,
+  "x-deprecated-since": "2026-06-14",
+  "x-replacement": "QRCode.theme_overrides (DB-driven theme system; merged with theme.config_json at render time)",
+  "x-removal-phase": "Phase 6 — after Angular UI cutover and migrate_design_info command",
+  "definitions": {},
+  "title": "design info schema",
+  "description": "design info schema of business card",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "color": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "primary": {
+          "type": "string",
+          "pattern": "^#([a-fA-F0-9]{8}|[a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
+          "description": "primary text color"
+        },
+        "secondary": {
+          "type": "string",
+          "pattern": "^#([a-fA-F0-9]{8}|[a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
+          "description": "secondary text color"
+        },
+        "background": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^#([a-fA-F0-9]{8}|[a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
+              "description": "background color"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "gradientStyle": {
+                  "type": "string",
+                  "description": "gradient style, e.g., horizontal, vertical, diagonal, radial"
+                },
+                "startColor": {
+                  "type": "string",
+                  "pattern": "^#([a-fA-F0-9]{8}|[a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
+                  "description": "starting color of the gradient"
+                },
+                "endColor": {
+                  "type": "string",
+                  "pattern": "^#([a-fA-F0-9]{8}|[a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
+                  "description": "ending color of the gradient"
+                }
+              },
+              "additionalProperties": false,
+              "description": "background as a gradient object"
+            }
+          ]
+        },
+        "primaryText": {
+          "type": "string",
+          "pattern": "^#([a-fA-F0-9]{8}|[a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
+          "description": "title text color"
+        },
+        "secondaryText": {
+          "type": "string",
+          "pattern": "^#([a-fA-F0-9]{8}|[a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
+          "description": "secondary text color"
+        }
+      }
+    },
+    "fontFamily": {
+      "type": "string",
+      "description": "font family of text"
+    },
+    "fontSize": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "number",
+          "description": "font size of name"
+        }
+      }
+    },
+    "floatingContactButton": {
+      "type": "boolean",
+      "description": "contact button is floating or not"
+    },
+    "contactButtonPosition": {
+      "type": "string",
+      "enum": ["bottom", "top", "floating"],
+      "description": "position of the contact button"
+    },
+    "backgroundImage": {
+      "type": "object",
+      "required": ["isSolid", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "isSolid": {
+          "type": "boolean",
+          "description": "To check background has image or solid color"
+        },
+        "value": {
+          "type": "string",
+          "description": "Value can be color or image url"
+        }
+      }
+    },
+    "button": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "description": "[legacy-angular-only] Feedback category's start-page button styling, sent only by the legacy Angular app — remove once all QR codes are migrated off design_info (see this schema's x-removal-phase).",
+      "properties": {
+        "color": {
+          "type": "string",
+          "pattern": "^#([a-fA-F0-9]{8}|[a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
+          "description": "button background color"
+        },
+        "textColor": {
+          "type": "string",
+          "pattern": "^#([a-fA-F0-9]{8}|[a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
+          "description": "button label color"
+        }
+      }
+    },
+    "heading": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "description": "[legacy-angular-only] Feedback category's start-page heading styling, sent only by the legacy Angular app — remove once all QR codes are migrated off design_info (see this schema's x-removal-phase).",
+      "properties": {
+        "fontSize": {
+          "type": "number",
+          "description": "heading font size"
+        },
+        "textColor": {
+          "type": "string",
+          "pattern": "^#([a-fA-F0-9]{8}|[a-fA-F0-9]{6}|[a-fA-F0-9]{3})$",
+          "description": "heading text color"
+        }
+      }
+    }
+  }
+}

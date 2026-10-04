@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "conditions": {
+      "type": "object",
+      "required": ["logicOperator", "field", "operator", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "logicOperator": {
+          "type": "string",
+          "enum": ["if", "and", "or", "else_if"],
+          "description": "Logical operator to combine conditions"
+        },
+        "field": {
+          "type": "string",
+          "enum": ["device", "country", "os", "language"],
+          "description": "Field to check against"
+        },
+        "operator": {
+          "type": "string",
+          "enum": ["includes", "excludes"],
+          "description": "Comparison operator"
+        },
+        "value": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "minItems": 1
+            }
+          ],
+          "description": "Value(s) to compare against"
+        }
+      }
+    },
+    "conditionGroup": {
+      "type": "object",
+      "required": ["conditions", "redirectUrl"],
+      "additionalProperties": false,
+      "properties": {
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/conditions"
+          },
+          "description": "Array of conditions that must be satisfied"
+        },
+        "redirectUrl": {
+          "type": "string",
+          "pattern": "(http://www\\.|https://www\\.|http://|https://)?[a-z0-9]+([\\-.][a-z0-9]+)*\\.[a-z]{2,10}(:[0-9]{1,5})?(/.*)?(\\?.*)?$",
+          "description": "URL to redirect to when conditions are met. No 'format: uri' — the pattern already makes the scheme optional to accept bare domains, as legacy Angular has always stored."
+        }
+      }
+    }
+  },
+  "title": "conditional urls",
+  "type": "array",
+  "items": {
+    "$ref": "#/definitions/conditionGroup"
+  },
+  "description": "Array of condition groups for conditional redirection"
+}

@@ -19,6 +19,10 @@ from forms import build_form_blocks
 from mcp_http.annotations import annotations_for
 from mcp_http.dispatcher import execute_tool
 from mcp_http.more_tools import MORE_TOOLS
+from mcp_http.page_tools import PAGE_TOOL_NAMES
+
+# Landing-page tools have their own tests (test_page_tools.py).
+ONE_ENDPOINT = [t for t in MORE_TOOLS if t.name not in PAGE_TOOL_NAMES]
 
 KEY = "key123"
 
@@ -88,7 +92,7 @@ CASES = [
 
 
 def test_every_new_tool_has_a_case():
-    assert {c[0] for c in CASES} == {t.name for t in MORE_TOOLS}
+    assert {c[0] for c in CASES} == {t.name for t in ONE_ENDPOINT}
 
 
 @pytest.mark.parametrize("tool,args,method,path,query,body", CASES, ids=[c[0] for c in CASES])
@@ -101,7 +105,7 @@ def test_request(api, tool, args, method, path, query, body):
     assert call["headers"]["Authorization"] == KEY  # forwarded exactly as given
 
 
-@pytest.mark.parametrize("tool", [t.name for t in MORE_TOOLS])
+@pytest.mark.parametrize("tool", [t.name for t in ONE_ENDPOINT])
 def test_no_api_key_calls_nothing(api, tool):
     args = next(c[1] for c in CASES if c[0] == tool)
     assert "error" in execute_tool(tool, args, None)
@@ -111,7 +115,7 @@ def test_no_api_key_calls_nothing(api, tool):
 def test_writes_are_never_read_only():
     writes = {"create_form_notification", "update_form_notification", "restore_qr_codes", "update_qr_tags",
               "create_gs1_recall", "update_gs1_recall", "create_analytics_report", "resend_user_invitation"}
-    for t in MORE_TOOLS:
+    for t in ONE_ENDPOINT:
         assert annotations_for(t.name)["readOnlyHint"] is (t.name not in writes), t.name
     for name in ("update_qr_tags", "update_gs1_recall", "update_form_notification"):
         assert annotations_for(name)["destructiveHint"] is True, name

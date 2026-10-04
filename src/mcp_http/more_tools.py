@@ -529,4 +529,10 @@ MORE_TOOLS: list[MoreTool] = [
     ),
 ]
 
+# Landing pages (create, change, preview, publish) live in page_tools.py; it
+# needs MoreTool and the helpers above, so it's imported once they exist.
+from mcp_http.page_tools import PAGE_TOOLS  # noqa: E402
+
+MORE_TOOLS += PAGE_TOOLS
+
 MORE_TOOLS_BY_NAME: dict[str, MoreTool] = {t.name: t for t in MORE_TOOLS}

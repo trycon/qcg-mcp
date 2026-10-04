@@ -30,6 +30,9 @@ READ_ONLY = frozenset({
     "get_custom_domain", "list_bulk_operations", "get_bulk_operation_stats", "list_media",
     "get_integrations_overview", "list_webhooks", "list_tracking_sites", "list_tracking_funnels",
     "list_page_templates",
+    # page_tools.py — get_page_preview only mints a 1-hour view link.
+    "list_page_blocks", "get_page_block", "list_page_themes", "get_page_theme", "get_page_template",
+    "get_page", "get_page_preview",
 })
 
 ADDITIVE = frozenset({
@@ -40,6 +43,9 @@ ADDITIVE = frozenset({
     # the address given; resend_user_invitation sends an email.
     "create_form_notification", "restore_qr_codes", "create_gs1_recall",
     "create_analytics_report", "resend_user_invitation",
+    # page_tools.py — edit_page only changes the page's draft; what scanners
+    # see changes on publish_page.
+    "create_page", "edit_page",
 })
 
 DESTRUCTIVE = frozenset({
@@ -50,6 +56,8 @@ DESTRUCTIVE = frozenset({
     # more_tools.py — replaces all of a code's tags; changes or switches off
     # what scanners of a recalled product see; changes or stops an alert.
     "update_qr_tags", "update_gs1_recall", "update_form_notification",
+    # page_tools.py — replaces what everyone scanning the code sees.
+    "publish_page",
 })
 
 IDEMPOTENT = frozenset({

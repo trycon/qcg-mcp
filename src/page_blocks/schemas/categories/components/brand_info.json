@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Brand info schema",
+  "description": "Brand info schema of Restaurant card",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "banner": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "Banner URL",
+          "anyOf": [
+              { "pattern": "^(https?:\/\/.*\\.(png|jpeg|jpg|svg|gif|PNG|JPEG|JPG|SVG|GIF))$" },
+              { "const": "" }
+           ]
+        }
+      }
+    },
+    "description": {
+      "type": "string",
+      "description": "Brand description",
+      "maxLength": 100
+    },
+    "title": {
+      "type": "string",
+      "description": "Brand title",
+      "maxLength": 50
+    },
+    "logo": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "Logo URL",
+           "anyOf": [
+              { "pattern": "^(https?:\/\/.*\\.(png|jpeg|jpg|svg|gif|PNG|JPEG|JPG|SVG|GIF))$" },
+              { "const": "" }
+           ]
+        }
+      }
+    },
+    "cardStyle": {
+      "$ref": "style/card.json"
+    },
+    "layout": {
+      "$ref": "style/layout.json"
+    }
+  }
+}

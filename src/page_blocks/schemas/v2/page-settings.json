@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "v2 Page Settings",
+  "description": "Navigation and SEO settings for a v2 QR code or Page",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "nav": {
+      "type": "string",
+      "enum": ["bottom_tabs", "top_tabs", "none"],
+      "default": "none"
+    },
+    "navItems": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["pageId", "label"],
+        "properties": {
+          "pageId": { "type": "string", "minLength": 1 },
+          "label": { "type": "string", "maxLength": 24 },
+          "icon": { "type": "string" }
+        }
+      }
+    },
+    "favicon": { "type": "string", "format": "uri" }
+  }
+}

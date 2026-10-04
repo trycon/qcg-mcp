@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Property Listing block",
+  "description": "List of properties for sale, rent or lease with specs, pricing, location and photos",
+  "type": "object",
+  "required": ["listings"],
+  "additionalProperties": false,
+  "properties": {
+    "listings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["propertyName"],
+        "additionalProperties": false,
+        "properties": {
+          "propertyName": {
+            "type": "string"
+          },
+          "propertyDescription": {
+            "type": "string"
+          },
+          "purpose": {
+            "type": "string",
+            "enum": ["sale", "rent", "lease"]
+          },
+          "bedroom": {
+            "type": ["string", "integer"]
+          },
+          "bathroom": {
+            "type": ["string", "integer"]
+          },
+          "propertyArea": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "type": ["string", "integer"]
+              },
+              "unit": {
+                "type": "string"
+              }
+            }
+          },
+          "propertyLot": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "type": ["string", "integer"]
+              },
+              "unit": {
+                "type": "string"
+              }
+            }
+          },
+          "pricing": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "amount": {
+                "type": ["string", "integer"]
+              },
+              "currency": {
+                "type": "string"
+              },
+              "frequency": {
+                "type": "string"
+              },
+              "lease": {
+                "type": ["string", "integer"]
+              },
+              "leaseFrequency": {
+                "type": "string"
+              }
+            }
+          },
+          "propertyLocation": {
+            "type": "string"
+          },
+          "furnishing": {
+            "type": "string",
+            "enum": ["fully-furnished", "semi-furnished", "unfurnished"]
+          },
+          "showOnMap": {
+            "type": "boolean",
+            "description": "Written by the new builder block (singular). Kept alongside the Angular-legacy 'showOnMaps'."
+          },
+          "showOnMaps": {
+            "type": "boolean",
+            "description": "Written directly by the live Angular property-listing form (plural, legacy field name)."
+          },
+          "mapLocation": {
+            "$ref": "_base_map.json#/properties/location"
+          },
+          "media": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "url": {
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Base map component",
+  "description": "This component can be extended to add extra properties",
+  "type": "object",
+  "required": [
+    "location"
+  ],
+  "properties": {
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": [
+            "google",
+            "baidu",
+            "openstreetmap"
+          ],
+          "title": "Provider of the map",
+          "description": "Provider of the map. Ex., Google, Baidu, etc. NOTE: 'baidu' is schema-only — no frontend picker or renderer branch exists for it (no China dev/API access as of this writing). The Next.js builder's location picker always writes 'openstreetmap' (Nominatim search/reverse-geocode); the public page renderer always embeds Google Maps regardless of this field's value. Do not assume setting 'baidu' here changes anything visible until real support is built."
+        },
+        "latitude": {
+          "oneOf": [
+            { "type": "number" },
+            { "type": "string" }
+          ],
+          "title": "Latitude",
+          "description": "Latitude of the location."
+        },
+        "longitude": {
+          "oneOf": [
+            { "type": "number" },
+            { "type": "string" }
+          ],
+          "title": "Longitude",
+          "description": "Longitude of the location."
+        },
+        "placeId": {
+          "type": "string",
+          "title": "Place id",
+          "description": "Used to locate the particular place on the map"
+        },
+        "placeName": {
+          "type": "string",
+          "title": "Place name",
+          "description": "Place name displayed to the user in case map title is mis-guiding.",
+          "anyOf": [
+            { "minLength": 2 },
+            { "const": "" }
+          ]
+        },
+        "zoom": {
+          "type": "number",
+          "title": "Zoom level of the map",
+          "description": "Zoom level of the map to set when map is rendered"
+        }
+      }
+    }
+  }
+}

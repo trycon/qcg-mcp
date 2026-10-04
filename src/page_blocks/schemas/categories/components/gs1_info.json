@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "GS1 Product Info Component",
+  "description": "gs1_info has no content fields by design (packages/blocks/src/blocks/landing/gs1-info/definition.ts, Decision 4: 'No content fields at all' — the block auto-shows live product data for whichever GS1 code the page is linked to; nothing is stored on the block itself). data is always {}.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {}
+}

@@ -238,6 +238,18 @@ Add the following configuration to your IDE's MCP settings:
 | Tool | Type | Description |
 |---|---|---|
 | `list_page_templates` | Read-only | List landing page templates for QR codes that open a page — Scanova's own, or only the account's saved ones |
+| `list_page_blocks` | Read-only | The blocks a landing page can have for a page category, what each is for and how many a page holds |
+| `get_page_block` | Read-only | One block type's fields, defaults and data schema |
+| `list_page_themes` | Read-only | The themes a page can use, with their main colours |
+| `get_page_theme` | Read-only | One theme's full values (colours, fonts, corners, shadows, spacing, background) |
+| `get_page_template` | Read-only | One template's theme and blocks |
+| `get_page` | Read-only | A code's landing page: blocks in order, theme, unpublished changes, preview and builder links |
+| `get_page_preview` | Read-only | A 1-hour link to the latest draft as visitors would see it; optionally a screenshot |
+| `create_page` | Write | Create a code with a landing page as a draft, from a template or blocks |
+| `edit_page` | Write | Change the draft: add, change, remove or move blocks; theme; theme values; a template's look or layout; name; search details |
+| `publish_page` | Write (destructive) | Make the draft live for everyone scanning the code |
+
+Pages are written in the page builder's block format, so they open at app.scanova.io and can be edited there. Blocks are checked against Scanova's own schemas before saving; refresh them with `python scripts/sync_page_blocks.py <qcg-backend> <qcg-frontend-next>` when blocks change.
 
 ## Usage
 

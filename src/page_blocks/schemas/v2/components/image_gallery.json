@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Image Gallery block (v2)",
+  "description": "v2-only block (allowedInPageTypes: image) — no v1 category equivalent, no backend schema existed prior to this file, so validation was silently skipped.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "pageTitle": {
+      "type": "string"
+    },
+    "subHeading": {
+      "type": "string"
+    },
+    "pageLayout": {
+      "type": "string",
+      "enum": ["grid", "list"]
+    },
+    "files": {
+      "type": "array",
+      "maxItems": 50,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "url": {
+            "type": "string",
+            "anyOf": [
+              { "pattern": "(https?://.*\\.(png|jpeg|jpg|svg|gif|PNG|JPEG|JPG|SVG|GIF))$" },
+              { "const": "" }
+            ]
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 30,
+            "description": "Optional per-photo heading shown above the caption. 30-char cap mirrors the legacy image category's main_page files[] title."
+          },
+          "caption": {
+            "type": "string"
+          },
+          "size": {
+            "type": "number",
+            "description": "Bytes. Persisted by the uploader so the gallery page's side panel can report a total size, the same way audio_player's files[] do. The legacy image category's main_page files[] already allowed this key."
+          }
+        }
+      }
+    },
+    "formatting": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "textStyle": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "fontFamily": { "type": "string" }
+          }
+        }
+      }
+    },
+    "cardStyle": {
+      "$ref": "../../categories/components/style/card.json",
+      "description": "Root-level, distinct from formatting.cardStyle: WithCardEffect (shell/with-effect.tsx) always reads this cardStyle.effect regardless of where backgroundColor lives — see design-field-presets.ts's cardEffectField() comment. Pre-existing gap: cardEffectField() has been in image-gallery/definition.ts's designFields with no matching schema property here, so a strict publish with a card effect set would have 400'd — fixed alongside the layout property below (.ai/block-card-appearance-plan.md, qcg-frontend-next)."
+    },
+    "layout": { "$ref": "../../categories/components/style/layout.json" }
+  }
+}

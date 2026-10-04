@@ -29,6 +29,7 @@ import json
 import re
 
 from mcp_http.more_tools import MORE_TOOLS
+from mcp_http.page_tools import PAGE_TOOL_NAMES
 
 # Map tool names to the Scanova API endpoint path (informational, not used for routing)
 _TOOL_ENDPOINTS = {
@@ -248,7 +249,7 @@ def _unwrap_jsonrpc(raw: dict, tool_name: str) -> dict | None:
 
 
 # Tools whose result is built in this server (not a Scanova API response), with list-valued fields.
-_REPORT_TOOLS = {"preview_qr_design", "get_qr_design_options"}
+_REPORT_TOOLS = {"preview_qr_design", "get_qr_design_options", *PAGE_TOOL_NAMES}
 
 
 def normalize(raw, tool_name: str) -> dict:

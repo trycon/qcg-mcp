@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Document page blocks",
+  "description": "Allowed block types for a document (viewer) page. Like a component page, a document page is a free-composition block array: the builder seeds it with a single `document_viewer` block (add-page-sheet.tsx INITIAL_BLOCKS) and the user may add/remove any other block, so it validates the same way as component-page.json — the allowed `type` enum plus per-block `data` dispatch via ../block-item.json. (The previous intro_page/main_page-only, max-2-block model matched neither the v2 builder nor the backend's own seed_page_templates document template, which both emit page_title/document_viewer/description_box — QCG-19801.)",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "allOf": [
+      { "$ref": "../block-item.json" },
+      {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "page_title", "description_box", "document_viewer", "banner_images",
+              "button", "event_schedule", "event_venue", "couple_name",
+              "social_media_profiles", "social_sharing_buttons", "map", "video",
+              "file", "separator", "rsvp", "rsvp_form", "custom_form", "custom_script",
+              "page_header", "contact_us", "intro_page", "image_gallery",
+              "audio_player", "footer_info", "logo_section", "profile_info",
+              "brand_info", "company_branding", "about_us", "coupon_details",
+              "review_us", "contact_details", "menu_info", "feedback_info",
+              "start_page", "success_page", "property_listing", "real_estate_profile",
+              "main_page", "cover_page"
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

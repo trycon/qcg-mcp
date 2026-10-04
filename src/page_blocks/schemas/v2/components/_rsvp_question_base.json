@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Base fields shared by an rsvp (v2) question item",
+  "description": "Not used standalone -- extended via allOf by rsvp_form.json's questions[] items. Mirrors the pattern in forms/json_schema/components/questions/base_question.json for the same field set (id/question/isRequired/questionDescription/privacyNote), but is its own file rather than a shared $ref with that one: rsvp's question length bounds (1-1000 chars) differ from the standalone Forms module's (0-200 chars) -- merging the two via allOf would silently tighten one of them to the other's limit.",
+  "type": "object",
+  "required": ["question", "answer"],
+  "properties": {
+    "id": { "type": "string", "description": "Stable client-generated id used to key form responses -- optional for backward compatibility with forms saved before this field existed." },
+    "question": { "type": "string", "minLength": 1, "maxLength": 1000 },
+    "isRequired": { "type": "boolean" },
+    "questionDescription": { "type": "string" },
+    "privacyNote": { "type": "string", "maxLength": 300 }
+  }
+}

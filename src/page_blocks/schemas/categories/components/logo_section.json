@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Logo section schema",
+  "description": "Logo section schema of Feedback QR",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "logo": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "Logo URL",
+           "anyOf": [
+              { "pattern": "^(https?:\/\/.*\\.(png|jpeg|jpg|svg|gif|PNG|JPEG|JPG|SVG|GIF))$" },
+              { "const": "" }
+           ]
+        }
+      }
+    }
+  }
+}

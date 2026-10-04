@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Real Estate Profile block",
+  "description": "Real estate agent profile — name, photo, license number, bio and company logo",
+  "type": "object",
+  "required": ["name", "license_number"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "license_number": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "image": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "companyLogo": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "cardStyle": {
+      "$ref": "style/card.json"
+    },
+    "layout": { "$ref": "style/layout.json" }
+  }
+}

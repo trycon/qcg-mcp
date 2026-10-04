@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Couple Name component",
+  "description": "Validate couple name component schema",
+  "type": "object",
+  "required": ["first_name", "second_name"],
+  "additionalProperties": false,
+  "properties": {
+    "first_name": {
+      "type": "string",
+      "maxLength": 30
+    },
+    "second_name": {
+      "type": "string",
+      "maxLength": 30
+    },
+    "separator_text": {
+      "type": "string",
+      "maxLength": 30
+    },
+    "formatting": { "$ref": "style/formatting.json" },
+    "separator": {
+      "$ref": "separator.json"
+    },
+    "cardStyle": {
+      "$ref": "style/card.json",
+      "description": "Root-level, distinct from formatting.cardStyle: WithCardEffect (shell/with-effect.tsx) always reads this cardStyle.effect regardless of where backgroundColor lives — see design-field-presets.ts's cardEffectField() comment."
+    },
+    "layout": { "$ref": "style/layout.json" }
+  }
+}

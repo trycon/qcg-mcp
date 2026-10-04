@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Contact Details block",
+  "description": "Phone numbers, SMS numbers, fax numbers, email addresses, websites, physical addresses and a save-contact button",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "phoneNumbers": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "phoneNumber": {
+            "type": "string",
+            "maxLength": 30,
+            "pattern": "^(?:$|\\d{1,20}|((\\+\\d{1,3}([- ])?\\(?\\d\\)?([- ])?\\d{1,5})|(\\(?\\d{2,6}\\)?))([- ])?(\\d{3,4})([- ])?(\\d{4})([- ])?((x|ext|[;,])([- ])?\\d{1,5})*[,;]?)$"
+          },
+          "extension": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "label": {
+            "type": "string"
+          },
+          "tracking": {
+            "$ref": "event_tracking.json"
+          }
+        }
+      }
+    },
+    "txtMsgNumbers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "txtMsgNumber": {
+            "type": "string",
+            "maxLength": 30
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "faxes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "faxNumber": {
+            "type": "string",
+            "maxLength": 30
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "emails": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["email"],
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "An empty string is accepted and treated as 'no email' — the builder keeps a blank email row until the user fills it in, and rejecting '' blocked saving the whole QR (Sentry QCG-BACKEND-9PA). Any non-empty value still gets the full format/minLength/pattern checks via the if/then below (if/then rather than anyOf so a bad address keeps its specific error message).",
+            "if": { "minLength": 1 },
+            "then": {
+              "format": "email",
+              "minLength": 5,
+              "pattern": "^\\S+@\\S+\\.\\S+$"
+            }
+          },
+          "label": {
+            "type": "string"
+          },
+          "tracking": {
+            "$ref": "event_tracking.json"
+          }
+        }
+      }
+    },
+    "website": {
+      "type": "array",
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["url"],
+        "additionalProperties": false,
+        "properties": {
+          "url": {
+            "type": "string",
+            "maxLength": 200,
+            "pattern": "(http://www\\.|https://www\\.|http://|https://)?[a-z0-9]+([\\-.][a-z0-9]+)*\\.[a-z]{2,10}(:[0-9]{1,5})?(/.*)?(\\?.*)?$",
+            "description": "No 'format: uri' here on purpose — the pattern above already makes the scheme optional (legacy Angular's business-card form has always accepted a bare domain like 'reddit.com'); adding format:uri would silently re-impose a scheme requirement the pattern was written to avoid."
+          },
+          "label": {
+            "type": "string"
+          },
+          "tracking": {
+            "$ref": "event_tracking.json"
+          }
+        }
+      }
+    },
+    "addresses": {
+      "type": "array",
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "address": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "label": {
+            "type": "string",
+            "description": "Address label — written by the business-card Angular form and by the new builder."
+          },
+          "addressLabel": {
+            "type": "string",
+            "description": "Address label — written directly by the vCard Angular form (legacy field name, kept alongside 'label')."
+          },
+          "hasMapLocation": {
+            "type": "boolean"
+          },
+          "location": {
+            "$ref": "_base_map.json#/properties/location"
+          },
+          "tracking": {
+            "$ref": "event_tracking.json"
+          }
+        }
+      }
+    },
+    "customFields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["field"],
+        "additionalProperties": false,
+        "properties": {
+          "field": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "buttonPosition": {
+      "type": "string",
+      "enum": ["bottom", "top", "floating", "circle", "none"]
+    },
+    "iconStyle": {
+      "type": "string",
+      "enum": ["flat", "circle"]
+    },
+    "showDividers": {
+      "type": "boolean"
+    },
+    "mapDisplay": {
+      "type": "string",
+      "enum": ["link", "embed"]
+    },
+    "mapProvider": {
+      "type": "string",
+      "enum": ["openstreetmap", "google"]
+    },
+    "cardStyle": {
+      "$ref": "style/card.json",
+      "description": "Card background/material override — added alongside the bc-omega-million business-card template (qcg-frontend-next design-field-presets.ts cardBackgroundField/cardSurfaceField), same shape already used by profile_info.json and social_media_profiles.json."
+    },
+    "layout": {
+      "$ref": "style/layout.json",
+      "description": "Shared appearance/transparent box-model override — added alongside the bc-omega-million business-card template, same shape already used by profile_info.json and button.json."
+    }
+  }
+}
