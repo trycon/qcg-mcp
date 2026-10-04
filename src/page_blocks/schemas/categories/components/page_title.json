@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Page title component",
+  "description": "Validate page title component schema",
+  "type": "object",
+  "required": [
+    "title"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "subtitle": {
+      "type": "string"
+    },
+    "align": {
+      "type": "string",
+      "enum": ["left", "center", "right"],
+      "description": "Renamed from textAlign to match the frontend field id (packages/blocks/src/blocks/landing/page-title/definition.ts) — QCG-19801."
+    },
+    "cardStyle": {
+      "$ref": "style/card.json"
+    },
+    "textStyle": {
+      "$ref": "style/text.json"
+    },
+    "subtitleStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "textColor": {
+          "type": "string"
+        },
+        "fontFamily": {
+          "type": "string",
+          "description": "Font family name for the subtitle text."
+        }
+      }
+    },
+    "layout": {
+      "$ref": "style/layout.json"
+    }
+  }
+}

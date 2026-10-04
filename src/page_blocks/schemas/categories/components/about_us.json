@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "About Us block",
+  "description": "Rich-text description and optional photo gallery",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "text": {
+      "type": "string",
+      "description": "Rich-text (HTML from Quill editor)"
+    },
+    "images": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "url": {
+            "type": "string",
+            "pattern": "(http://www\\.|https://www\\.|http://|https://)?[a-z0-9]+([\\-.][a-z0-9]+)*\\.[a-z]{2,10}(:[0-9]{1,5})?(/.*)?(\\?.*)?$"
+          }
+        }
+      }
+    },
+    "cardStyle": {
+      "$ref": "style/card.json"
+    },
+    "imageStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "height": {
+          "type": "string",
+          "enum": ["96px", "128px", "160px", "200px"]
+        }
+      }
+    },
+    "layout": {
+      "$ref": "style/layout.json"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Button styling",
+  "description": "Button style properties",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "variant": {
+      "type": "string",
+      "enum": ["default", "filled", "outline", "ghost", "link"],
+      "description": "Visual style variant for the button"
+    },
+    "fullWidth": {
+      "type": "boolean",
+      "description": "Whether the button stretches to fill its container width"
+    },
+    "borderWidth": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "borderRadius": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "color": {
+      "$ref": "hex-color.json"
+    },
+    "borderColor": {
+      "$ref": "hex-color.json"
+    },
+    "iconColor": {
+      "$ref": "hex-color.json",
+      "description": "QCG-18038: icon color, independent of the label/text color. Empty string means inherit the label's resolved color."
+    },
+    "effect": {
+      "$ref": "effect.json",
+      "description": "Animated visual effect attached to the button. null explicitly disables inheriting a theme-level effect; omitted means inherit the theme default."
+    }
+  }
+}

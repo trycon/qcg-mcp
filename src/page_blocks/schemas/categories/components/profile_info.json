@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Profile Info block",
+  "description": "Agent or person profile — name, pronouns, designation, company, bio and photos",
+  "type": "object",
+  "additionalProperties": false,
+  "anyOf": [
+    { "required": ["name"] },
+    { "required": ["first_name"] }
+  ],
+  "properties": {
+    "displayStyle": {
+      "type": "string",
+      "enum": ["center", "banner", "card", "card-accent", "solid", "float", "portrait", "hero", "float-bg", "quick-contact", "stacked", "overlay", "overlay-wave"],
+      "description": "Visual layout of the profile block. Renamed from 'layout' (.ai/block-card-appearance-plan.md, qcg-frontend-next) to free the layout.* namespace for the shared appearance/transparent/fullWidth system below. 'stacked'/'overlay'/'overlay-wave' are 1:1 ports of classic business-card templates 4/6/7 (qcg-frontend-next profile-info/renderer.tsx). 'quick-contact' reads a sibling contact_details block's data at render time via LandingContext (qcg-frontend-next shell/context.ts) — it stores no phone/email/address of its own."
+    },
+    "portraitHeight": {
+      "type": "string",
+      "enum": ["compact", "balanced", "full", "immersive"],
+      "description": "Profile photo height preset for the 'portrait' displayStyle only; ignored by every other layout (frontend: packages/blocks/src/blocks/landing/profile-info/definition.ts)."
+    },
+    "name": {
+      "type": "string",
+      "maxLength": 200,
+      "description": "Full name — written by the vCard Angular form and used when the block is authored under the vCard/dynamicVCard categories.",
+      "anyOf": [
+        { "minLength": 2 },
+        { "const": "" }
+      ]
+    },
+    "first_name": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "First name — written directly by the live business-card Angular form (no 'name' field exists there at all)."
+    },
+    "last_name": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Last name — written directly by the live business-card Angular form."
+    },
+    "pronoun": {
+      "type": "string",
+      "maxLength": 30
+    },
+    "designation": {
+      "type": "string",
+      "maxLength": 100,
+      "anyOf": [
+        { "minLength": 2 },
+        { "const": "" }
+      ]
+    },
+    "company": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "image": {
+      "type": "object",
+      "required": ["url"],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "anyOf": [
+            { "pattern": "(https?://.*\\.(png|jpeg|jpg|svg|PNG|JPEG|JPG|SVG))$" },
+            { "const": "" }
+          ]
+        },
+        "shape": {
+          "type": "string",
+          "enum": ["circle", "rounded"]
+        }
+      }
+    },
+    "companyLogo": {
+      "type": "object",
+      "required": ["url"],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "anyOf": [
+            { "pattern": "(https?://.*\\.(png|jpeg|jpg|svg|PNG|JPEG|JPG|SVG))$" },
+            { "const": "" }
+          ]
+        },
+        "shape": {
+          "type": "string",
+          "enum": ["circle", "rounded"]
+        }
+      }
+    },
+    "cardStyle": {
+      "$ref": "style/card.json"
+    },
+    "layout": { "$ref": "style/layout.json" },
+    "textStyle": {
+      "$ref": "style/text.json",
+      "description": "Classic business-card ports only (stacked/overlay/overlay-wave): the card's own text colour and name size carried over from classic design_info (textColor = primaryText; fontSize = fontSize.name in rem on classic's 14px root). Other displayStyles ignore it."
+    },
+    "photoStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Overrides for the floating profile photo used by the float/float-bg/hero displayStyles.",
+      "properties": {
+        "ringColor": {
+          "$ref": "style/hex-color.json",
+          "description": "Photo ring/border colour, independent of cardStyle.backgroundColor. Empty string or omitted falls back to cardStyle.backgroundColor, then the theme surface colour."
+        }
+      }
+    },
+    "ctaButton": {
+      "type": "string"
+    },
+    "ctaLink": {
+      "type": "string"
+    },
+    "backgroundStyle": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Accent/hero-zone or card-surface background (frontend: packages/blocks/src/blocks/landing/profile-info/definition.ts) — distinct from cardStyle.backgroundColor, which only affects the description text strip.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["solid", "gradient", "image"]
+        },
+        "color": {
+          "$ref": "style/hex-color.json"
+        },
+        "gradient": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "from": { "$ref": "style/hex-color.json" },
+            "to": { "$ref": "style/hex-color.json" },
+            "direction": {
+              "type": "string",
+              "enum": ["to bottom", "to right", "135deg"]
+            }
+          }
+        },
+        "image": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "url": {
+              "type": "string",
+              "anyOf": [
+                { "pattern": "(https?://.*\\.(png|jpeg|jpg|svg|PNG|JPEG|JPG|SVG))$" },
+                { "const": "" }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

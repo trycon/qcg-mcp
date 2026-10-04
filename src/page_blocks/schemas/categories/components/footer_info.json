@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Footer Info block",
+  "description": "Short footer text shown at the bottom of the page",
+  "type": "object",
+  "required": ["text"],
+  "additionalProperties": false,
+  "properties": {
+    "text": {
+      "type": "string",
+      "maxLength": 400
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "showDivider": {
+      "type": "boolean"
+    }
+  }
+}

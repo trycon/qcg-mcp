@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Feedback options styling",
+  "description": "Feedback style properties",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "color": {
+      "$ref": "hex-color.json",
+      "description": "Feedback HEX color. Empty string means use theme default."
+    }
+  }
+}

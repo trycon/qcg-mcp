@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Feedback Info block",
+  "description": "Star-rating feedback form with optional comment box and custom input fields",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "heading": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "comment_box": {
+      "type": "boolean"
+    },
+    "input": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "type": {
+            "type": "string",
+            "maxLength": 10
+          },
+          "required": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 30
+          }
+        }
+      }
+    },
+    "submitButton": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string"
+        },
+        "tracking": { "$ref": "event_tracking.json" }
+      }
+    },
+    "submissionBehaviour": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "submissionOption": {
+          "type": "string",
+          "enum": ["message", "url"]
+        },
+        "message": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "cardStyle": { "$ref": "style/card.json" },
+    "layout": {
+      "$ref": "style/layout.json"
+    }
+  }
+}

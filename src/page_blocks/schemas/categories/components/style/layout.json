@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Layout styling",
+  "description": "Shared per-block box-model controls (.ai/block-card-appearance-plan.md in qcg-frontend-next) — distinct from a block's own visual-variant content field, if it has one (e.g. banner_images' displayStyle).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "appearance": {
+      "type": "string",
+      "enum": ["card", "plain"],
+      "description": "Card (inset margin/border/shadow) or plain (full-width within the 480px frame). Omitted defers to the specific block's own default."
+    },
+    "transparent": {
+      "type": "boolean",
+      "description": "Force a fully see-through background, overriding any resolved surface colour. Default false (opaque)."
+    },
+    "fullWidth": {
+      "type": "boolean",
+      "description": "Break the block out of the 480px mobile frame entirely, spanning the physical viewport. A distinct axis from appearance — this leaves the frame, appearance never does."
+    }
+  }
+}

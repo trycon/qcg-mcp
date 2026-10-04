@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Card styling",
+  "description": "Card style properties",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "backgroundColor": {
+      "$ref": "hex-color.json",
+      "description": "Card background HEX color. Empty string means use theme default."
+    },
+    "effect": {
+      "$ref": "effect.json",
+      "description": "Animated visual effect attached to the card. null explicitly disables inheriting a theme-level effect; omitted means inherit the theme default."
+    },
+    "material": {
+      "$ref": "material.json",
+      "description": "Card surface material (Standard, Glass, …). null explicitly forces the standard material even if a theme default is set; omitted means inherit the theme default."
+    },
+    "shadowVariant": {
+      "type": "string",
+      "enum": ["standard", "elevated"],
+      "description": "Which theme shadow slot (shadow.card vs shadow.elevated) this card uses. Omitted means inherit the theme default."
+    },
+    "variant": {
+      "type": "string",
+      "enum": ["plain", "card"],
+      "description": "Render as a plain text block (default) or a distinct bordered card. Currently used by description_box."
+    }
+  }
+}

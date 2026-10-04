@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Material",
+  "description": "Card surface material (materialRegistry — packages/blocks/src/materials/). null explicitly forces the standard material even if a theme default is set; omitted means inherit the theme default.",
+  "type": ["object", "null"],
+  "required": ["type"],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["standard", "glass"]
+    },
+    "config": {
+      "type": "object"
+    }
+  }
+}

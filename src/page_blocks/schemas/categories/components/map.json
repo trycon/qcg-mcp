@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Map location component",
+  "description": "Validate map location component schema",
+  "allOf": [
+    {
+      "$ref": "_base_map.json"
+    },
+    {
+      "properties": {
+        "location": {},
+        "button": {
+          "$ref": "_base_button.json"
+        },
+        "showMap": {
+          "type": "boolean",
+          "description": "Whether to show the map or not"
+        },
+        "address": {
+          "type": "string",
+          "description": "The address to be shown on the map"
+        },
+        "showDirectionsButton": {
+          "type": "boolean"
+        },
+        "directionsLabel": {
+          "type": "string"
+        },
+        "formatting": { "$ref": "style/formatting.json" },
+        "layout": { "$ref": "style/layout.json" }
+      },
+      "required": [
+        "button"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

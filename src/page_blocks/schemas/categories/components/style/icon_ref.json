@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Icon reference",
+  "description": "Shared shape for a block's optional icon value. Extensible via the `type` discriminator on the object branches — add a new `type` value with its own required/optional properties (e.g. `{\"type\":\"custom\",\"assetId\":...}` for a custom SVG) as new icon sources are supported, without breaking data saved under the existing branches. QCG-20295: the button block previously inlined this same oneOf directly, with no discriminator — see git history on _base_button.json. The `image` branch below was consolidated from menu_info.json's and social_profile.json's own separately-inlined `{url}` icon shapes — see git history on those files.",
+  "oneOf": [
+    {
+      "type": "string",
+      "maxLength": 10,
+      "description": "A raw emoji or unicode character, rendered as text."
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name"],
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["icon"],
+          "default": "icon",
+          "description": "Discriminates the icon source. Optional and defaults to \"icon\" so rows saved before this discriminator existed (bare {name,color}) keep validating without a data migration. Future icon-source branches (image, custom, ...) must declare their own required `type` value and a disjoint property set so `oneOf` can still tell branches apart."
+        },
+        "name": {
+          "type": "string",
+          "description": "Icon name from our icon library (see packages/blocks/src/data/block-icons.ts on the frontend)."
+        },
+        "color": {
+          "type": "string",
+          "description": "Icon color. Empty/absent means use theme default."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["image"],
+          "default": "image",
+          "description": "Discriminates the icon source. Optional and defaults to \"image\" so rows saved before this discriminator existed (bare {url}) keep validating without a data migration."
+        },
+        "url": {
+          "type": "string",
+          "maxLength": 2048,
+          "description": "URL of an uploaded/external image used as the icon. Absent or empty means no icon set."
+        }
+      },
+      "description": "An uploaded or externally-hosted image used as the icon, as opposed to a library icon or emoji. `url` is optional (an icon field with no image set yet is still a valid, empty image reference) — matches the field's frontend editor (kind:\"image\"), which writes only the `url` sub-path and never a `type` key, relying on this default."
+    }
+  ]
+}

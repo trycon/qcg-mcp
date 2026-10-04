@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Document Viewer block",
+  "description": "Embeddable document viewer block for component pages. Same fields as document main_page.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["files"],
+  "properties": {
+    "pageTitle": { "type": "string", "maxLength": 100 },
+    "subHeading": { "type": "string", "maxLength": 200 },
+    "pageLayout": {
+      "type": "string",
+      "enum": ["list", "grid", "slide"],
+      "default": "list"
+    },
+    "allowFileDownload": { "type": "boolean" },
+    "openSingleFileDirectly": {
+      "type": "boolean",
+      "description": "When the block holds exactly one readable file (PDF/image/text/CSV), the landing page opens it straight in the document reader instead of showing a one-row list. Absent means true: pages published before this field existed get the behaviour too."
+    },
+    "files": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["url"],
+        "properties": {
+          "url": {
+            "type": "string",
+            "anyOf": [{ "format": "uri" }, { "const": "" }],
+            "description": "Empty string means no file uploaded yet (list-editor placeholder row before the user picks a file)."
+          },
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "mime": { "type": "string" },
+          "size": { "type": "number" },
+          "fileName": { "type": "string" },
+          "thumbnail": {
+            "type": "string",
+            "anyOf": [{ "format": "uri" }, { "const": "" }],
+            "description": "Optional per-file cover image, shown by the renderer instead of the generic document icon. Empty string means none."
+          },
+          "description": { "type": "string" }
+        }
+      }
+    }
+  }
+}

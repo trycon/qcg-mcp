@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Menu Info block",
+  "description": "Restaurant menu — single PDF file or multiple named sections each with their own file",
+  "type": "object",
+    "properties": {
+    "_menuMode": {
+      "type": "string",
+      "enum": ["single", "multiple"],
+      "description": "Controls which menu mode is active in the builder"
+    },
+    "single": {
+      "type": "object",
+            "properties": {
+        "file": {
+          "type": "object",
+                    "properties": {
+            "url": {
+              "type": "string",
+              "anyOf": [
+                { "pattern": "(http://www\\.|https://www\\.|http://|https://)?[a-z0-9]+([\\-.][a-z0-9]+)*\\.[a-z]{2,10}(:[0-9]{1,5})?(/.*)?(\\?.*)?$" },
+                { "const": "" }
+              ]
+            },
+            "name": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "description": "Set when populated via direct upload (QCG bug-hunt row 513); absent for a plain pasted URL."
+            },
+            "mime": {
+              "type": "string",
+              "description": "Set when populated via direct upload (QCG bug-hunt row 513); absent for a plain pasted URL."
+            }
+          }
+        }
+      }
+    },
+    "multiple": {
+      "type": "array",
+      "items": {
+        "type": "object",
+                "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "icon": {
+            "description": "Library icon, emoji or image, plus the deprecated Angular-era shapes.",
+            "anyOf": [
+              { "$ref": "style/icon_ref.json" },
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "maxLength": 20000,
+                    "description": "Raw SVG markup. Sanitised on the frontend before render."
+                  }
+                },
+                "description": "Deprecated: Angular-era icon shapes. Left open because pre-v11 menu_info accepted any icon object; never produced by the current builder."
+              }
+            ]
+          },
+          "id": {
+            "type": "integer"
+          },
+          "file": {
+            "type": "object",
+                        "properties": {
+              "url": {
+                "type": "string",
+                "anyOf": [
+                  { "pattern": "(http://www\\.|https://www\\.|http://|https://)?[a-z0-9]+([\\-.][a-z0-9]+)*\\.[a-z]{2,10}(:[0-9]{1,5})?(/.*)?(\\?.*)?$" },
+                  { "const": "" }
+                ]
+              },
+              "data": {
+                "type": "array",
+                "description": "Deprecated: Angular upload list. Only the first entry was ever read; entries are loose so existing rows validate.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "url":  { "type": "string", "maxLength": 2048 },
+                    "name": { "type": "string" },
+                    "type": { "type": "string" },
+                    "mime": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

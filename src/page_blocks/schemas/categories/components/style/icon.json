@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Icon styling",
+  "description": "Icon style properties",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "color": {
+      "$ref": "hex-color.json",
+      "description": "Icon color. Empty string means use theme default."
+    }
+  }
+}

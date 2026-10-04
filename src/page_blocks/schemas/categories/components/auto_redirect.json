@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Auto Redirect component schema",
+  "description": "Countdown + Skip/Continue control block. `time` is seconds before auto-redirecting (0/omitted = no auto-redirect, Skip only — visible alongside the countdown either way). `type`/`link` mirror the button component's shape (url|page|qr): for `qr`, the frontend resolves the target QR's own public URL once at edit time (qr/minimal/'s short_url) and stores it in `link`, so at render time `qr` is handled identically to `url` — no separate backend resolution needed. `qrTarget` is display-only (lets the builder re-show which QR is currently selected) and carries no redirect meaning of its own.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["type"],
+  "properties": {
+    "time": { "type": "number", "minimum": 0, "maximum": 3600 },
+    "label": { "type": "string", "maxLength": 60 },
+    "type": { "type": "string", "enum": ["url", "page", "qr"] },
+    "link": {
+      "type": "string",
+      "maxLength": 2000,
+      "anyOf": [{ "minLength": 1 }, { "const": "" }]
+    },
+    "qrTarget": { "type": "string", "maxLength": 64 }
+  }
+}

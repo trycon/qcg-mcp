@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Custom Form Component",
+  "description": "Custom form component schema",
+  "allOf": [
+    { "$ref": "_base_form.json" },
+    {
+      "properties": {
+        "receiverEmail": {
+          "type": "string",
+          "description": "Email where Form response will be sent",
+          "anyOf": [
+            { "pattern": "^\\S+@\\S+\\.\\S+$" },
+            { "const": "" }
+          ]
+        },
+        "expiry": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Form expiry date, timezone and text",
+          "properties": {
+            "date":     { "type": "string" },
+            "timezone": { "type": "string" },
+            "text":     { "type": "string", "maxLength": 1000 }
+          }
+        },
+        "submitButton": { "$ref": "_base_button.json" },
+        "submissionBehaviour": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "submissionOption": {
+              "type": "string",
+              "$comment": "success_screen is legacy data written by the custom-form-schema-update backfill; it renders like message.",
+              "enum": ["message", "url", "success_screen"]
+            },
+            "message": { "type": "string", "maxLength": 1000 },
+            "url": {
+              "type": "string",
+              "anyOf": [{ "format": "uri" }, { "const": "" }]
+            },
+            "additionalAction": { "type": "boolean" },
+            "additionalActionConfig": {
+              "type": "object",
+              "properties": {
+                "additionalActionType": { "type": "string" },
+                "manualAction": {
+                  "type": "object",
+                  "properties": {
+                    "buttonData": { "$ref": "button.json" }
+                  }
+                },
+                "automaticAction": {
+                  "type": "object",
+                  "properties": {
+                    "delay": { "type": "number" },
+                    "email": {
+                      "type": "object",
+                      "properties": {
+                        "body":           { "type": "string" },
+                        "recipientEmail": { "type": "string" },
+                        "subject":        { "type": "string" }
+                      }
+                    },
+                    "phone": {
+                      "type": "object",
+                      "properties": {
+                        "phoneNumber": { "type": "number" }
+                      }
+                    },
+                    "sms": {
+                      "type": "object",
+                      "properties": {
+                        "message":     { "type": "string" },
+                        "phoneNumber": { "type": "number" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "formatting": {
+          "type": "object",
+          "additionalProperties": false,
+          "$comment": "Superset of style/formatting.json: forms also carry iconStyle (see _base_form.json).",
+          "properties": {
+            "textStyle":  { "$ref": "style/text.json" },
+            "cardStyle":  { "$ref": "style/card.json" },
+            "iconStyle":  { "$ref": "style/icon.json" }
+          }
+        }
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

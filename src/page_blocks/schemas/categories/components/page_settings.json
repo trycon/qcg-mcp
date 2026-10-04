@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Additional Page Settings",
+  "type": "object",
+  "properties": {
+    "meta_title": {
+      "type": "string",
+      "maxLength": 100
+    },
+    "meta_description": {
+      "type": "string",
+      "maxLength": 200
+    },
+    "feature_image": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false
+    },
+    "favicon": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

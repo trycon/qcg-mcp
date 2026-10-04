@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Social Profile component",
+  "description": "Validate social profile component schema",
+  "required": [],
+  "additionalProperties": false,
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "data",
+      "field",
+      "key"
+    ],
+    "additionalProperties": false,
+    "properties": {
+      "data": {
+        "type": "string",
+        "description": "Data contains either profile url, handle id, etc.",
+        "minLength": 2
+      },
+      "field": {
+        "type": "string",
+        "enum": [
+          "url",
+          "handle",
+          "id",
+          "tel",
+          "email"
+        ],
+        "description": "Type of field value."
+      },
+      "key": {
+        "type": "string",
+        "description": "Social media name used to distinguish each social network",
+        "minLength": 2
+      },
+      "name" : {"type": "string"},
+      "label": {
+        "type": "string",
+        "description": "Label to display on the landing page",
+        "minLength": 2
+      },
+      "color": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [],
+        "properties": {
+          "button": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "border": {
+            "type": "string"
+          }
+        }
+      },
+      "icon": {
+        "$ref": "style/icon_ref.json"
+      },
+      "tracking": {
+        "$ref": "event_tracking.json"
+      }
+    }
+  }
+}

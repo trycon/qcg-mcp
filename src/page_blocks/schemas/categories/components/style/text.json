@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Text styling",
+  "description": "Text or font style properties",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "fontFamily": {
+      "type": "string",
+      "description": "Font family name."
+    },
+    "fontSize": {
+      "type": "number",
+      "enum": [0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 3.5, 4],
+      "description": "Display font size."
+    },
+    "textColor": {
+      "$ref": "hex-color.json",
+      "description": "Font Hex Color code. Empty string means use theme default."
+    }
+  }
+}

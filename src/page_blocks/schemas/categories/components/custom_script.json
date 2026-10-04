@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Custom Script Component",
+  "description": "Schema to validate custom script component",
+  "type": "object",
+  "required": [],
+  "additionalProperties": false,
+  "properties": {
+    "external": {
+      "type": "array",
+      "additionalProperties": false,
+      "maxItems": 5,
+      "$comment": "Allows 5 external links",
+      "items": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "(https?://.*\\.js([?#].*)?)$"
+          }
+        }
+      }
+    },
+    "script": {
+      "type": "string"
+    }
+  }
+}

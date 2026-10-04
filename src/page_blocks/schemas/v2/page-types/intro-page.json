@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Intro page blocks",
+  "description": "Allowed block types for an intro (splash/redirect) page. Like audio/image/document pages, an intro page is a free-composition block array — the builder seeds it with logo_section/description_box/auto_redirect (add-page-sheet.tsx INITIAL_BLOCKS) — but unlike those, the enum here is DELIBERATELY narrow (branding, short text, one action/redirect, a divider) rather than the near-full block set: an intro screen is a splash shown before real content, not a place for maps/forms/RSVP/menus/etc. Per-block `data` still dispatches via ../block-item.json. Supersedes an earlier revision of this file that made `intro` a locked, non-block page type storing {logoUrl,tagline,time,redirect} directly on `data` — reverted in favor of this block-based model so intro pages get the same layout flexibility (reorder, restyle, add/remove) as every other page type.",
+  "type": "array",
+  "minItems": 1,
+  "items": {
+    "allOf": [
+      { "$ref": "../block-item.json" },
+      {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "page_title", "description_box", "logo_section", "banner_images",
+              "brand_info", "company_branding", "social_media_profiles",
+              "button", "auto_redirect", "separator"
+            ]
+          }
+        }
+      }
+    ]
+  }
+}

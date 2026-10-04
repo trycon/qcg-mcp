@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {},
+  "title": "Start page schema",
+  "description": "",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "logo": {
+      "type": "object",
+      "required": [],
+      "additionalProperties": false,
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "Logo URL",
+           "anyOf": [
+              { "pattern": "^(https?:\/\/.*\\.(png|jpeg|jpg|svg|gif|PNG|JPEG|JPG|SVG|GIF))$" },
+              { "const": "" }
+           ]
+        }
+      }
+    },
+    "title": {
+      "type": "string",
+      "minLength": 0,
+      "maxLength": 100,
+      "description": "Page title"
+    },
+    "description": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 200,
+      "description": "Page description"
+    },
+    "button": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string" },
+        "buttonStyle": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "borderWidth": { "type": "number" },
+            "borderRadius": { "type": "number" }
+          }
+        },
+        "color": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "border": { "type": "string" },
+            "button": { "type": "string" },
+            "label": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

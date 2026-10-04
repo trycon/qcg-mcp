@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "RSVP Form block (v2)",
+  "description": "v2 builder sends { questions, submitButton } — differs from v1 bare-array format",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "questions": {
+      "type": "array",
+      "maxItems": 3,
+      "items": {
+        "allOf": [
+          { "$ref": "_rsvp_question_base.json" },
+          {
+            "properties": {
+              "answer":        { "type": "object" },
+              "askFromGuests": { "type": "boolean" }
+            }
+          }
+        ],
+        "unevaluatedProperties": false
+      }
+    },
+    "submitButton": { "type": "object" },
+    "receiverEmail": { "type": "string" },
+    "inviteeDetails": { "type": "object" },
+    "cardStyle": { "type": "object" }
+  }
+}

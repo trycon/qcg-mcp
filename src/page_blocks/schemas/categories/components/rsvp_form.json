@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "RSVP Form component",
+  "description": "RSVP form component",
+  "type": "array",
+  "additionalProperties": false,
+  "maxItems": 3,
+  "items": {
+    "type": "object",
+    "required": [
+      "question",
+      "answer"
+    ],
+    "additionalProperties": false,
+    "minProperties": 1,
+    "properties": {
+      "question": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000
+      },
+      "answer": {
+        "$ref": "_base_form.json#/properties/questions/items/properties/answer"
+      },
+      "questionDescription": {
+        "type": "string"
+      },
+      "privacyNote": {
+        "type": "string",
+        "maxLength": 300
+      },
+      "askFromGuests": {
+        "type": "boolean",
+        "default": false,
+        "description": "Whether to ask the question from quests as well. ** This JSON OBJECT IS DEPRECATED **"
+      },
+      "isRequired": {
+        "type": "boolean",
+        "default": false
+      }
+    }
+  }
+}

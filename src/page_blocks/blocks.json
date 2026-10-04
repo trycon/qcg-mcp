@@ -1,0 +1,3185 @@
+{
+ "page_title": {
+  "label": "Page Title",
+  "description": "Main heading shown at the top of the page",
+  "limit": 1,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "title",
+    "kind": "text",
+    "label": "Title"
+   },
+   {
+    "id": "subtitle",
+    "kind": "text",
+    "label": "Subtitle"
+   },
+   {
+    "id": "align",
+    "kind": "select",
+    "label": "Alignment",
+    "options": [
+     "left",
+     "center",
+     "right"
+    ],
+    "default": "center"
+   }
+  ],
+  "defaults": {
+   "title": "",
+   "subtitle": "",
+   "align": "center",
+   "cardStyle": {
+    "backgroundColor": ""
+   },
+   "layout": {
+    "appearance": "plain"
+   },
+   "textStyle": {
+    "textColor": "",
+    "fontFamily": "",
+    "fontSize": 1
+   },
+   "subtitleStyle": {
+    "textColor": "",
+    "fontFamily": ""
+   }
+  }
+ },
+ "description_box": {
+  "label": "Description",
+  "description": "A rich-text paragraph with formatting, links, and images",
+  "limit": 20,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "text",
+    "kind": "richtext",
+    "label": "Text"
+   }
+  ],
+  "defaults": {
+   "text": "",
+   "cardStyle": {
+    "backgroundColor": ""
+   },
+   "layout": {
+    "appearance": "plain"
+   },
+   "textStyle": {
+    "textColor": "",
+    "fontFamily": "",
+    "fontSize": 1
+   }
+  }
+ },
+ "banner_images": {
+  "label": "Image Gallery",
+  "description": "Up to 8 images shown as a banner or gallery",
+  "limit": 2,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "displayStyle",
+    "kind": "select",
+    "label": "Display style",
+    "options": [
+     "carousel",
+     "grid1",
+     "grid2",
+     "list",
+     "sliderWithText"
+    ],
+    "default": "carousel"
+   },
+   {
+    "id": "autoplay",
+    "kind": "switch",
+    "label": "Auto-advance slides",
+    "default": false,
+    "showWhen": {
+     "field": "displayStyle",
+     "values": [
+      "carousel",
+      "sliderWithText"
+     ]
+    }
+   },
+   {
+    "id": "autoplayInterval",
+    "kind": "number",
+    "label": "Interval (seconds)",
+    "default": 4,
+    "showWhen": {
+     "field": "displayStyle",
+     "values": [
+      "carousel",
+      "sliderWithText"
+     ]
+    }
+   },
+   {
+    "id": "_sep1",
+    "kind": "hr",
+    "label": ""
+   },
+   {
+    "id": "images",
+    "kind": "list",
+    "label": "Images",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "url",
+      "kind": "image",
+      "label": "Image"
+     },
+     {
+      "id": "text",
+      "kind": "text",
+      "label": "Caption"
+     },
+     {
+      "id": "textColor",
+      "kind": "color",
+      "label": "Caption colour"
+     },
+     {
+      "id": "textBgColor",
+      "kind": "color",
+      "label": "Caption background"
+     }
+    ]
+   },
+   {
+    "id": "_sep2",
+    "kind": "hr",
+    "label": ""
+   },
+   {
+    "id": "title",
+    "kind": "text",
+    "label": "Title"
+   },
+   {
+    "id": "description",
+    "kind": "longtext",
+    "label": "Description"
+   }
+  ],
+  "defaults": {
+   "displayStyle": "carousel",
+   "title": "",
+   "description": "",
+   "images": [],
+   "autoplay": false,
+   "autoplayInterval": 4,
+   "aspectRatio": "auto",
+   "layout": {
+    "appearance": "plain"
+   },
+   "formatting": {
+    "textStyle": {
+     "fontFamily": "",
+     "fontSize": 1,
+     "textColor": ""
+    },
+    "cardStyle": {
+     "backgroundColor": ""
+    }
+   }
+  }
+ },
+ "button": {
+  "label": "Button",
+  "description": "A call-to-action button with a link",
+  "limit": 20,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "label",
+    "kind": "text",
+    "label": "Button label"
+   },
+   {
+    "id": "icon",
+    "kind": "icon_emoji",
+    "label": "Icon"
+   },
+   {
+    "id": "iconPosition",
+    "kind": "select",
+    "label": "Icon position",
+    "options": [
+     "left",
+     "right"
+    ],
+    "default": "left"
+   },
+   {
+    "id": "type",
+    "kind": "select",
+    "label": "Link type",
+    "options": [
+     "url",
+     "email",
+     "phone",
+     "sms",
+     "page",
+     "qr"
+    ],
+    "default": "url"
+   },
+   {
+    "id": "link",
+    "kind": "url",
+    "label": "Link / number / address"
+   },
+   {
+    "id": "defaultMessage",
+    "kind": "longtext",
+    "label": "SMS message",
+    "showWhen": {
+     "field": "type",
+     "values": [
+      "sms"
+     ]
+    }
+   },
+   {
+    "id": "utm",
+    "kind": "utm",
+    "label": "Tracking Parameters",
+    "showWhen": {
+     "field": "type",
+     "values": [
+      "url"
+     ]
+    }
+   },
+   {
+    "id": "conditions",
+    "kind": "conditional_urls",
+    "label": "Traffic Routing Rules",
+    "showWhen": {
+     "field": "type",
+     "values": [
+      "url"
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "label": "Click here",
+   "link": "",
+   "type": "url",
+   "qrTarget": "",
+   "defaultMessage": "",
+   "utm": {
+    "enabled": false,
+    "source": "",
+    "medium": "",
+    "campaign": "",
+    "term": "",
+    "content": "",
+    "custom": {}
+   },
+   "conditions": [],
+   "buttonStyle": {
+    "variant": "filled",
+    "fullWidth": true,
+    "color": "",
+    "borderColor": "",
+    "borderWidth": 0
+   },
+   "textStyle": {
+    "textColor": "",
+    "fontFamily": "",
+    "fontSize": 1
+   },
+   "layout": {
+    "appearance": "plain"
+   },
+   "tracking": {}
+  }
+ },
+ "event_schedule": {
+  "label": "Event Schedule",
+  "description": "Date, time and recurring settings for the event",
+  "limit": 1,
+  "removable": true,
+  "categories": [
+   "wedding",
+   "event"
+  ],
+  "fields": [
+   {
+    "id": "title",
+    "kind": "text",
+    "label": "Event title"
+   },
+   {
+    "id": "startDate",
+    "kind": "date",
+    "label": "Start date"
+   },
+   {
+    "id": "endDate",
+    "kind": "date",
+    "label": "End date"
+   },
+   {
+    "id": "timeZone",
+    "kind": "timezone",
+    "label": "Time zone"
+   },
+   {
+    "id": "allDayEvent",
+    "kind": "switch",
+    "label": "All day event",
+    "default": false
+   },
+   {
+    "id": "timeFormat",
+    "kind": "select",
+    "label": "Time format",
+    "options": [
+     "12h",
+     "24h"
+    ],
+    "default": "24h"
+   },
+   {
+    "id": "dateFormat",
+    "kind": "select",
+    "label": "Date format",
+    "options": [
+     "MM-dd-yyyy",
+     "dd-MM-yyyy",
+     "yyyy-MM-dd",
+     "M/dd/yyyy",
+     "MMM d, yyyy"
+    ],
+    "default": "MM-dd-yyyy"
+   },
+   {
+    "id": "addToCalendar.show",
+    "path": "addToCalendar.show",
+    "kind": "switch",
+    "label": "Show \"Add to Calendar\" button",
+    "default": true
+   },
+   {
+    "id": "addToCalendar.label",
+    "path": "addToCalendar.label",
+    "kind": "text",
+    "label": "Button label",
+    "default": "Add to Calendar",
+    "showWhen": {
+     "field": "addToCalendar.show",
+     "values": [
+      "true"
+     ]
+    }
+   },
+   {
+    "id": "repeat",
+    "kind": "switch",
+    "label": "Repeat",
+    "default": false
+   },
+   {
+    "id": "recurrence",
+    "kind": "select",
+    "label": "Repeat frequency",
+    "options": [
+     "daily",
+     "weekly",
+     "monthly",
+     "yearly"
+    ],
+    "default": "weekly",
+    "showWhen": {
+     "field": "repeat",
+     "values": [
+      "true"
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "title": "",
+   "startDate": "",
+   "endDate": "",
+   "timeZone": "UTC",
+   "allDayEvent": false,
+   "timeFormat": "24h",
+   "dateFormat": "MM-dd-yyyy",
+   "repeat": false,
+   "recurrence": "weekly",
+   "addToCalendar": {
+    "show": true,
+    "label": "Add to Calendar",
+    "tracking": {}
+   },
+   "layout": {
+    "appearance": "plain"
+   },
+   "formatting": {
+    "textStyle": {
+     "fontFamily": "",
+     "fontSize": 1,
+     "textColor": ""
+    },
+    "cardStyle": {
+     "backgroundColor": ""
+    }
+   }
+  }
+ },
+ "event_venue": {
+  "label": "Event Venue",
+  "description": "Venue address or online meeting link",
+  "limit": 1,
+  "removable": true,
+  "categories": [
+   "wedding",
+   "event"
+  ],
+  "fields": [
+   {
+    "id": "venueType",
+    "kind": "checkbox",
+    "label": "Venue type",
+    "options": [
+     "physical",
+     "online"
+    ],
+    "default": [
+     "physical"
+    ]
+   },
+   {
+    "id": "title",
+    "kind": "text",
+    "label": "Venue title"
+   },
+   {
+    "id": "address",
+    "kind": "longtext",
+    "label": "Address",
+    "showWhen": {
+     "field": "venueType",
+     "values": [
+      "physical"
+     ]
+    }
+   },
+   {
+    "id": "hasMapLocation",
+    "kind": "switch",
+    "label": "Show on map",
+    "default": false,
+    "showWhen": {
+     "field": "venueType",
+     "values": [
+      "physical"
+     ]
+    }
+   },
+   {
+    "id": "location",
+    "kind": "location",
+    "label": "Map location",
+    "showWhen": {
+     "field": "hasMapLocation",
+     "values": [
+      "true"
+     ]
+    }
+   },
+   {
+    "id": "joinButton.label",
+    "path": "joinButton.label",
+    "kind": "text",
+    "label": "Join button label",
+    "showWhen": {
+     "field": "venueType",
+     "values": [
+      "online"
+     ]
+    }
+   },
+   {
+    "id": "joinButton.link",
+    "path": "joinButton.link",
+    "kind": "url",
+    "label": "Join link",
+    "showWhen": {
+     "field": "venueType",
+     "values": [
+      "online"
+     ]
+    }
+   },
+   {
+    "id": "joiningPhoneNumbers",
+    "kind": "list",
+    "label": "Phone numbers to join",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "phoneNumber",
+      "kind": "tel",
+      "label": "Phone number"
+     },
+     {
+      "id": "label",
+      "kind": "text",
+      "label": "Label"
+     }
+    ],
+    "showWhen": {
+     "field": "venueType",
+     "values": [
+      "online"
+     ]
+    }
+   },
+   {
+    "id": "joiningPassword",
+    "kind": "text",
+    "label": "Meeting password",
+    "showWhen": {
+     "field": "venueType",
+     "values": [
+      "online"
+     ]
+    }
+   },
+   {
+    "id": "eventNotes",
+    "kind": "longtext",
+    "label": "Notes / directions"
+   }
+  ],
+  "defaults": {
+   "venueType": [
+    "physical"
+   ],
+   "title": "",
+   "address": "",
+   "hasMapLocation": false,
+   "joinButton": {
+    "label": "Join Online",
+    "link": ""
+   },
+   "joiningPhoneNumbers": [],
+   "joiningPassword": "",
+   "eventNotes": "",
+   "layout": {
+    "appearance": "card"
+   },
+   "formatting": {
+    "textStyle": {
+     "fontFamily": "",
+     "fontSize": 1,
+     "textColor": ""
+    },
+    "cardStyle": {
+     "backgroundColor": ""
+    },
+    "iconStyle": {
+     "color": ""
+    }
+   }
+  }
+ },
+ "couple_name": {
+  "label": "Couple Names",
+  "description": "Display the couple's names with optional separator",
+  "limit": 1,
+  "removable": true,
+  "categories": [
+   "wedding"
+  ],
+  "fields": [
+   {
+    "id": "first_name",
+    "kind": "text",
+    "label": "First name"
+   },
+   {
+    "id": "second_name",
+    "kind": "text",
+    "label": "Second name"
+   },
+   {
+    "id": "separator_text",
+    "kind": "text",
+    "label": "Separator"
+   }
+  ],
+  "defaults": {
+   "first_name": "",
+   "second_name": "",
+   "separator_text": "&",
+   "separator": {
+    "name": "01",
+    "color": ""
+   },
+   "layout": {
+    "appearance": "card"
+   },
+   "formatting": {
+    "textStyle": {
+     "fontFamily": "",
+     "fontSize": 1,
+     "textColor": ""
+    },
+    "cardStyle": {
+     "backgroundColor": ""
+    }
+   }
+  }
+ },
+ "social_media_profiles": {
+  "label": "Social Profiles",
+  "description": "Links to social media profiles",
+  "limit": 1,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "headerText",
+    "kind": "text",
+    "label": "Header text"
+   },
+   {
+    "id": "headerStyle",
+    "kind": "select",
+    "label": "Header style",
+    "options": [
+     "text",
+     "pill"
+    ],
+    "default": "text"
+   },
+   {
+    "id": "description",
+    "kind": "longtext",
+    "label": "Description"
+   },
+   {
+    "id": "headerAlign",
+    "kind": "select",
+    "label": "Text align",
+    "options": [
+     "left",
+     "center"
+    ],
+    "default": "left"
+   },
+   {
+    "id": "hasCard",
+    "kind": "switch",
+    "label": "Show card",
+    "default": false
+   },
+   {
+    "id": "viewType",
+    "kind": "select",
+    "label": "Layout",
+    "options": [
+     "linear",
+     "list",
+     "grid",
+     "circle",
+     "bands",
+     "tiles",
+     "discs",
+     "icons"
+    ],
+    "default": "linear"
+   },
+   {
+    "id": "profiles",
+    "kind": "social-profiles",
+    "label": "Profiles",
+    "default": []
+   }
+  ],
+  "defaults": {
+   "headerText": "",
+   "headerStyle": "text",
+   "description": "",
+   "headerAlign": "left",
+   "hasCard": false,
+   "viewType": "linear",
+   "profiles": [],
+   "cardStyle": {
+    "backgroundColor": ""
+   },
+   "iconStyle": {
+    "size": "md",
+    "showLabels": true,
+    "shape": "circle",
+    "transparent": false
+   }
+  }
+ },
+ "social_sharing_buttons": {
+  "label": "Share Buttons",
+  "description": "Social share buttons for the page",
+  "limit": 1,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "headerText",
+    "kind": "text",
+    "label": "Header text"
+   },
+   {
+    "id": "layout",
+    "kind": "select",
+    "label": "Layout",
+    "options": [
+     "both",
+     "icon",
+     "label"
+    ],
+    "default": "both"
+   },
+   {
+    "id": "facebook",
+    "kind": "switch",
+    "label": "Facebook",
+    "default": true
+   },
+   {
+    "id": "whatsApp",
+    "kind": "switch",
+    "label": "WhatsApp",
+    "default": true
+   },
+   {
+    "id": "instagram",
+    "kind": "switch",
+    "label": "Instagram",
+    "default": true
+   },
+   {
+    "id": "x",
+    "kind": "switch",
+    "label": "X",
+    "default": true
+   },
+   {
+    "id": "email",
+    "kind": "switch",
+    "label": "Email",
+    "default": true
+   },
+   {
+    "id": "copyLink",
+    "kind": "switch",
+    "label": "Copy link",
+    "default": true
+   },
+   {
+    "id": "systemShare",
+    "kind": "switch",
+    "label": "System share",
+    "default": true
+   }
+  ],
+  "defaults": {
+   "headerText": "Share this page",
+   "layout": "both",
+   "blockLayout": {
+    "appearance": "plain"
+   },
+   "iconStyle": {
+    "transparent": false
+   },
+   "facebook": true,
+   "whatsApp": true,
+   "instagram": true,
+   "x": true,
+   "email": true,
+   "copyLink": true,
+   "systemShare": true,
+   "tracking": [],
+   "formatting": {
+    "textStyle": {
+     "fontFamily": "",
+     "fontSize": 1,
+     "textColor": ""
+    },
+    "cardStyle": {
+     "backgroundColor": ""
+    }
+   }
+  }
+ },
+ "map": {
+  "label": "Map",
+  "description": "Embedded Google Map with directions button",
+  "limit": 20,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "address",
+    "kind": "text",
+    "label": "Address"
+   },
+   {
+    "id": "showMap",
+    "kind": "switch",
+    "label": "Show map",
+    "default": true
+   },
+   {
+    "id": "location",
+    "kind": "location",
+    "label": "Pin location"
+   },
+   {
+    "id": "zoom",
+    "path": "location.zoom",
+    "kind": "number",
+    "label": "Map zoom level",
+    "default": 14
+   },
+   {
+    "id": "showDirectionsButton",
+    "kind": "switch",
+    "label": "Show 'Get Directions' button",
+    "default": true
+   },
+   {
+    "id": "button.label",
+    "path": "button.label",
+    "kind": "text",
+    "label": "Button label"
+   }
+  ],
+  "defaults": {
+   "address": "",
+   "showMap": true,
+   "location": {
+    "provider": "google",
+    "placeId": "",
+    "placeName": "",
+    "latitude": 0,
+    "longitude": 0,
+    "zoom": 14
+   },
+   "showDirectionsButton": true,
+   "button": {
+    "label": "Get Directions",
+    "color": {
+     "button": "",
+     "label": "",
+     "border": ""
+    },
+    "buttonStyle": {
+     "borderWidth": 0
+    },
+    "textStyle": {
+     "fontFamily": "",
+     "fontSize": 1,
+     "textColor": ""
+    },
+    "tracking": {}
+   },
+   "formatting": {
+    "cardStyle": {
+     "backgroundColor": ""
+    }
+   }
+  }
+ },
+ "video": {
+  "label": "Video",
+  "description": "Embedded video from a URL",
+  "limit": 10,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "video.url",
+    "path": "video.url",
+    "kind": "video",
+    "label": "Video"
+   },
+   {
+    "id": "thumbnail.url",
+    "path": "thumbnail.url",
+    "kind": "image",
+    "label": "Thumbnail"
+   },
+   {
+    "id": "title",
+    "kind": "text",
+    "label": "Title"
+   },
+   {
+    "id": "description",
+    "kind": "longtext",
+    "label": "Description"
+   },
+   {
+    "id": "hasCard",
+    "kind": "switch",
+    "label": "Show card",
+    "default": false
+   },
+   {
+    "id": "caption",
+    "kind": "text",
+    "label": "Caption"
+   },
+   {
+    "id": "autoplay",
+    "kind": "switch",
+    "label": "Autoplay (muted)",
+    "default": false
+   },
+   {
+    "id": "loop",
+    "kind": "switch",
+    "label": "Loop video",
+    "default": false
+   },
+   {
+    "id": "showControls",
+    "kind": "switch",
+    "label": "Show player controls (uploaded videos)",
+    "default": true
+   }
+  ],
+  "defaults": {
+   "video": {
+    "url": "",
+    "name": ""
+   },
+   "thumbnail": {
+    "url": "",
+    "name": ""
+   },
+   "title": "",
+   "description": "",
+   "isUploaded": false,
+   "hasCard": false,
+   "caption": "",
+   "autoplay": false,
+   "loop": false,
+   "showControls": true,
+   "formatting": {
+    "textStyle": {
+     "fontFamily": "",
+     "fontSize": 1,
+     "textColor": ""
+    },
+    "cardStyle": {
+     "backgroundColor": ""
+    }
+   }
+  }
+ },
+ "file": {
+  "label": "File Download",
+  "description": "A downloadable file link",
+  "limit": 20,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "file",
+    "path": "file",
+    "kind": "file",
+    "label": "File"
+   },
+   {
+    "id": "button.label",
+    "path": "button.label",
+    "kind": "text",
+    "label": "Button label"
+   },
+   {
+    "id": "button.icon",
+    "path": "button.icon",
+    "kind": "icon_emoji",
+    "label": "Icon"
+   },
+   {
+    "id": "button.iconPosition",
+    "path": "button.iconPosition",
+    "kind": "select",
+    "label": "Icon position",
+    "options": [
+     "left",
+     "right"
+    ],
+    "default": "left",
+    "showWhen": {
+     "field": "button.icon",
+     "values": []
+    }
+   }
+  ],
+  "defaults": {
+   "file": {
+    "url": "",
+    "type": "",
+    "mime": "",
+    "name": ""
+   },
+   "button": {
+    "label": "Download",
+    "iconPosition": "left",
+    "color": {
+     "button": "",
+     "label": "",
+     "border": ""
+    },
+    "buttonStyle": {
+     "borderWidth": 0
+    },
+    "textStyle": {
+     "fontFamily": "",
+     "fontSize": 1,
+     "textColor": ""
+    },
+    "tracking": {}
+   }
+  }
+ },
+ "separator": {
+  "label": "Separator",
+  "description": "A visual divider between blocks",
+  "limit": 20,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "name",
+    "kind": "select",
+    "label": "Style",
+    "options": [
+     "01",
+     "02",
+     "03",
+     "04",
+     "05",
+     "06",
+     "07",
+     "08",
+     "09"
+    ],
+    "default": "01"
+   },
+   {
+    "id": "label",
+    "kind": "text",
+    "label": "Divider label"
+   }
+  ],
+  "defaults": {
+   "name": "01",
+   "label": "",
+   "separatorStyle": {
+    "color": "",
+    "spacing": 8
+   }
+  }
+ },
+ "rsvp": {
+  "label": "RSVP",
+  "description": "RSVP form for guests to respond",
+  "limit": 1,
+  "removable": true,
+  "categories": [
+   "wedding",
+   "event"
+  ],
+  "fields": [
+   {
+    "id": "heading",
+    "kind": "text",
+    "label": "Heading",
+    "default": "RSVP"
+   },
+   {
+    "id": "description",
+    "kind": "longtext",
+    "label": "Description"
+   },
+   {
+    "id": "receiverEmail",
+    "kind": "email",
+    "label": "Send responses to"
+   },
+   {
+    "id": "inviteeDetails.email",
+    "path": "inviteeDetails.email",
+    "kind": "switch",
+    "label": "Ask for email",
+    "default": false
+   },
+   {
+    "id": "inviteeDetails.phone",
+    "path": "inviteeDetails.phone",
+    "kind": "switch",
+    "label": "Ask for phone",
+    "default": false
+   },
+   {
+    "id": "numberOfGuests",
+    "kind": "number",
+    "label": "Max guests per RSVP"
+   },
+   {
+    "id": "limitAttendance",
+    "kind": "switch",
+    "label": "Limit total attendance",
+    "default": false
+   },
+   {
+    "id": "maxAttendees",
+    "kind": "number",
+    "label": "Max attendance limit",
+    "default": 0,
+    "showWhen": {
+     "field": "limitAttendance",
+     "values": [
+      "true"
+     ]
+    }
+   },
+   {
+    "id": "fullMessage",
+    "kind": "text",
+    "label": "'Event full' message",
+    "showWhen": {
+     "field": "limitAttendance",
+     "values": [
+      "true"
+     ]
+    }
+   },
+   {
+    "id": "rsvpBy.endDate",
+    "path": "rsvpBy.endDate",
+    "kind": "date",
+    "label": "RSVP deadline"
+   },
+   {
+    "id": "rsvpBy.timeZone",
+    "path": "rsvpBy.timeZone",
+    "kind": "timezone",
+    "label": "Deadline time zone"
+   },
+   {
+    "id": "rsvpBy.timeFormat",
+    "path": "rsvpBy.timeFormat",
+    "kind": "select",
+    "label": "Time format",
+    "options": [
+     "12h",
+     "24h"
+    ],
+    "default": "24h"
+   },
+   {
+    "id": "rsvpBy.dateFormat",
+    "path": "rsvpBy.dateFormat",
+    "kind": "select",
+    "label": "Date format",
+    "options": [
+     "MM-dd-yyyy",
+     "dd-MM-yyyy",
+     "yyyy-MM-dd",
+     "M/dd/yyyy",
+     "MMM d, yyyy"
+    ],
+    "default": "MM-dd-yyyy"
+   },
+   {
+    "id": "submitButton.label",
+    "path": "submitButton.label",
+    "kind": "text",
+    "label": "Submit button label"
+   },
+   {
+    "id": "submissionBehaviour.submissionOption",
+    "path": "submissionBehaviour.submissionOption",
+    "kind": "select",
+    "label": "After submission",
+    "options": [
+     "message",
+     "url"
+    ],
+    "default": "message"
+   },
+   {
+    "id": "submissionBehaviour.message",
+    "path": "submissionBehaviour.message",
+    "kind": "longtext",
+    "label": "Thank-you message",
+    "showWhen": {
+     "field": "submissionBehaviour.submissionOption",
+     "values": [
+      "message"
+     ]
+    }
+   },
+   {
+    "id": "submissionBehaviour.url",
+    "path": "submissionBehaviour.url",
+    "kind": "url",
+    "label": "Redirect URL",
+    "showWhen": {
+     "field": "submissionBehaviour.submissionOption",
+     "values": [
+      "url"
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "heading": "RSVP",
+   "description": "",
+   "receiverEmail": "",
+   "inviteeDetails": {
+    "name": true,
+    "email": false,
+    "phone": false
+   },
+   "numberOfGuests": 0,
+   "limitAttendance": false,
+   "maxAttendees": 0,
+   "fullMessage": "",
+   "rsvpBy": {
+    "endDate": "",
+    "timeZone": "UTC",
+    "timeFormat": "24h",
+    "dateFormat": "MM-dd-yyyy"
+   },
+   "submitButton": {
+    "label": "Submit RSVP",
+    "buttonStyle": {
+     "borderWidth": 0
+    },
+    "color": {
+     "button": "",
+     "label": "",
+     "border": ""
+    },
+    "textStyle": {
+     "fontFamily": "",
+     "fontSize": 1,
+     "textColor": ""
+    },
+    "tracking": {}
+   },
+   "layout": {
+    "appearance": "card"
+   },
+   "questions": [],
+   "formatting": {
+    "textStyle": {
+     "fontFamily": "",
+     "fontSize": 1,
+     "textColor": ""
+    },
+    "cardStyle": {
+     "backgroundColor": ""
+    }
+   },
+   "submissionBehaviour": {
+    "submissionOption": "message",
+    "message": "Thank you for your RSVP! We look forward to seeing you.",
+    "url": ""
+   }
+  }
+ },
+ "custom_form": {
+  "label": "Custom Form",
+  "description": "A custom form to collect responses",
+  "limit": 1,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "title",
+    "kind": "text",
+    "label": "Form title"
+   },
+   {
+    "id": "description",
+    "kind": "longtext",
+    "label": "Form description"
+   },
+   {
+    "id": "receiverEmail",
+    "kind": "email",
+    "label": "Send responses to"
+   },
+   {
+    "id": "expiry.date",
+    "path": "expiry.date",
+    "kind": "date",
+    "label": "Expiry date"
+   },
+   {
+    "id": "expiry.timezone",
+    "path": "expiry.timezone",
+    "kind": "timezone",
+    "label": "Expiry time zone"
+   },
+   {
+    "id": "expiry.text",
+    "path": "expiry.text",
+    "kind": "longtext",
+    "label": "Expiry message"
+   },
+   {
+    "id": "submitButton.label",
+    "path": "submitButton.label",
+    "kind": "text",
+    "label": "Submit button label"
+   },
+   {
+    "id": "submitButton.tracking",
+    "path": "submitButton.tracking",
+    "kind": "tracking",
+    "label": "Submit button tracking"
+   },
+   {
+    "id": "submissionBehaviour.submissionOption",
+    "path": "submissionBehaviour.submissionOption",
+    "kind": "select",
+    "label": "After submission",
+    "options": [
+     "message",
+     "url"
+    ],
+    "default": "message"
+   },
+   {
+    "id": "submissionBehaviour.message",
+    "path": "submissionBehaviour.message",
+    "kind": "longtext",
+    "label": "Thank-you message",
+    "showWhen": {
+     "field": "submissionBehaviour.submissionOption",
+     "values": [
+      "message"
+     ]
+    }
+   },
+   {
+    "id": "submissionBehaviour.url",
+    "path": "submissionBehaviour.url",
+    "kind": "url",
+    "label": "Redirect URL",
+    "showWhen": {
+     "field": "submissionBehaviour.submissionOption",
+     "values": [
+      "url"
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "title": "",
+   "description": "",
+   "questions": [],
+   "receiverEmail": "",
+   "expiry": {
+    "date": "",
+    "timezone": "UTC",
+    "text": ""
+   },
+   "submitButton": {
+    "label": "Submit",
+    "color": {
+     "button": "",
+     "label": "",
+     "border": ""
+    },
+    "buttonStyle": {
+     "borderWidth": 0
+    },
+    "textStyle": {
+     "fontFamily": "",
+     "fontSize": 1,
+     "textColor": ""
+    },
+    "tracking": {}
+   },
+   "submissionBehaviour": {
+    "submissionOption": "message",
+    "message": "Thank you for your response!",
+    "url": ""
+   },
+   "formatting": {
+    "textStyle": {
+     "fontFamily": "",
+     "textColor": ""
+    },
+    "cardStyle": {
+     "backgroundColor": ""
+    }
+   }
+  }
+ },
+ "page_header": {
+  "label": "Hero Section",
+  "description": "Hero section with profile image, cover, title, and links",
+  "limit": 1,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "layout",
+    "kind": "select",
+    "label": "Layout",
+    "options": [
+     "profile",
+     "banner",
+     "cover",
+     "minimal"
+    ],
+    "default": "profile"
+   },
+   {
+    "id": "profileImage.url",
+    "path": "profileImage.url",
+    "kind": "image",
+    "label": "Profile image",
+    "showWhen": {
+     "field": "layout",
+     "values": [
+      "profile",
+      "banner"
+     ]
+    }
+   },
+   {
+    "id": "coverImage.url",
+    "path": "coverImage.url",
+    "kind": "image",
+    "label": "Cover image",
+    "showWhen": {
+     "field": "layout",
+     "values": [
+      "cover",
+      "banner"
+     ]
+    }
+   },
+   {
+    "id": "coverImage.fullWidth",
+    "path": "coverImage.fullWidth",
+    "kind": "switch",
+    "label": "Full-width cover",
+    "default": false,
+    "showWhen": {
+     "field": "layout",
+     "values": [
+      "cover",
+      "banner"
+     ]
+    }
+   },
+   {
+    "id": "title",
+    "kind": "text",
+    "label": "Title"
+   },
+   {
+    "id": "description",
+    "kind": "longtext",
+    "label": "Description"
+   },
+   {
+    "id": "showContactLinks",
+    "kind": "switch",
+    "label": "Show contact links",
+    "default": false
+   },
+   {
+    "id": "contactLinks",
+    "kind": "list",
+    "label": "Contact links",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "type",
+      "kind": "select",
+      "label": "Type",
+      "options": [
+       "email",
+       "mobile",
+       "phone",
+       "sms",
+       "location",
+       "website"
+      ]
+     },
+     {
+      "id": "value",
+      "kind": "text",
+      "label": "Value"
+     }
+    ],
+    "showWhen": {
+     "field": "showContactLinks",
+     "values": [
+      "true"
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "layout": "profile",
+   "title": "",
+   "description": "",
+   "showContactLinks": false,
+   "contactLinks": [],
+   "profileImage": {
+    "url": ""
+   },
+   "coverImage": {
+    "url": "",
+    "fullWidth": false
+   },
+   "formatting": {
+    "textStyle": {
+     "textColor": "",
+     "fontFamily": "",
+     "fontSize": 1
+    },
+    "cardStyle": {
+     "backgroundColor": ""
+    }
+   },
+   "tracking": {}
+  }
+ },
+ "contact_us": {
+  "label": "Contact Us",
+  "description": "Contact information with links and icon",
+  "limit": 1,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "title",
+    "kind": "text",
+    "label": "Title"
+   },
+   {
+    "id": "blocks",
+    "kind": "list",
+    "label": "Contact entries",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "type",
+      "kind": "select",
+      "label": "Type",
+      "options": [
+       "contact_number",
+       "email",
+       "address",
+       "website",
+       "custom"
+      ]
+     },
+     {
+      "id": "label",
+      "kind": "text",
+      "label": "Label"
+     },
+     {
+      "id": "value",
+      "kind": "text",
+      "label": "Value"
+     },
+     {
+      "id": "showOnMap",
+      "kind": "switch",
+      "label": "Show on map",
+      "default": false,
+      "showWhen": {
+       "field": "type",
+       "values": [
+        "address"
+       ]
+      }
+     },
+     {
+      "id": "location",
+      "kind": "location",
+      "label": "Pin location",
+      "showWhen": {
+       "field": "showOnMap",
+       "values": [
+        "true"
+       ]
+      }
+     },
+     {
+      "id": "tracking",
+      "kind": "tracking",
+      "label": "Tracking"
+     }
+    ]
+   },
+   {
+    "id": "showIcons",
+    "kind": "switch",
+    "label": "Show icons",
+    "default": true
+   },
+   {
+    "id": "displayStyle",
+    "kind": "select",
+    "label": "Layout",
+    "options": [
+     "list",
+     "compact"
+    ],
+    "default": "list"
+   }
+  ],
+  "defaults": {
+   "title": "Contact Us",
+   "blocks": [
+    {
+     "type": "contact_number",
+     "label": "Call Us",
+     "value": ""
+    },
+    {
+     "type": "email",
+     "label": "Email",
+     "value": ""
+    }
+   ],
+   "showIcons": true,
+   "displayStyle": "list",
+   "cardStyle": {
+    "backgroundColor": ""
+   },
+   "layout": {
+    "appearance": "plain"
+   },
+   "formatting": {
+    "textStyle": {
+     "textColor": "",
+     "fontFamily": "",
+     "fontSize": 1
+    }
+   }
+  }
+ },
+ "audio_player": {
+  "label": "Audio Player",
+  "description": "Audio playlist with optional track titles and cover art",
+  "limit": 1,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "pageTitle",
+    "kind": "text",
+    "label": "Title",
+    "default": ""
+   },
+   {
+    "id": "subHeading",
+    "kind": "text",
+    "label": "Subtitle",
+    "default": ""
+   },
+   {
+    "id": "pageLayout",
+    "kind": "select",
+    "label": "Layout",
+    "options": [
+     "list",
+     "grid"
+    ],
+    "default": "list"
+   },
+   {
+    "id": "allowFileDownload",
+    "kind": "switch",
+    "label": "Allow file downloads",
+    "default": true
+   },
+   {
+    "id": "files",
+    "kind": "list",
+    "label": "Audio tracks",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "url",
+      "kind": "audio",
+      "label": "Audio file"
+     },
+     {
+      "id": "thumbnail",
+      "kind": "image",
+      "label": "Thumbnail"
+     },
+     {
+      "id": "name",
+      "kind": "text",
+      "label": "File Name"
+     },
+     {
+      "id": "description",
+      "kind": "longtext",
+      "label": "Description"
+     }
+    ]
+   }
+  ],
+  "defaults": {
+   "pageTitle": "",
+   "subHeading": "",
+   "pageLayout": "list",
+   "allowFileDownload": true,
+   "files": []
+  }
+ },
+ "footer_info": {
+  "label": "Footer",
+  "description": "Footer text shown at the bottom of the restaurant page",
+  "limit": 1,
+  "removable": true,
+  "categories": [
+   "restaurant"
+  ],
+  "fields": [
+   {
+    "id": "text",
+    "kind": "longtext",
+    "label": "Footer text"
+   },
+   {
+    "id": "links",
+    "kind": "list",
+    "label": "Footer links",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "label",
+      "kind": "text",
+      "label": "Label"
+     },
+     {
+      "id": "url",
+      "kind": "url",
+      "label": "URL"
+     }
+    ]
+   },
+   {
+    "id": "showDivider",
+    "kind": "switch",
+    "label": "Show divider line above footer",
+    "default": true
+   }
+  ],
+  "defaults": {
+   "text": "",
+   "links": [],
+   "showDivider": true
+  }
+ },
+ "logo_section": {
+  "label": "Logo Section",
+  "description": "Branded logo shown at the top of the feedback page",
+  "limit": 1,
+  "removable": false,
+  "categories": [
+   "feedback"
+  ],
+  "fields": [
+   {
+    "id": "logo.url",
+    "path": "logo.url",
+    "kind": "image",
+    "label": "Logo"
+   }
+  ],
+  "defaults": {
+   "logo": {
+    "url": ""
+   }
+  }
+ },
+ "profile_info": {
+  "label": "Profile Info",
+  "description": "Personal profile — name, photo, designation and company",
+  "limit": 1,
+  "removable": true,
+  "categories": [
+   "businessCard",
+   "vCard",
+   "dynamicVCard"
+  ],
+  "fields": [
+   {
+    "id": "displayStyle",
+    "kind": "select",
+    "label": "Layout",
+    "options": [
+     "center",
+     "banner",
+     "card",
+     "card-accent",
+     "solid",
+     "float",
+     "portrait",
+     "hero",
+     "float-bg",
+     "quick-contact",
+     "stacked",
+     "overlay",
+     "overlay-wave"
+    ],
+    "default": "center"
+   },
+   {
+    "id": "portraitHeight",
+    "kind": "select",
+    "label": "Photo height",
+    "options": [
+     "compact",
+     "balanced",
+     "full",
+     "immersive"
+    ],
+    "default": "full",
+    "showWhen": {
+     "field": "displayStyle",
+     "values": [
+      "portrait"
+     ]
+    }
+   },
+   {
+    "id": "image.url",
+    "path": "image.url",
+    "kind": "image",
+    "label": "Profile photo"
+   },
+   {
+    "id": "companyLogo.url",
+    "path": "companyLogo.url",
+    "kind": "image",
+    "label": "Company logo"
+   },
+   {
+    "id": "first_name",
+    "kind": "text",
+    "label": "First name"
+   },
+   {
+    "id": "last_name",
+    "kind": "text",
+    "label": "Last name"
+   },
+   {
+    "id": "pronoun",
+    "kind": "text",
+    "label": "Pronoun"
+   },
+   {
+    "id": "designation",
+    "kind": "text",
+    "label": "Designation"
+   },
+   {
+    "id": "company",
+    "kind": "text",
+    "label": "Company"
+   },
+   {
+    "id": "description",
+    "kind": "longtext",
+    "label": "Bio"
+   },
+   {
+    "id": "ctaButton",
+    "kind": "text",
+    "label": "CTA button label"
+   },
+   {
+    "id": "ctaLink",
+    "kind": "url",
+    "label": "CTA button URL"
+   }
+  ],
+  "defaults": {
+   "displayStyle": "center",
+   "portraitHeight": "full",
+   "image": {
+    "url": ""
+   },
+   "companyLogo": {
+    "url": ""
+   },
+   "first_name": "",
+   "last_name": "",
+   "pronoun": "",
+   "designation": "",
+   "company": "",
+   "description": "",
+   "ctaButton": "",
+   "ctaLink": "",
+   "layout": {
+    "appearance": "plain"
+   },
+   "cardStyle": {
+    "backgroundColor": ""
+   },
+   "backgroundStyle": {
+    "type": "solid",
+    "color": "",
+    "gradient": {
+     "from": "",
+     "to": "",
+     "direction": "to bottom"
+    },
+    "image": {
+     "url": ""
+    }
+   }
+  }
+ },
+ "brand_info": {
+  "label": "Brand Info",
+  "description": "Restaurant banner, logo, name and tagline",
+  "limit": 1,
+  "removable": true,
+  "categories": [
+   "restaurant"
+  ],
+  "fields": [
+   {
+    "id": "banner.url",
+    "path": "banner.url",
+    "kind": "image",
+    "label": "Banner image"
+   },
+   {
+    "id": "logo.url",
+    "path": "logo.url",
+    "kind": "image",
+    "label": "Logo"
+   },
+   {
+    "id": "title",
+    "kind": "text",
+    "label": "Restaurant name"
+   },
+   {
+    "id": "description",
+    "kind": "longtext",
+    "label": "Tagline / description"
+   }
+  ],
+  "defaults": {
+   "banner": {
+    "url": ""
+   },
+   "logo": {
+    "url": ""
+   },
+   "title": "",
+   "description": "",
+   "cardStyle": {
+    "backgroundColor": ""
+   },
+   "layout": {
+    "appearance": "card"
+   }
+  }
+ },
+ "company_branding": {
+  "label": "Company Branding",
+  "description": "Company logo and name",
+  "limit": 1,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "displayStyle",
+    "kind": "select",
+    "label": "Layout",
+    "options": [
+     "centered",
+     "side-by-side",
+     "banner"
+    ],
+    "default": "centered"
+   },
+   {
+    "id": "image.url",
+    "path": "image.url",
+    "kind": "image",
+    "label": "Logo"
+   },
+   {
+    "id": "title",
+    "kind": "text",
+    "label": "Company name"
+   }
+  ],
+  "defaults": {
+   "displayStyle": "centered",
+   "image": {
+    "url": ""
+   },
+   "title": "",
+   "layout": {
+    "appearance": "plain"
+   },
+   "formatting": {
+    "textStyle": {
+     "fontFamily": "",
+     "fontSize": 1,
+     "textColor": ""
+    },
+    "cardStyle": {
+     "backgroundColor": ""
+    }
+   },
+   "logoStyle": {
+    "size": "md"
+   }
+  }
+ },
+ "about_us": {
+  "label": "About Us",
+  "description": "About section with text and images",
+  "limit": 1,
+  "removable": true,
+  "categories": [
+   "restaurant"
+  ],
+  "fields": [
+   {
+    "id": "text",
+    "kind": "longtext",
+    "label": "About text"
+   },
+   {
+    "id": "images",
+    "kind": "list",
+    "label": "Images",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "url",
+      "kind": "image",
+      "label": "Image"
+     }
+    ]
+   }
+  ],
+  "defaults": {
+   "text": "",
+   "images": [],
+   "cardStyle": {
+    "backgroundColor": ""
+   },
+   "layout": {
+    "appearance": "card"
+   }
+  }
+ },
+ "coupon_details": {
+  "label": "Coupon Details",
+  "description": "Coupon code with offer title, details, and validity dates",
+  "limit": 1,
+  "removable": true,
+  "categories": null,
+  "fields": [
+   {
+    "id": "couponCode",
+    "kind": "text",
+    "label": "Coupon code"
+   },
+   {
+    "id": "offerTitle",
+    "kind": "text",
+    "label": "Offer title"
+   },
+   {
+    "id": "offerDetails",
+    "kind": "longtext",
+    "label": "Offer details"
+   },
+   {
+    "id": "sec_schedule",
+    "kind": "hr",
+    "label": "Schedule"
+   },
+   {
+    "id": "startDate",
+    "kind": "date",
+    "label": "Valid from"
+   },
+   {
+    "id": "endDate",
+    "kind": "date",
+    "label": "Valid until"
+   },
+   {
+    "id": "timeZone",
+    "kind": "timezone",
+    "label": "Time zone"
+   },
+   {
+    "id": "showCountdown",
+    "kind": "switch",
+    "label": "Show countdown timer"
+   },
+   {
+    "id": "sec_limit",
+    "kind": "hr",
+    "label": "Limit"
+   },
+   {
+    "id": "scanLimit",
+    "kind": "number",
+    "label": "Scan limit"
+   }
+  ],
+  "defaults": {
+   "couponCode": "",
+   "offerTitle": "",
+   "offerDetails": "",
+   "startDate": "",
+   "endDate": "",
+   "timeZone": "UTC",
+   "scanLimit": 0,
+   "showCountdown": false,
+   "formatting": {
+    "textStyle": {
+     "fontFamily": "",
+     "fontSize": 1,
+     "textColor": ""
+    },
+    "cardStyle": {
+     "backgroundColor": ""
+    }
+   },
+   "layout": {
+    "appearance": "card"
+   },
+   "tracking": {}
+  }
+ },
+ "review_us": {
+  "label": "Review Us",
+  "description": "Links to review platforms like Google, TripAdvisor, Yelp",
+  "limit": null,
+  "removable": true,
+  "categories": [
+   "restaurant"
+  ],
+  "fields": [
+   {
+    "id": "platforms",
+    "kind": "review-platforms",
+    "label": "Review platforms",
+    "default": []
+   },
+   {
+    "id": "ctaLabel",
+    "kind": "text",
+    "label": "Button label"
+   },
+   {
+    "id": "showRating",
+    "kind": "switch",
+    "label": "Show star preview",
+    "default": true
+   }
+  ],
+  "defaults": {
+   "platforms": [
+    {
+     "key": "google",
+     "data": "",
+     "icon": "",
+     "tracking": {}
+    }
+   ],
+   "ctaLabel": "",
+   "showRating": true,
+   "cardStyle": {
+    "backgroundColor": ""
+   },
+   "layout": {
+    "appearance": "card"
+   }
+  }
+ },
+ "contact_details": {
+  "label": "Contact Details",
+  "description": "Phone numbers, emails, websites and addresses",
+  "limit": 1,
+  "removable": true,
+  "categories": [
+   "businessCard",
+   "realEstate",
+   "vCard",
+   "dynamicVCard"
+  ],
+  "fields": [
+   {
+    "id": "phoneNumbers",
+    "kind": "list",
+    "label": "Phone numbers",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "phoneNumber",
+      "kind": "tel",
+      "label": "Number"
+     },
+     {
+      "id": "extension",
+      "kind": "text",
+      "label": "Extension"
+     },
+     {
+      "id": "label",
+      "kind": "select",
+      "label": "Label",
+      "options": [
+       "Phone",
+       "Mobile",
+       "Office",
+       "Personal",
+       "Home",
+       "Work",
+       "Landline"
+      ]
+     },
+     {
+      "id": "tracking",
+      "kind": "tracking",
+      "label": "Tracking"
+     }
+    ]
+   },
+   {
+    "id": "emails",
+    "kind": "list",
+    "label": "Email addresses",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "email",
+      "kind": "email",
+      "label": "Email"
+     },
+     {
+      "id": "label",
+      "kind": "select",
+      "label": "Label",
+      "options": [
+       "Email",
+       "Work",
+       "Personal"
+      ]
+     },
+     {
+      "id": "tracking",
+      "kind": "tracking",
+      "label": "Tracking"
+     }
+    ]
+   },
+   {
+    "id": "website",
+    "kind": "list",
+    "label": "Websites",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "url",
+      "kind": "url",
+      "label": "URL"
+     },
+     {
+      "id": "label",
+      "kind": "select",
+      "label": "Label",
+      "options": [
+       "Website",
+       "Work",
+       "Company",
+       "Social",
+       "Portfolio",
+       "Personal"
+      ]
+     },
+     {
+      "id": "tracking",
+      "kind": "tracking",
+      "label": "Tracking"
+     }
+    ]
+   },
+   {
+    "id": "addresses",
+    "kind": "list",
+    "label": "Addresses",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "address",
+      "kind": "longtext",
+      "label": "Address"
+     },
+     {
+      "id": "addressLabel",
+      "kind": "select",
+      "label": "Label",
+      "options": [
+       "Address",
+       "Office",
+       "Work",
+       "Home"
+      ]
+     },
+     {
+      "id": "hasMapLocation",
+      "kind": "switch",
+      "label": "Show on map",
+      "default": false
+     },
+     {
+      "id": "location",
+      "kind": "location",
+      "label": "Pin location",
+      "showWhen": {
+       "field": "hasMapLocation",
+       "values": [
+        "true"
+       ]
+      }
+     },
+     {
+      "id": "tracking",
+      "kind": "tracking",
+      "label": "Tracking"
+     }
+    ]
+   },
+   {
+    "id": "txtMsgNumbers",
+    "kind": "list",
+    "label": "SMS / Text numbers",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "txtMsgNumber",
+      "kind": "tel",
+      "label": "Number"
+     },
+     {
+      "id": "label",
+      "kind": "select",
+      "label": "Label",
+      "options": [
+       "SMS",
+       "Text",
+       "Mobile",
+       "Personal",
+       "Work"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "faxes",
+    "kind": "list",
+    "label": "Fax numbers",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "faxNumber",
+      "kind": "tel",
+      "label": "Fax number"
+     },
+     {
+      "id": "label",
+      "kind": "select",
+      "label": "Label",
+      "options": [
+       "Fax",
+       "Office",
+       "Work",
+       "Home"
+      ]
+     }
+    ]
+   },
+   {
+    "id": "customFields",
+    "kind": "list",
+    "label": "Custom fields",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "field",
+      "kind": "text",
+      "label": "Value"
+     },
+     {
+      "id": "label",
+      "kind": "text",
+      "label": "Field label"
+     }
+    ]
+   },
+   {
+    "id": "iconStyle",
+    "kind": "select",
+    "label": "Icon style",
+    "options": [
+     "flat",
+     "circle"
+    ],
+    "default": "flat"
+   },
+   {
+    "id": "showDividers",
+    "kind": "switch",
+    "label": "Show dividers between rows",
+    "default": false
+   },
+   {
+    "id": "mapDisplay",
+    "kind": "select",
+    "label": "Map display",
+    "options": [
+     "link",
+     "embed"
+    ],
+    "default": "link"
+   },
+   {
+    "id": "mapProvider",
+    "kind": "select",
+    "label": "Map provider",
+    "options": [
+     "openstreetmap",
+     "google"
+    ],
+    "default": "openstreetmap",
+    "showWhen": {
+     "field": "mapDisplay",
+     "values": [
+      "embed"
+     ]
+    }
+   },
+   {
+    "id": "buttonPosition",
+    "kind": "select",
+    "label": "Save contact button",
+    "options": [
+     "none",
+     "bottom",
+     "top",
+     "floating",
+     "circle"
+    ],
+    "default": "bottom"
+   }
+  ],
+  "defaults": {
+   "phoneNumbers": [],
+   "emails": [],
+   "website": [],
+   "addresses": [],
+   "txtMsgNumbers": [],
+   "faxes": [],
+   "customFields": [],
+   "buttonPosition": "bottom",
+   "mapDisplay": "link",
+   "mapProvider": "openstreetmap",
+   "iconStyle": "flat",
+   "showDividers": false,
+   "cardStyle": {
+    "backgroundColor": ""
+   },
+   "layout": {
+    "appearance": "card"
+   }
+  }
+ },
+ "menu_info": {
+  "label": "Menu",
+  "description": "Restaurant menu — single PDF or multiple sections",
+  "limit": 1,
+  "removable": false,
+  "categories": [
+   "restaurant"
+  ],
+  "fields": [
+   {
+    "id": "_menuMode",
+    "kind": "select",
+    "label": "Menu type",
+    "options": [
+     "single",
+     "multiple"
+    ],
+    "default": "single"
+   },
+   {
+    "id": "single.file",
+    "path": "single.file",
+    "kind": "file",
+    "label": "Upload Menu File",
+    "showWhen": {
+     "field": "_menuMode",
+     "values": [
+      "single"
+     ]
+    }
+   },
+   {
+    "id": "single.file.name",
+    "path": "single.file.name",
+    "kind": "text",
+    "label": "Display name",
+    "showWhen": {
+     "field": "_menuMode",
+     "values": [
+      "single"
+     ]
+    }
+   },
+   {
+    "id": "multiple",
+    "kind": "list",
+    "label": "Menu sections",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "title",
+      "kind": "text",
+      "label": "Section title"
+     },
+     {
+      "id": "description",
+      "kind": "longtext",
+      "label": "Description"
+     },
+     {
+      "id": "icon.url",
+      "path": "icon.url",
+      "kind": "select",
+      "label": "Section icon",
+      "options": [
+       "/images/restaurant-menu-icons/1.svg",
+       "/images/restaurant-menu-icons/2.svg",
+       "/images/restaurant-menu-icons/3.svg",
+       "/images/restaurant-menu-icons/4.svg",
+       "/images/restaurant-menu-icons/5.svg",
+       "/images/restaurant-menu-icons/6.svg",
+       "/images/restaurant-menu-icons/7.svg",
+       "/images/restaurant-menu-icons/8.svg",
+       "/images/restaurant-menu-icons/9.svg",
+       "/images/restaurant-menu-icons/10.svg",
+       "/images/restaurant-menu-icons/11.svg",
+       "/images/restaurant-menu-icons/12.svg",
+       "/images/restaurant-menu-icons/13.svg",
+       "/images/restaurant-menu-icons/14.svg",
+       "/images/restaurant-menu-icons/15.svg",
+       "/images/restaurant-menu-icons/16.svg",
+       "/images/restaurant-menu-icons/17.svg",
+       "/images/restaurant-menu-icons/18.svg"
+      ]
+     },
+     {
+      "id": "file.url",
+      "path": "file.url",
+      "kind": "url",
+      "label": "Menu file"
+     }
+    ],
+    "showWhen": {
+     "field": "_menuMode",
+     "values": [
+      "multiple"
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "_menuMode": "single",
+   "single": {
+    "file": {
+     "url": "",
+     "name": ""
+    }
+   },
+   "multiple": []
+  }
+ },
+ "feedback_info": {
+  "label": "Feedback Form",
+  "description": "Star-rating feedback form with configurable parameters and fields",
+  "limit": 1,
+  "removable": true,
+  "categories": [
+   "restaurant"
+  ],
+  "fields": [
+   {
+    "id": "heading",
+    "kind": "text",
+    "label": "Heading"
+   },
+   {
+    "id": "comment_box",
+    "kind": "switch",
+    "label": "Show comment box",
+    "default": true
+   },
+   {
+    "id": "parameters",
+    "kind": "list",
+    "label": "Rating parameters",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "name",
+      "kind": "text",
+      "label": "Parameter"
+     }
+    ]
+   },
+   {
+    "id": "input",
+    "kind": "list",
+    "label": "Extra fields",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "name",
+      "kind": "text",
+      "label": "Label"
+     },
+     {
+      "id": "type",
+      "kind": "select",
+      "label": "Type",
+      "options": [
+       "text",
+       "email",
+       "tel"
+      ]
+     },
+     {
+      "id": "required",
+      "kind": "switch",
+      "label": "Required",
+      "default": false
+     }
+    ]
+   },
+   {
+    "id": "submitButton.label",
+    "path": "submitButton.label",
+    "kind": "text",
+    "label": "Submit button label"
+   },
+   {
+    "id": "submissionBehaviour.submissionOption",
+    "path": "submissionBehaviour.submissionOption",
+    "kind": "select",
+    "label": "After submission",
+    "options": [
+     "message",
+     "url"
+    ],
+    "default": "message"
+   },
+   {
+    "id": "submissionBehaviour.message",
+    "path": "submissionBehaviour.message",
+    "kind": "longtext",
+    "label": "Thank-you message",
+    "showWhen": {
+     "field": "submissionBehaviour.submissionOption",
+     "values": [
+      "message"
+     ]
+    }
+   },
+   {
+    "id": "submissionBehaviour.url",
+    "path": "submissionBehaviour.url",
+    "kind": "url",
+    "label": "Redirect URL",
+    "showWhen": {
+     "field": "submissionBehaviour.submissionOption",
+     "values": [
+      "url"
+     ]
+    }
+   }
+  ],
+  "defaults": {
+   "heading": "How was your experience?",
+   "comment_box": true,
+   "parameters": [
+    {
+     "name": "Food Quality"
+    },
+    {
+     "name": "Service"
+    },
+    {
+     "name": "Ambiance"
+    }
+   ],
+   "input": [],
+   "submitButton": {
+    "label": "Submit Feedback",
+    "tracking": {}
+   },
+   "submissionBehaviour": {
+    "submissionOption": "message",
+    "message": "Thank you for your feedback!",
+    "url": ""
+   },
+   "layout": {
+    "appearance": "card"
+   }
+  }
+ },
+ "start_page": {
+  "label": "Start Page",
+  "description": "Landing screen shown before the feedback form",
+  "limit": 1,
+  "removable": false,
+  "categories": [
+   "feedback"
+  ],
+  "fields": [
+   {
+    "id": "logo.url",
+    "path": "logo.url",
+    "kind": "image",
+    "label": "Logo"
+   },
+   {
+    "id": "title",
+    "kind": "text",
+    "label": "Title"
+   },
+   {
+    "id": "description",
+    "kind": "longtext",
+    "label": "Description"
+   },
+   {
+    "id": "button.label",
+    "path": "button.label",
+    "kind": "text",
+    "label": "Button label"
+   }
+  ],
+  "defaults": {
+   "logo": {
+    "url": ""
+   },
+   "title": "Share your feedback",
+   "description": "We'd love to hear from you.",
+   "button": {
+    "label": "Get Started",
+    "buttonStyle": {
+     "borderWidth": 0
+    },
+    "color": {
+     "border": "",
+     "button": "",
+     "label": ""
+    }
+   }
+  }
+ },
+ "success_page": {
+  "label": "Success Page",
+  "description": "Confirmation screen shown after feedback is submitted",
+  "limit": 1,
+  "removable": false,
+  "categories": [
+   "feedback"
+  ],
+  "fields": [
+   {
+    "id": "logo.url",
+    "path": "logo.url",
+    "kind": "image",
+    "label": "Logo"
+   },
+   {
+    "id": "title",
+    "kind": "text",
+    "label": "Title"
+   },
+   {
+    "id": "description",
+    "kind": "longtext",
+    "label": "Description"
+   },
+   {
+    "id": "social_media_profiles.headerText",
+    "path": "social_media_profiles.headerText",
+    "kind": "text",
+    "label": "Social profiles heading"
+   },
+   {
+    "id": "social_media_profiles.profiles",
+    "path": "social_media_profiles.profiles",
+    "kind": "list",
+    "label": "Social profiles",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "key",
+      "kind": "text",
+      "label": "Platform (e.g. instagram)"
+     },
+     {
+      "id": "name",
+      "kind": "text",
+      "label": "Display name"
+     },
+     {
+      "id": "data",
+      "kind": "text",
+      "label": "URL or @handle"
+     },
+     {
+      "id": "field",
+      "kind": "select",
+      "label": "Field type",
+      "options": [
+       "url",
+       "handle",
+       "id",
+       "tel",
+       "email"
+      ],
+      "default": "url"
+     },
+     {
+      "id": "label",
+      "kind": "text",
+      "label": "Label"
+     },
+     {
+      "id": "color.button",
+      "path": "color.button",
+      "kind": "color",
+      "label": "Button colour"
+     },
+     {
+      "id": "color.label",
+      "path": "color.label",
+      "kind": "color",
+      "label": "Label colour"
+     },
+     {
+      "id": "color.border",
+      "path": "color.border",
+      "kind": "color",
+      "label": "Border colour"
+     },
+     {
+      "id": "icon.url",
+      "path": "icon.url",
+      "kind": "image",
+      "label": "Custom icon"
+     },
+     {
+      "id": "tracking",
+      "kind": "tracking",
+      "label": "Tracking"
+     }
+    ]
+   }
+  ],
+  "defaults": {
+   "logo": {
+    "url": ""
+   },
+   "title": "Thank you!",
+   "description": "Your feedback has been received.",
+   "social_media_profiles": {
+    "headerText": "",
+    "profiles": []
+   }
+  }
+ },
+ "property_listing": {
+  "label": "Property Listings",
+  "description": "List of properties with images, specs and pricing",
+  "limit": 1,
+  "removable": true,
+  "categories": [
+   "realEstate"
+  ],
+  "fields": [
+   {
+    "id": "listings",
+    "kind": "list",
+    "label": "Properties",
+    "default": [],
+    "itemSchema": [
+     {
+      "id": "propertyName",
+      "kind": "text",
+      "label": "Property name"
+     },
+     {
+      "id": "propertyDescription",
+      "kind": "longtext",
+      "label": "Description"
+     },
+     {
+      "id": "propertyLocation",
+      "kind": "text",
+      "label": "Location"
+     },
+     {
+      "id": "purpose",
+      "kind": "select",
+      "label": "Purpose",
+      "options": [
+       "sale",
+       "rent",
+       "lease"
+      ]
+     },
+     {
+      "id": "bedroom",
+      "kind": "text",
+      "label": "Bedrooms"
+     },
+     {
+      "id": "bathroom",
+      "kind": "text",
+      "label": "Bathrooms"
+     },
+     {
+      "id": "propertyArea.value",
+      "path": "propertyArea.value",
+      "kind": "text",
+      "label": "Floor area"
+     },
+     {
+      "id": "propertyArea.unit",
+      "path": "propertyArea.unit",
+      "kind": "text",
+      "label": "Floor area unit"
+     },
+     {
+      "id": "propertyLot.value",
+      "path": "propertyLot.value",
+      "kind": "text",
+      "label": "Lot size"
+     },
+     {
+      "id": "propertyLot.unit",
+      "path": "propertyLot.unit",
+      "kind": "text",
+      "label": "Lot size unit"
+     },
+     {
+      "id": "pricing.amount",
+      "path": "pricing.amount",
+      "kind": "text",
+      "label": "Price"
+     },
+     {
+      "id": "pricing.currency",
+      "path": "pricing.currency",
+      "kind": "text",
+      "label": "Currency"
+     },
+     {
+      "id": "pricing.frequency",
+      "path": "pricing.frequency",
+      "kind": "text",
+      "label": "Rent period",
+      "showWhen": {
+       "field": "purpose",
+       "values": [
+        "rent"
+       ]
+      }
+     },
+     {
+      "id": "pricing.lease",
+      "path": "pricing.lease",
+      "kind": "text",
+      "label": "Lease length",
+      "showWhen": {
+       "field": "purpose",
+       "values": [
+        "lease"
+       ]
+      }
+     },
+     {
+      "id": "pricing.leaseFrequency",
+      "path": "pricing.leaseFrequency",
+      "kind": "select",
+      "label": "Lease frequency",
+      "options": [
+       "months",
+       "years"
+      ],
+      "showWhen": {
+       "field": "purpose",
+       "values": [
+        "lease"
+       ]
+      }
+     },
+     {
+      "id": "furnishing",
+      "kind": "select",
+      "label": "Furnishing",
+      "options": [
+       "fully-furnished",
+       "semi-furnished",
+       "unfurnished"
+      ]
+     },
+     {
+      "id": "showOnMaps",
+      "kind": "switch",
+      "label": "Show on map",
+      "default": false
+     },
+     {
+      "id": "mapLocation",
+      "kind": "location",
+      "label": "Map location",
+      "showWhen": {
+       "field": "showOnMaps",
+       "values": [
+        "true"
+       ]
+      }
+     },
+     {
+      "id": "media",
+      "kind": "list",
+      "label": "Photos / videos",
+      "default": [],
+      "itemSchema": [
+       {
+        "id": "url",
+        "kind": "image",
+        "label": "Image URL"
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "defaults": {
+   "listings": []
+  }
+ },
+ "real_estate_profile": {
+  "label": "Agent Profile",
+  "description": "Real estate agent — name, photo, license number and company logo",
+  "limit": 1,
+  "removable": false,
+  "categories": [
+   "realEstate"
+  ],
+  "fields": [
+   {
+    "id": "image.url",
+    "path": "image.url",
+    "kind": "image",
+    "label": "Agent photo"
+   },
+   {
+    "id": "companyLogo.url",
+    "path": "companyLogo.url",
+    "kind": "image",
+    "label": "Company logo"
+   },
+   {
+    "id": "name",
+    "kind": "text",
+    "label": "Full name"
+   },
+   {
+    "id": "license_number",
+    "kind": "text",
+    "label": "License number"
+   },
+   {
+    "id": "description",
+    "kind": "longtext",
+    "label": "Bio"
+   }
+  ],
+  "defaults": {
+   "image": {
+    "url": ""
+   },
+   "companyLogo": {
+    "url": ""
+   },
+   "name": "",
+   "license_number": "",
+   "description": "",
+   "layout": {
+    "appearance": "card"
+   },
+   "cardStyle": {
+    "backgroundColor": ""
+   }
+  }
+ }
+}

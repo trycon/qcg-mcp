@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "title": "Form input fields",
+  "description": "Form input types field.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "multipleOptions": {
+      "type": "array",
+      "minItems": 1,
+      "$comment": "Allow upto 50 choices.",
+      "additionalProperties": false,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["option"],
+        "properties": {
+          "option": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        }
+      }
+    },
+    "linearScale": {
+      "type": "object",
+      "additionalProperties": false,
+      "$comment": "Linear scale with lower limit and upper limit.",
+      "properties": {
+        "lowerLimit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "lowerLimitLabel": {
+          "type": "string",
+          "maxLength": 100
+        },
+        "upperLimit": {
+          "type": "integer",
+          "maximum": 10
+        },
+        "upperLimitLabel": {
+          "type": "string",
+          "maxLength": 100
+        }
+      }
+    },
+    "dateFormat": {
+      "type": "string",
+      "enum": [
+        "dd-MM-yyyy",
+        "MM-dd-yyyy",
+        "yyyy-MM-dd"
+      ]
+    },
+    "timeFormat": {
+      "type": "string",
+      "enum": [
+        "12h",
+        "24h"
+      ]
+    },
+    "feedback": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "formatting": {
+          "$ref": "style/feedback.json"
+        }
+      }
+    },
+    "likeDislike": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Like/Dislike answer styling. Kept separate from `feedback` (starRating/emoji, colour only) because this question type has a full per-question button panel in the builder, which those two do not.",
+      "properties": {
+        "formatting": {
+          "$ref": "style/feedback.json",
+          "description": "Legacy pre-buttonStyle colour, still honoured by the renderer as a fallback for forms authored in the Angular app."
+        },
+        "buttonStyle": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Per-question Like/Dislike button styling (qcg-frontend-next packages/blocks form/like-dislike). Property shapes mirror style/button.json.",
+          "properties": {
+            "showLabel": {
+              "type": "boolean",
+              "description": "Show the 'Like'/'Dislike' caption beside each icon."
+            },
+            "fullWidth": {
+              "type": "boolean",
+              "description": "Stretch both buttons to fill the question's width."
+            },
+            "color": {
+              "$ref": "style/hex-color.json",
+              "description": "Background of the selected button. Empty string means use theme default."
+            },
+            "textColor": {
+              "$ref": "style/hex-color.json",
+              "description": "Icon and label colour. Empty string means use theme default."
+            },
+            "borderColor": {
+              "$ref": "style/hex-color.json",
+              "description": "Border colour of an unselected button. Empty string means use theme default."
+            },
+            "borderRadius": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "borderWidth": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "uploadFile": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+         "url": {
+           "type": "string",
+           "pattern": "(https?://.*\\.(png|jpeg|jpg|svg|gif|mp3|wav|aac|m4a|pdf|doc|docx|xls|xlsx|ppt|pptx|odt|ods|odp|txt|csv|js|PNG|JPEG|JPG|SVG|GIF|MP3|WAV|AAC|M4A|PDF|DOC|DOCX|XLS|XLSX|PPT|PPTX|ODT|ODS|ODP|TXT|CSV|JS))$"
+         }
+      }
+    },
+    "signature": {
+      "type": "string"
+    }
+  }
+}
