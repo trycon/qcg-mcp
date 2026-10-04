@@ -409,8 +409,9 @@ def _failed(result) -> bool:
     return not isinstance(result, dict) or "error" in result
 
 
-def _links(qrid: str, api_key: str) -> dict:
-    links = {"builder_url": BUILDER_URL.format(qrid=qrid)}
+def _links(qrid: str, api_key: str, draft: bool = False) -> dict:
+    # With a draft, the builder opens it directly (?draft=continue) instead of asking "draft or live page?".
+    links = {"builder_url": BUILDER_URL.format(qrid=qrid) + ("?draft=continue" if draft else "")}
     token = scanova("POST", f"qr/{qrid}/preview-token/", api_key, body={})
     if not _failed(token) and token.get("token") and token.get("complete_url"):
         sep = "&" if "?" in token["complete_url"] else "?"
@@ -432,7 +433,7 @@ def _page_report(qr: dict, env: dict, api_key: str, **extra) -> dict:
         "has_unpublished_changes": bool(qr.get("draft_info")),
         "published": bool(qr.get("published_at")),
         "page_url": duo.get("complete_url"),
-        **_links(qrid, api_key),
+        **_links(qrid, api_key, draft=bool(qr.get("draft_info"))),
         **extra,
     }
     problems = block_problems(env["pages"][0]["data"]["blocks"])
@@ -584,7 +585,7 @@ def publish_page(a: dict, api_key: str):
 
 @_tool("qrid", ids=('qrid',))
 def get_page_preview(a: dict, api_key: str):
-    links = _links(a["qrid"], api_key)
+    links = _links(a["qrid"], api_key, draft=True)
     if "preview_url" not in links:
         return {"error": f"Couldn't make a preview link for {a['qrid']!r}."}
     if a.get("image"):
