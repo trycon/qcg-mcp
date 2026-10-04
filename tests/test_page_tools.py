@@ -104,7 +104,7 @@ def test_get_page_outline_and_links(page):
     out = execute_tool("get_page", {"qrid": "Qa1"}, KEY)
     assert [(b["id"], b["label"], b.get("summary")) for b in out["blocks"]] == [
         ("b1", "Page Title", "Our Coffee Shop Opens in Pune"), ("b2", "Description", "Freshly brewed coffee."), ("b3", "Button", "Get directions")]
-    assert out["builder_url"] == "https://app.scanova.io/qr/Qa1/landing"
+    assert out["builder_url"] == "https://app.scanova.io/qr/Qa1/landing?draft=continue"  # opens the draft directly
     assert out["preview_url"] == "https://scnv.io/AbC?preview_token=t0k"
     assert out["has_unpublished_changes"] is True and "before_publishing" not in out
     assert normalize(out, "get_page")["ok"] is True  # lists in the result aren't a validation error
