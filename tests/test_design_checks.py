@@ -130,3 +130,10 @@ def test_previews_and_design_options_are_successes_not_validation_errors():
     # A Scanova API endpoint answering with DRF field errors is still a validation error.
     drf = normalize({"name": ["This field is required."]}, "create_qr_code")
     assert drf["ok"] is False and drf["status_code"] == 422
+
+
+def test_download_offers_vector_formats():
+    """The API accepts svg and eps (qcg-backend DownloadQRCodeImage); the tool now says so."""
+    from mcp_http.schemas import DOWNLOAD_QR_PARAMS_SCHEMA
+
+    assert {"svg", "eps"} <= set(DOWNLOAD_QR_PARAMS_SCHEMA["properties"]["file"]["enum"])

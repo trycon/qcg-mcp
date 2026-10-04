@@ -134,9 +134,9 @@ DOWNLOAD_QR_PARAMS_SCHEMA = {
     "properties": {
         "file": {
             "type": "string",
-            "enum": ["png", "jpg", "pdf"],
+            "enum": ["png", "jpg", "svg", "pdf", "eps"],
             "default": "png",
-            "description": "Output image format",
+            "description": "Output format: png or jpg (images), svg (vector, best for print and packaging), pdf, eps (vector, for designers)",
         },
         "size": {
             "type": "integer",

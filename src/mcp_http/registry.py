@@ -274,7 +274,7 @@ def list_mcp_tools():
         _tool(
             "download_qr_code",
             "Download QR code image",
-            "Download QR code image in PNG, JPG, or PDF format",
+            "Download a QR code as PNG, JPG, SVG, PDF or EPS (SVG/EPS are vector — best for print)",
             READ_ONLY_TOOL_ANNOTATIONS_JSON,
             {
                 "type": "object",
