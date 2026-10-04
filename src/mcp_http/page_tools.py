@@ -245,13 +245,23 @@ def _resolve_theme(ref, api_key):
     return theme, None
 
 
+def _set_theme(env: dict, theme_id, config) -> None:
+    """The theme, and its values as the builder keeps them in a draft (theme_config): Scanova's draft preview draws
+    the page with them — without, a page that was never published previews in the default look."""
+    env["theme_id"] = theme_id
+    if isinstance(config, dict) and config:
+        env["theme_config"] = copy.deepcopy(config)
+    else:
+        env.pop("theme_config", None)
+
+
 def _template(slug, api_key):
-    """(theme_id, theme_overrides, blocks, error) for a page template."""
+    """(theme_id, theme_config, theme_overrides, blocks, error) for a page template."""
     if not _id_ok(slug):
-        return None, None, None, "Give a template's slug."
+        return None, None, None, None, "Give a template's slug."
     t = scanova("GET", f"page-template/{slug}/", api_key)
     if not isinstance(t, dict) or "error" in t:
-        return None, None, None, f"There's no page template {slug!r} — list_page_templates shows them."
+        return None, None, None, None, f"There's no page template {slug!r} — list_page_templates shows them."
     raw = t.get("blocks_json")
     raw = _parsed(raw) if isinstance(raw, str) else raw
     if isinstance(raw, list):
@@ -264,7 +274,8 @@ def _template(slug, api_key):
     theme = t.get("theme")
     theme_id = theme.get("id") if isinstance(theme, dict) else theme
     made = [{"id": new_block_id(), "type": b.get("type"), "data": copy.deepcopy(b.get("data") or {})} for b in tpl_blocks if b.get("type")]
-    return theme_id, overrides, made, None
+    config = theme.get("config_json") if isinstance(theme, dict) and isinstance(theme.get("config_json"), dict) else None
+    return theme_id, config, overrides, made, None
 
 
 def _new_block(spec: dict, category: str):
@@ -353,7 +364,7 @@ def apply_changes(env: dict, changes: list, category: str, api_key: str):
             theme, err = _resolve_theme(change.get("theme"), api_key)
             if err:
                 return fail(err)
-            env["theme_id"] = theme["id"]
+            _set_theme(env, theme["id"], theme.get("config_json"))
             if not change.get("keep_values"):
                 env["theme_overrides"] = {}
             done.append(f"theme set to {theme.get('name')}")
@@ -368,10 +379,10 @@ def apply_changes(env: dict, changes: list, category: str, api_key: str):
             env["theme_overrides"] = merged
             done.append("theme values changed")
         elif op == "template":
-            theme_id, overrides, tpl_blocks, err = _template(change.get("template"), api_key)
+            theme_id, config, overrides, tpl_blocks, err = _template(change.get("template"), api_key)
             if err:
                 return fail(err)
-            env["theme_id"] = theme_id
+            _set_theme(env, theme_id, config)
             env["theme_overrides"] = overrides or {}
             if change.get("keep_content", True):
                 done.append(f"took the look of template {change.get('template')} (blocks kept)")
@@ -479,16 +490,16 @@ def create_page(a: dict, api_key: str):
     category = a.get("category") or "dynamicText"
     if category not in PAGE_CATEGORIES:
         return {"error": f"category must be one of {', '.join(PAGE_CATEGORIES)} (dynamicText is a general page)."}
-    theme_id, overrides, page_blocks = None, {}, []
+    theme_id, theme_config, overrides, page_blocks = None, None, {}, []
     if a.get("template"):
-        theme_id, overrides, page_blocks, err = _template(a["template"], api_key)
+        theme_id, theme_config, overrides, page_blocks, err = _template(a["template"], api_key)
         if err:
             return {"error": err}
     if a.get("theme"):
         theme, err = _resolve_theme(a["theme"], api_key)
         if err:
             return {"error": err}
-        theme_id = theme["id"]
+        theme_id, theme_config = theme["id"], theme.get("config_json")
     if a.get("blocks"):
         page_blocks = []
         for spec in a["blocks"]:
@@ -508,16 +519,16 @@ def create_page(a: dict, api_key: str):
         system = [t for t in themes if isinstance(t, dict) and t.get("is_system")] if isinstance(themes, list) else []
         if not system:
             return {"error": "Couldn't load the themes to start the page with; give a theme or a template."}
-        theme_id = system[0]["id"]
+        theme_id, theme_config = system[0]["id"], system[0].get("config_json")
     name = (a.get("name") or "").strip() or DEFAULT_NAME
     env = {
-        "theme_id": theme_id,
         "theme_overrides": overrides or {},
         "pageName": name,
         "settings": {"nav": "none", "navItems": []},
         "iconImages": [],
         "pages": [{"id": "main", "name": "Page 1", "type": "component", "category": category, "data": {"blocks": page_blocks}}],
     }
+    _set_theme(env, theme_id, theme_config)
     category_id = _category_id(category, api_key)
     if category_id is None:
         return {"error": f"Couldn't find the {category} category in this account."}
@@ -655,7 +666,7 @@ def get_page_template(a: dict, api_key: str):
     t = scanova("GET", f"page-template/{a['template']}/", api_key)
     if _failed(t):
         return {"error": f"There's no page template {a['template']!r} — list_page_templates shows them."}
-    theme_id, overrides, tpl_blocks, _ = _template(a["template"], api_key)
+    theme_id, _config, overrides, tpl_blocks, _ = _template(a["template"], api_key)
     theme = t.get("theme") if isinstance(t.get("theme"), dict) else {}
     return {
         "slug": t.get("slug"), "name": t.get("name"), "description": t.get("description"),
