@@ -286,3 +286,12 @@ def test_safety_classes():
     for name in ("create_page", "edit_page"):
         assert annotations_for(name)["destructiveHint"] is False, name
     assert annotations_for("publish_page")["destructiveHint"] is True
+
+
+def test_several_block_types_in_one_call(api):
+    out = execute_tool("get_page_block", {"types": ["page_title", "map", "nope", "map"]}, KEY)
+    assert [b["type"] for b in out["data"]] == ["page_title", "map"] and out["unknown"] == ["nope"]
+    assert out["data"][1]["data_schema"] is not None
+    assert execute_tool("get_page_block", {"type": "button"}, KEY)["type"] == "button"
+    assert "required" in execute_tool("get_page_block", {}, KEY)["error"]
+    assert "isn't a page block" in execute_tool("get_page_block", {"types": ["nope"]}, KEY)["error"]
