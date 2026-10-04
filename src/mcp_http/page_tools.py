@@ -596,16 +596,34 @@ def list_page_blocks(a: dict, api_key: str):
     ]}
 
 
-@_tool("type")
-def get_page_block(a: dict, api_key: str):
-    b = blocks().get(a["type"])
+MAX_BLOCK_TYPES = 10
+
+
+def _block_info(block_type: str):
+    b = blocks().get(block_type)
     if not b:
-        return {"error": f"{a['type']!r} isn't a page block — list_page_blocks shows them."}
-    schema_path = _SCHEMAS / "v2" / "components" / f"{a['type']}.json"
+        return None
+    schema_path = _SCHEMAS / "v2" / "components" / f"{block_type}.json"
     if not schema_path.exists():
-        schema_path = _SCHEMAS / "categories" / "components" / f"{a['type']}.json"
+        schema_path = _SCHEMAS / "categories" / "components" / f"{block_type}.json"
     schema = json.loads(schema_path.read_text()) if schema_path.exists() else None
-    return {"type": a["type"], **b, "data_schema": schema}
+    return {"type": block_type, **b, "data_schema": schema}
+
+
+@_tool()
+def get_page_block(a: dict, api_key: str):
+    """One block type (`type`), or several at once (`types`) — one call instead of one per block."""
+    wanted = a.get("types") if isinstance(a.get("types"), list) else [a.get("type")] if a.get("type") else []
+    wanted = [t for t in dict.fromkeys(str(t) for t in wanted if t)][:MAX_BLOCK_TYPES]
+    if not wanted:
+        return {"error": "type (or types) is required"}
+    found = [info for info in map(_block_info, wanted) if info]
+    unknown = [t for t in wanted if not blocks().get(t)]
+    if not found:
+        return {"error": f"{', '.join(map(repr, unknown))} isn't a page block — list_page_blocks shows them."}
+    if not isinstance(a.get("types"), list):
+        return found[0]
+    return {"data": found, **({"unknown": unknown} if unknown else {})}
 
 
 @_tool()
@@ -684,10 +702,13 @@ PAGE_TOOLS: list[MoreTool] = [
         _object({"data": {"type": "array"}}), list_page_blocks,
     ),
     MoreTool(
-        "get_page_block", "Get a page block's fields",
-        "One block type's fields, defaults and data schema — what to put in `data` when adding or changing it.",
+        "get_page_block", "Get page blocks' fields",
+        "Block types' fields, defaults and data schema — what to put in `data` when adding or changing them. Ask for every type you need at once with `types`.",
         "Landing pages", "(local)",
-        _input({"type": {"type": "string"}}, ("type",)), _object(), get_page_block,
+        _input({
+            "type": {"type": "string", "description": "One block type"},
+            "types": {"type": "array", "items": {"type": "string"}, "maxItems": MAX_BLOCK_TYPES, "description": "Several block types at once"},
+        }), _object(), get_page_block,
     ),
     MoreTool(
         "list_page_themes", "List page themes",
