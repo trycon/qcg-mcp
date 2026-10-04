@@ -109,3 +109,24 @@ def test_set_qr_design_refuses_an_unsafe_design_unless_accepted():
         ok = execute_tool("set_qr_design", {"qrid": "Q1", "start_color": "#1D3A8A"}, "key")
         save.assert_called_once()
         assert ok["scan"]["scannable"] is True
+
+
+def test_previews_and_design_options_are_successes_not_validation_errors():
+    """Tools computed here return lists (checks, patterns); only API endpoints' field-error dicts are 422s."""
+    from mcp_http.normalizer import normalize
+
+    preview = {
+        "preview": True, "saved": False, "content": "https://scnv.io/x", "pattern_info": {"dataInfo": {"startColor": "#1565C0"}},
+        "checks": [{"check": "dots", "level": "ok", "message": "fine"}], "scan": {"scannable": True, "message": "Scan test passed"},
+        "summary": {"safe": True, "verdict": "Safe to print"},
+    }
+    env = normalize(preview, "preview_qr_design")
+    assert env["ok"] is True
+    assert env["data"]["preview"] is True and env["data"]["pattern_info"]
+
+    options = {"data_patterns": ["square", "circle"], "eye_shapes": ["E0", "E1"], "tips": ["Keep contrast high"]}
+    assert normalize(options, "get_qr_design_options")["ok"] is True
+
+    # A Scanova API endpoint answering with DRF field errors is still a validation error.
+    drf = normalize({"name": ["This field is required."]}, "create_qr_code")
+    assert drf["ok"] is False and drf["status_code"] == 422

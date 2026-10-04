@@ -247,6 +247,10 @@ def _unwrap_jsonrpc(raw: dict, tool_name: str) -> dict | None:
     return result
 
 
+# Tools whose result is built in this server (not a Scanova API response), with list-valued fields.
+_REPORT_TOOLS = {"preview_qr_design", "get_qr_design_options"}
+
+
 def normalize(raw, tool_name: str) -> dict:
     """
     Convert any raw Scanova tool result into the stable output schema.
@@ -328,9 +332,12 @@ def normalize(raw, tool_name: str) -> dict:
     )
 
     # DRF validation errors: dict with field-name keys, no "error" top-level key,
-    # no "count"/"results" — treated as 422
+    # no "count"/"results" — treated as 422. Not for tools computed here
+    # (_REPORT_TOOLS): they legitimately return lists (checks, patterns), and a
+    # preview read as a failure meant clients never showed it.
     is_validation_error = (
         not is_error
+        and tool_name not in _REPORT_TOOLS
         and "count" not in raw
         and "results" not in raw
         and success_field is None
