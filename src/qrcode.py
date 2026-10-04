@@ -156,6 +156,17 @@ def update_qr_code(qrid=None, params=None, api_key=None):
     
     headers = {"Authorization": f"{api_key}", "Content-Type": "application/json"}
     try:
+        # The API's update is a full one: name and qr_type are always required. A change to just one thing (where it
+        # points, its design) keeps the code's current name and type instead of failing with "This field is required".
+        missing = [k for k in ("name", "qr_type") if k not in params]
+        if missing:
+            current = requests.get(f"{_BASE}/qr/{qrid}/", headers={"Authorization": f"{api_key}"})
+            if current.status_code == 200:
+                body = current.json()
+                obj = body.get("data", body) if isinstance(body, dict) else {}
+                params = {**{k: obj[k] for k in missing if isinstance(obj, dict) and obj.get(k) is not None}, **params}
+            else:
+                return api_result(current)
         resp = requests.put(f"{_BASE}/qr/{qrid}/", headers=headers, json=params)
         return api_result(resp)
     except requests.RequestException as e:
