@@ -49,7 +49,8 @@ _NEW_INPUTS = {"set_qr_design": {"accept_risk"}}
 # call failed. It now takes title + questions (tests/test_more_tools.py).
 # attach_form_to_qr's form_id also accepts the string form_id now (it only
 # took the numeric id, while every other tool's form_id is the string one).
-_REWRITTEN = {"create_form", "attach_form_to_qr"}
+# download_qr_code offers the formats the API always accepted (svg, eps), not just png/jpg/pdf.
+_REWRITTEN = {"create_form", "attach_form_to_qr", "download_qr_code"}
 
 
 def test_tools_list_matches_the_pre_upgrade_server_on_both_eras():
