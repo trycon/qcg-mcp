@@ -128,7 +128,7 @@ def test_a_code_without_a_builder_page_points_to_the_builder(api):
 # ── creating ───────────────────────────────────────────────────────────────── #
 
 def test_create_page_saves_a_draft_in_the_builders_format(api):
-    api.routes[("GET", "theme/")] = [{"id": 7, "slug": "mine", "is_system": False}, {"id": 3, "slug": "clean", "is_system": True}]
+    api.routes[("GET", "theme/")] = [{"id": 7, "slug": "mine", "is_system": False}, {"id": 3, "slug": "clean", "is_system": True, "config_json": {"_v": 2, "color": {"accent": "#111111"}}}]
     api.routes[("GET", "qr/category/")] = {"Pages": [{"id": 9, "slug": "dynamicText"}, {"id": 20, "slug": "event"}]}
     api.routes[("POST", "qr/")] = lambda body: {"qrid": "Qn1", "name": body["name"], "category": {"slug": "dynamicText"}, "draft_info": body["info"]}
     out = execute_tool("create_page", {"name": "Grand opening", "blocks": [
@@ -140,6 +140,7 @@ def test_create_page_saves_a_draft_in_the_builders_format(api):
     assert (body["qr_type"], body["category"], body["is_draft"], body["name"]) == ("dy", 9, True, "Grand opening")
     env = json.loads(body["info"])
     assert env["theme_id"] == 3  # the first system theme, never another account's
+    assert env["theme_config"] == {"_v": 2, "color": {"accent": "#111111"}}  # what the draft preview draws with
     assert env["theme_overrides"] == {"color": {"accent": "#1F7A4D"}, "_v": 2}
     blocks = env["pages"][0]["data"]["blocks"]
     assert [b["type"] for b in blocks] == ["page_title", "button"]
@@ -204,13 +205,14 @@ def test_null_removes_a_field(page):
 
 
 def test_switching_theme_and_theme_values(page):
-    page.routes[("GET", "theme/forest/")] = {"id": 21, "slug": "forest", "name": "Forest"}
+    page.routes[("GET", "theme/forest/")] = {"id": 21, "slug": "forest", "name": "Forest", "config_json": {"_v": 2, "color": {"accent": "#2E7D32"}}}
     execute_tool("edit_page", {"qrid": "Qa1", "changes": [
         {"op": "theme", "theme": "forest"},
         {"op": "theme_values", "values": {"color": {"accent": "#1F7A4D"}, "radius": {"button": "999px"}}},
     ]}, KEY)
     env = _saved(page)
     assert env["theme_id"] == 21
+    assert env["theme_config"]["color"]["accent"] == "#2E7D32"
     assert env["theme_overrides"] == {"color": {"accent": "#1F7A4D"}, "radius": {"button": "999px"}, "_v": 2}
 
 
@@ -220,11 +222,12 @@ def test_bad_theme_values_are_refused(page):
 
 
 def test_template_look_keeps_the_blocks_unless_asked(page):
-    page.routes[("GET", "page-template/evt-neon/")] = {"theme": {"id": 30}, "blocks_json": {"theme_overrides": {"_v": 2, "color": {"accent": "#FF00AA"}},
+    page.routes[("GET", "page-template/evt-neon/")] = {"theme": {"id": 30, "config_json": {"_v": 2, "effects": {"particles": True}}}, "blocks_json": {"theme_overrides": {"_v": 2, "color": {"accent": "#FF00AA"}},
         "pages": [{"data": {"blocks": [{"type": "page_title", "data": {"title": "Neon night"}}]}}]}}
     execute_tool("edit_page", {"qrid": "Qa1", "changes": [{"op": "template", "template": "evt-neon"}]}, KEY)
     env = _saved(page)
     assert env["theme_id"] == 30 and env["theme_overrides"]["color"]["accent"] == "#FF00AA"
+    assert env["theme_config"] == {"_v": 2, "effects": {"particles": True}}
     assert [b["id"] for b in env["pages"][0]["data"]["blocks"]] == ["b1", "b2", "b3"]
     execute_tool("edit_page", {"qrid": "Qa1", "changes": [{"op": "template", "template": "evt-neon", "keep_content": False}]}, KEY)
     assert [b["data"]["title"] for b in _saved(page)["pages"][0]["data"]["blocks"]] == ["Neon night"]
