@@ -619,7 +619,45 @@ def _block_info(block_type: str):
     if not schema_path.exists():
         schema_path = _SCHEMAS / "categories" / "components" / f"{block_type}.json"
     schema = json.loads(schema_path.read_text()) if schema_path.exists() else None
-    return {"type": block_type, **b, "data_schema": schema}
+    return {"type": block_type, **b, "data_schema": _compact_schema(schema, schema_path.parent)}
+
+
+_STYLE_KEYS = {"cardStyle", "textStyle", "layout", "formatting", "tracking", "buttonStyle", "subtitleStyle"}
+
+
+def _compact_schema(schema, base: Path | None = None):
+    """The block's data contract without the noise: its own fields (types, allowed values, limits, which are
+    required); styling objects and long comments left out — the full file is the backend's, and saves still validate
+    against it."""
+    if not isinstance(schema, dict):
+        return None
+    parts = [schema, *[x for x in schema.get("allOf", []) if isinstance(x, dict)]]
+    # A shared base it builds on (button → _base_button.json): its fields count too.
+    for part in list(parts):
+        ref = part.get("$ref")
+        if base and isinstance(ref, str) and ref.endswith(".json") and "/" not in ref and (base / ref).exists():
+            shared = json.loads((base / ref).read_text())
+            parts += [shared, *[x for x in shared.get("allOf", []) if isinstance(x, dict)]]
+    props, required = {}, []
+    for part in parts:
+        required += [r for r in part.get("required", []) if isinstance(r, str)]
+        for name, spec in (part.get("properties") or {}).items():
+            if name in _STYLE_KEYS or not isinstance(spec, dict):
+                continue
+            keep = {k: spec[k] for k in ("type", "enum", "maxLength", "minLength", "maxItems", "format", "const") if k in spec}
+            if "$ref" in spec:
+                keep["ref"] = spec["$ref"].split("/")[-1].removesuffix(".json")
+            if isinstance(spec.get("items"), dict):
+                item = spec["items"]
+                keep["items"] = {k: item[k] for k in ("type", "enum") if k in item} or {"ref": str(item.get("$ref", "")).split("/")[-1].removesuffix(".json")}
+                if isinstance(item.get("properties"), dict):
+                    keep["items"]["properties"] = sorted(item["properties"])
+            if isinstance(spec.get("properties"), dict):
+                keep["properties"] = sorted(k for k in spec["properties"] if k not in _STYLE_KEYS)
+            if isinstance(spec.get("description"), str) and len(spec["description"]) <= 120:
+                keep["description"] = spec["description"]
+            props[name] = keep
+    return {"required": sorted(set(required)), "properties": props}
 
 
 @_tool()

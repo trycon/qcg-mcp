@@ -298,3 +298,23 @@ def test_several_block_types_in_one_call(api):
     assert execute_tool("get_page_block", {"type": "button"}, KEY)["type"] == "button"
     assert "required" in execute_tool("get_page_block", {}, KEY)["error"]
     assert "isn't a page block" in execute_tool("get_page_block", {"types": ["nope"]}, KEY)["error"]
+
+
+def test_template_list_is_slim(api):
+    api.routes[("GET", "page-template/")] = {"count": 1, "results": [{
+        "slug": "wed-royal-affair", "name": "Royal Affair", "description": "Formal", "category": {"slug": "wedding", "name": "Wedding"},
+        "theme": {"id": 11, "slug": "noir", "name": "Noir", "config_json": {"_v": 2, "color": {"accent": "#c9a86a"}}},
+        "blocks_json": {"pages": [{"data": {"blocks": [{"type": "page_title", "data": {"title": "x" * 5000}}, {"type": "rsvp", "data": {}}]}}]},
+        "filter_tags": ["wedding"], "accent_color": "#c9a86a", "is_premium": False, "is_system": True,
+    }]}
+    out = execute_tool("list_page_templates", {}, KEY)
+    t = out["data"][0] if "data" in out else out["results"][0]
+    assert t == {"slug": "wed-royal-affair", "name": "Royal Affair", "description": "Formal", "category": "wedding",
+                 "theme": {"id": 11, "slug": "noir", "name": "Noir"}, "blocks": ["page_title", "rsvp"], "tags": ["wedding"],
+                 "accent_color": "#c9a86a", "premium": False, "mine": False}
+
+
+def test_block_schema_is_compact_but_complete():
+    d = P._block_info("button")["data_schema"]
+    assert {"label", "link", "type"} <= set(d["properties"]) and d["required"] == ["label", "link"]
+    assert not {"cardStyle", "layout"} & set(d["properties"])
