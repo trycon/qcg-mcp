@@ -56,6 +56,34 @@ def _missing(a: dict, *keys: str):
     return {"error": f"{', '.join(gone)} {'is' if len(gone) == 1 else 'are'} required"} if gone else None
 
 
+def _templates_slim(run: Callable[[dict, str], object]) -> Callable[[dict, str], object]:
+    """A template list as a choice needs it: each template's blocks and its theme's whole config made the reply
+    tens of thousands of tokens (get_page_template has the full template)."""
+    def slim(t: dict) -> dict:
+        theme = t.get("theme") if isinstance(t.get("theme"), dict) else {}
+        category = t.get("category") if isinstance(t.get("category"), dict) else {}
+        raw = t.get("blocks_json")
+        pages = raw.get("pages") if isinstance(raw, dict) else None
+        blocks = ((pages or [{}])[0].get("data") or {}).get("blocks") if pages else raw
+        return {
+            "slug": t.get("slug"), "name": t.get("name"), "description": t.get("description"),
+            "category": category.get("slug") or category.get("name"),
+            "theme": {"id": theme.get("id"), "slug": theme.get("slug"), "name": theme.get("name")},
+            "blocks": [b.get("type") for b in blocks if isinstance(b, dict)] if isinstance(blocks, list) else None,
+            "tags": t.get("filter_tags"), "accent_color": t.get("accent_color"),
+            "premium": t.get("is_premium"), "mine": t.get("is_system") is False,
+        }
+
+    def handler(a: dict, k: str):
+        out = run(a, k)
+        if isinstance(out, dict) and isinstance(out.get("results"), list):
+            return {**out, "results": [slim(t) for t in out["results"] if isinstance(t, dict)]}
+        if isinstance(out, list):
+            return [slim(t) for t in out if isinstance(t, dict)]
+        return out
+    return handler
+
+
 # ── the tools ──────────────────────────────────────────────────────────────── #
 
 @dataclass(frozen=True)
@@ -525,7 +553,7 @@ MORE_TOOLS: list[MoreTool] = [
             "search": {"type": "string"},
             **_PAGE,
         }),
-        _list_of(), _get("page-template/", lambda a: {"mine": "true" if a.get("mine") else None, "category": a.get("category"), "search": a.get("search"), "page": a.get("page")}),
+        _list_of(), _templates_slim(_get("page-template/", lambda a: {"mine": "true" if a.get("mine") else None, "category": a.get("category"), "search": a.get("search"), "page": a.get("page")})),
     ),
 ]
 
