@@ -5,7 +5,8 @@ name: Deploy to QA
 # EC2 box (Name=qcg-qa) beside QA's backend, pointed at QA's Management API by deploy/qa/qa.env. See README → QA.
 #
 # The image is built here for the box's arm64 and shipped in the CodeDeploy bundle; the box only loads and starts
-# it (deploy/qa/scripts), and rolls back to the previous image unless /health answers.
+# it (deploy/qa/scripts), and rolls back to the previous image unless /health answers there. QA is VPN-only, like
+# the rest of Scanova's QA, so the runner can't check mcp.qa.scanova.io itself; the box's check gates the deploy.
 on:
   push:
     branches: [qa]
@@ -86,13 +87,3 @@ jobs:
             aws deploy get-deployment --deployment-id "$ID" --query 'deploymentInfo.{status:status,err:errorInformation}' --output json || true
             exit 1
           fi
-
-      # The load balancer marks the new container healthy after two passing checks, 10s apart.
-      - name: Check it answers through the load balancer
-        run: |
-          for i in $(seq 1 36); do
-            [ "$(curl -s -o /dev/null -w '%{http_code}' -m 10 https://mcp.qa.scanova.io/health)" = "200" ] && { echo "mcp.qa.scanova.io is up"; exit 0; }
-            sleep 5
-          done
-          echo "::error::https://mcp.qa.scanova.io/health didn't answer 200"
-          exit 1
