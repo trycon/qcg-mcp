@@ -386,12 +386,33 @@ Merging adds the PR to the **draft release**, versioned by
 
 **Publishing the draft release deploys it** (`.github/workflows/deploy.yml`): tests run, the
 image is built and tagged with the version, the `scanova-mcp` ECS Express service is updated to it,
-and `/health` and `initialize` are checked. A merge to `main` does not deploy. To redeploy or roll
+and `/health` and `initialize` are checked. A merge to `main` does not deploy to production. To redeploy or roll
 back, run the Deploy workflow from the Actions tab with that release's tag as the ref.
 
 AWS access is GitHub OIDC → IAM role `qcg-mcp-github-deploy` (no stored keys): it trusts only this
 repository's `production` environment (release tags `v*` only) and can only push this image, update
 the `scanova-mcp` service and pass its task roles.
+
+### QA (`mcp.qa.scanova.io`)
+
+**Every merge to `main` deploys QA** (`.github/workflows/qa-deploy.yml`), so a change runs against QA before it's
+released. QA is the same image, pointed at QA's Management API (`api.qa.scanova.io`) and OAuth server by
+`deploy/qa/qa.env`, so tokens from QA's backend work there and nowhere else (production's `api.scanova.io` doesn't
+know them).
+
+It runs on the QA EC2 box (`Name=qcg-qa`, arm64) as container `qcg-mcp-qa` on port 3030, capped at 512 MB and one
+CPU. `qcg-qa-load-balancer` sends `mcp.qa.scanova.io` to it (host rule → target group `qcg-qa-mcp`, health check
+`/health`, TLS by the listener's `*.qa.scanova.io` certificate). The runner builds the arm64 image and ships it in a
+CodeDeploy bundle (`QCG_QA_GeneratorApp` / `QCG_QA_Mcp`). On the box, `deploy/qa/scripts` load it, swap the
+container, and roll back to the previous image unless `/health` answers within two minutes. AWS access is GitHub
+OIDC → IAM role `qcg-mcp-qa-deploy`, which trusts only this repository's `qa` environment and can only upload this
+app's bundles and deploy that one group.
+
+```bash
+gh workflow run qa-deploy.yml --repo trycon/qcg-mcp --ref main      # redeploy main to QA
+aws ssm start-session --target i-0ff14be528bff086b --region ap-south-1
+docker logs --tail 50 qcg-mcp-qa                                     # on the box
+```
 
 ## Troubleshooting
 
