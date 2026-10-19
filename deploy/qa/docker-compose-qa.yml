@@ -1,0 +1,20 @@
+# The QA MCP server on the QA EC2 box. qcg-qa-load-balancer sends mcp.qa.scanova.io to the box's port 3030 (target
+# group qcg-qa-mcp); the box's security group admits that port only from the load balancer and the VPC.
+# Same image as production, pointed at QA by qa.env.
+services:
+  qcg-mcp:
+    image: qcg-mcp:latest
+    container_name: qcg-mcp-qa
+    restart: unless-stopped
+    ports:
+      - "3030:8000"
+    env_file:
+      - qa.env
+    # Shares the box with QA's backend and apps: capped so it can't crowd them out.
+    mem_limit: 512m
+    cpus: 1.0
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
