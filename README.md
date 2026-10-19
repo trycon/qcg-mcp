@@ -396,7 +396,7 @@ the `scanova-mcp` service and pass its task roles.
 ### QA (`mcp.qa.scanova.io`)
 
 **Every merge to `main` deploys QA** (`.github/workflows/qa-deploy.yml`), so a change runs against QA before it's
-released. QA is the same image, pointed at QA's Management API (`management.qa.scanova.io`) and OAuth server by
+released. QA is the same image, pointed at QA's Management API (`api.qa.scanova.io`) and OAuth server by
 `deploy/qa/qa.env`, so tokens from QA's backend work there and nowhere else (production's `api.scanova.io` doesn't
 know them).
 
