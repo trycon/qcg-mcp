@@ -395,21 +395,21 @@ the `scanova-mcp` service and pass its task roles.
 
 ### QA (`mcp.qa.scanova.io`)
 
-**Every merge to `main` deploys QA** (`.github/workflows/qa-deploy.yml`), so a change runs against QA before it's
-released. QA is the same image, pointed at QA's Management API (`api.qa.scanova.io`) and OAuth server by
+**Every push or merge to the `qa` branch deploys QA** (`.github/workflows/qa-deploy.yml`), as in Scanova's other
+repos, so a change runs against QA before it reaches `main` and a release. QA is the same image, pointed at QA's Management API (`api.qa.scanova.io`) and OAuth server by
 `deploy/qa/qa.env`, so tokens from QA's backend work there and nowhere else (production's `api.scanova.io` doesn't
 know them).
 
 It runs on the QA EC2 box (`Name=qcg-qa`, arm64) as container `qcg-mcp-qa` on port 3030, capped at 512 MB and one
 CPU. `qcg-qa-load-balancer` sends `mcp.qa.scanova.io` to it (host rule → target group `qcg-qa-mcp`, health check
-`/health`, TLS by the listener's `*.qa.scanova.io` certificate). The runner builds the arm64 image and ships it in a
+`/health` every 10s, TLS by the listener's `*.qa.scanova.io` certificate). The runner builds the arm64 image and ships it in a
 CodeDeploy bundle (`QCG_QA_GeneratorApp` / `QCG_QA_Mcp`). On the box, `deploy/qa/scripts` load it, swap the
 container, and roll back to the previous image unless `/health` answers within two minutes. AWS access is GitHub
 OIDC → IAM role `qcg-mcp-qa-deploy`, which trusts only this repository's `qa` environment and can only upload this
-app's bundles and deploy that one group.
+app's bundles and deploy that one group; the `qa` environment admits only the `qa` branch.
 
 ```bash
-gh workflow run qa-deploy.yml --repo trycon/qcg-mcp --ref main      # redeploy main to QA
+gh workflow run qa-deploy.yml --repo trycon/qcg-mcp --ref qa        # redeploy qa
 aws ssm start-session --target i-0ff14be528bff086b --region ap-south-1
 docker logs --tail 50 qcg-mcp-qa                                     # on the box
 ```

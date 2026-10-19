@@ -1,14 +1,14 @@
 name: Deploy to QA
 
-# QA (mcp.qa.scanova.io) follows main: every merge deploys it, so a change is tried against QA before it's
-# released to production (deploy.yml, release tags only). It runs on the QA EC2 box (Name=qcg-qa) beside QA's
-# backend, pointed at QA's Management API by deploy/qa/qa.env. See README → QA.
+# QA (mcp.qa.scanova.io) follows the `qa` branch, like Scanova's other repos: a push or merge to qa deploys it, so a
+# change is tried against QA before it reaches main and a release (deploy.yml, release tags only). It runs on the QA
+# EC2 box (Name=qcg-qa) beside QA's backend, pointed at QA's Management API by deploy/qa/qa.env. See README → QA.
 #
 # The image is built here for the box's arm64 and shipped in the CodeDeploy bundle; the box only loads and starts
 # it (deploy/qa/scripts), and rolls back to the previous image unless /health answers.
 on:
   push:
-    branches: [main]
+    branches: [qa]
   workflow_dispatch:
 
 concurrency:
@@ -18,7 +18,7 @@ concurrency:
 permissions:
   contents: read
   # GitHub OIDC → AWS role qcg-mcp-qa-deploy: no stored AWS keys. It trusts only this repo's `qa` environment and
-  # can only upload this app's bundles and deploy the QCG_QA_Mcp group.
+  # can only upload this app's bundles and deploy the QCG_QA_Mcp group. The environment admits only the qa branch.
   id-token: write
 
 env:
@@ -87,9 +87,10 @@ jobs:
             exit 1
           fi
 
+      # The load balancer marks the new container healthy after two passing checks, 10s apart.
       - name: Check it answers through the load balancer
         run: |
-          for i in $(seq 1 12); do
+          for i in $(seq 1 36); do
             [ "$(curl -s -o /dev/null -w '%{http_code}' -m 10 https://mcp.qa.scanova.io/health)" = "200" ] && { echo "mcp.qa.scanova.io is up"; exit 0; }
             sleep 5
           done
