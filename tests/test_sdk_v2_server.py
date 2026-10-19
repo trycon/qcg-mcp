@@ -191,11 +191,15 @@ def test_an_unknown_tool_is_a_protocol_error():
     assert _modern_call("no_such_tool", {"authorization": "k"}).json()["error"]["code"] == -32602
 
 
-def test_an_expired_key_gets_the_reconnect_message(monkeypatch):
+def test_a_refused_credential_says_sign_in_again_for_apps_and_clients_alike(monkeypatch):
     monkeypatch.setattr(sdk_server, "execute_tool", lambda name, args, key: {"detail": "Invalid token."})
     monkeypatch.setattr(sdk_server, "normalize", lambda raw, name: {"ok": False, "status_code": 401, "error": raw})
     result = _modern_call("list_folders", {"authorization": "k"}).json()["result"]
-    assert "reconnect your Scanova API key" in result["content"][0]["text"]
+    body = json.loads(result["content"][0]["text"])
+    assert body["code"] == "auth_failed"
+    assert "Signing in again" in body["error"] and "reconnect your Scanova API key" in body["error"]
+    # Not only "expired": a token from another environment is refused the same way.
+    assert "different Scanova environment" in body["error"]
 
 
 # --- legacy keep-alive GET ------------------------------------------------------

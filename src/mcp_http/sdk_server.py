@@ -48,9 +48,12 @@ SERVER_VERSION = os.getenv("APP_VERSION", "dev").removeprefix("v")
 # form keeps working; the value is passed to the Scanova API as-is.
 _KEY_HEADERS = ("x-api-key", "scanova-api-key", "api-key")
 
+# Said to whoever reads the tool result: someone in an MCP client, or an assistant inside a Scanova app (where there's
+# no API key to reconnect). So it names the likely causes and both remedies; `code` lets a caller tell it apart.
+AUTH_FAILED_CODE = "auth_failed"
 EXPIRED_KEY_MESSAGE = (
-    "Your Scanova session has expired or the API key is invalid. "
-    "Please reconnect your Scanova API key in your MCP client settings."
+    "Scanova didn't accept this sign-in: it may have expired, or come from a different Scanova environment. "
+    "Signing in again fixes it (in an MCP client, reconnect your Scanova API key)."
 )
 
 
@@ -109,6 +112,7 @@ async def call_tool(ctx: ServerRequestContext[Any], params: types.CallToolReques
     envelope = normalize(raw, name)
     if isinstance(envelope, dict) and envelope.get("status_code") == 401:
         envelope["error"] = EXPIRED_KEY_MESSAGE
+        envelope["code"] = AUTH_FAILED_CODE
     built = attach_ui_metadata(name, envelope)
     envelope = built["envelope"]
     # A failed Scanova call is a tool execution error the model can read and act on.
