@@ -402,7 +402,7 @@ know them).
 
 It runs on the QA EC2 box (`Name=qcg-qa`, arm64) as container `qcg-mcp-qa` on port 3030, capped at 512 MB and one
 CPU. `qcg-qa-load-balancer` sends `mcp.qa.scanova.io` to it (host rule → target group `qcg-qa-mcp`, health check
-`/health` every 10s, TLS by the listener's `*.qa.scanova.io` certificate). The runner builds the arm64 image and ships it in a
+`/health` every 10s, TLS by the listener's `*.qa.scanova.io` certificate). Like the rest of QA it's reachable only over the VPN: the load balancer admits 443 from the VPN and the QA box. The runner builds the arm64 image and ships it in a
 CodeDeploy bundle (`QCG_QA_GeneratorApp` / `QCG_QA_Mcp`). On the box, `deploy/qa/scripts` load it, swap the
 container, and roll back to the previous image unless `/health` answers within two minutes. AWS access is GitHub
 OIDC → IAM role `qcg-mcp-qa-deploy`, which trusts only this repository's `qa` environment and can only upload this
