@@ -8,7 +8,7 @@
 
 The tool is in the ``internal`` toolset, which no customer-facing group includes. It is still listed in tools/list
 (the list is the same for every caller), so it guards itself: it runs only for a caller whose own credential *is*
-the configured service token (constant-time compare). Anyone else — a customer's Management API key, an OAuth token —
+the configured service token, raw or as `Bearer <token>` (constant-time compare). Anyone else — a customer's Management API key, an OAuth token —
 gets a 403 tool error here and their credential never reaches the internal route. Until both env vars are set the
 tool answers "not configured".
 
@@ -41,8 +41,21 @@ FORBIDDEN = {
 }
 
 
+_BEARER = re.compile(r"^bearer\s+", re.IGNORECASE)
+
+
+def _presented_token(api_key: str) -> str:
+    """The caller's credential without a `Bearer ` prefix (any case); the raw form is kept as is."""
+    return _BEARER.sub("", api_key.strip(), count=1).strip()
+
+
 def _authorized(api_key: str, service_token: str) -> bool:
-    return hmac.compare_digest(api_key.strip().encode(), service_token.strip().encode())
+    presented = _presented_token(api_key)
+    expected = service_token.strip()
+    if not presented or not expected:
+        return False
+    # Constant time, so the comparison doesn't leak how much of the key matched.
+    return hmac.compare_digest(presented.encode(), expected.encode())
 
 
 def lookup_customer_plan(email, api_key: str = None):

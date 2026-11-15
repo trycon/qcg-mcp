@@ -152,3 +152,33 @@ def test_over_mcp_the_service_gets_the_plan_and_the_email_is_not_logged(backend,
     assert result["structuredContent"]["ok"] is True
     assert result["structuredContent"]["data"]["plan"]["family"]["name"] == "Pro"
     assert "who@example.com" not in caplog.text
+
+
+# ── the caller's credential: raw or Bearer ──────────────────────────────────── #
+
+@pytest.mark.parametrize("header", [f"Bearer {SERVICE}", f"bearer {SERVICE}", f"BEARER   {SERVICE} ", f"  {SERVICE}  "])
+def test_bearer_and_raw_forms_of_the_service_token_are_accepted(backend, header):
+    assert execute_tool("lookup_customer_plan", {"email": "a@example.com"}, header) == FOUND
+    # Whatever form the caller used, the backend gets the bare key.
+    assert backend.calls[-1]["headers"]["Authorization"] == SERVICE
+
+
+@pytest.mark.parametrize("header", [f"Bearer {SERVICE}x", "Bearer qsvc_wrong", f"Token {SERVICE}", f"Bearer Bearer {SERVICE}"])
+def test_wrong_token_is_refused(backend, header):
+    out = execute_tool("lookup_customer_plan", {"email": "a@example.com"}, header)
+    assert out["status_code"] == 403
+    assert backend.calls == []
+
+
+@pytest.mark.parametrize("header", ["", "   ", "Bearer", "Bearer ", "bearer    "])
+def test_empty_header_is_refused(backend, header):
+    out = execute_tool("lookup_customer_plan", {"email": "a@example.com"}, header)
+    assert "error" in out and out.get("status_code") != 200
+    assert backend.calls == []
+
+
+def test_bearer_form_over_mcp(backend):
+    resp = rpc("tools/call", {"params": {"name": "lookup_customer_plan", "arguments": {"email": "a@example.com"}}},
+               api_key=f"Bearer {SERVICE}")
+    assert resp["result"]["isError"] is False
+    assert backend.calls[-1]["headers"]["Authorization"] == SERVICE
