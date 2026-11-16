@@ -57,6 +57,12 @@ TOOLSETS: dict[str, tuple[str, str, frozenset[str]]] = {
         "get_page", "create_page", "edit_page", "get_page_preview", "publish_page",
         "get_ai_page_quota", "get_ai_page", "save_ai_page",
     })),
+    # Scanova's own services only (internal_tools.py). No customer-facing assistant
+    # should enable this group; the tool also refuses any credential but the
+    # configured service token.
+    "internal": ("Internal", "Lookups for Scanova's own services (e.g. a customer's plan by email). Not for customers.", frozenset({
+        "lookup_customer_plan",
+    })),
 }
 
 _BY_TOOL = {tool: key for key, (_, _, tools) in TOOLSETS.items() for tool in tools}

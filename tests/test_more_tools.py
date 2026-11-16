@@ -20,10 +20,15 @@ from mcp_http.annotations import annotations_for
 from mcp_http.dispatcher import execute_tool
 from mcp_http.more_tools import MORE_TOOLS
 from mcp_http.ai_page_tools import AI_PAGE_TOOL_NAMES
+from mcp_http.internal_tools import INTERNAL_TOOL_NAMES
 from mcp_http.page_tools import PAGE_TOOL_NAMES
 
-# Landing-page and AI page tools have their own tests (test_page_tools.py, test_ai_page_tools.py).
-ONE_ENDPOINT = [t for t in MORE_TOOLS if t.name not in PAGE_TOOL_NAMES and t.name not in AI_PAGE_TOOL_NAMES]
+# Landing-page, AI page and internal tools have their own tests (test_page_tools.py, test_ai_page_tools.py,
+# test_internal_tools.py).
+ONE_ENDPOINT = [
+    t for t in MORE_TOOLS
+    if t.name not in PAGE_TOOL_NAMES and t.name not in AI_PAGE_TOOL_NAMES and t.name not in INTERNAL_TOOL_NAMES
+]
 
 KEY = "key123"
 

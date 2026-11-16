@@ -75,7 +75,7 @@ Add the following configuration to your IDE's MCP settings:
 
 ## Tools
 
-97 tools. **Type** is the tool's MCP annotation: read-only, write (only adds), or destructive (can change or switch off something live — hosts should confirm first).
+98 tools. **Type** is the tool's MCP annotation: read-only, write (only adds), or destructive (can change or switch off something live — hosts should confirm first).
 
 ### Documentation
 
@@ -262,6 +262,14 @@ Pages are written in the page builder's block format, so they open at app.scanov
 | `save_ai_page` | Write | A finished page as a new AI Studio version (Tailwind compiled by Scanova, one credit used) and as the code's draft — a new AI QR code or the given one's |
 
 AI pages are AI Studio's whole-page HTML pages (category `ai`, `info` = `{"full_html_page": …}`), made by Scova's page pipeline in Trycon AI. `save_ai_page` calls `ai-assistance/qr-sessions/external/` (qcg-backend PR "save externally generated AI pages", which also serves `ai-assistance/token-usage/` on this API host), then `POST qr/` or `PATCH qr/<qrid>/` with the session id, as AI Studio does. Nothing is published: the customer publishes from AI Studio.
+
+### Internal
+
+| Tool | Type | Description |
+|---|---|---|
+| `lookup_customer_plan` | Read-only | Scanova's own services only: the plan of the account an email belongs to (owner's plan for a team member), its status, expiry, billing interval, scheduled change and seats; `found: false` when no account has that email |
+
+Toolset `internal`, which no customer-facing group includes. It calls qcg-backend's `POST /internal/plan-lookup/` on the backend's VPC-only internal listener, not the public API: set `INTERNAL_API_BASE_URL` (e.g. `https://internal.scanova.io`) and `SCANOVA_SERVICE_TOKEN` (the backend `ServiceToken` key, `qsvc_…`, created by a superuser in Django admin and shown once — qcg-backend `docs/service-tokens.md`). The tool runs only for a caller whose own credential is that same key, sent raw or as `Bearer <key>` (Trycon AI's "Scanova (internal)" server registration); any other credential gets a 403 tool error and is never forwarded. Unset, it answers "not configured". The email goes in the POST body and is never logged.
 
 ## Usage
 

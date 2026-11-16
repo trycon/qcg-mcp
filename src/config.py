@@ -44,3 +44,10 @@ ANON_RATE_LIMIT_PER_MINUTE = int(os.getenv("ANON_RATE_LIMIT_PER_MINUTE", "60"))
 # Scanova's QR renderer (qcg-generator): the same one downloads use. Design
 # previews and scan tests render through it (design_checks.py).
 QCG_GENERATOR_URL = os.getenv("QCG_GENERATOR_URL", "https://generator.scanova.io")
+
+# Internal tools (mcp_http/internal_tools.py, e.g. lookup_customer_plan): qcg-backend's
+# VPC-only internal listener (serves /internal/*, never api.scanova.io) and the
+# ServiceToken key (qsvc_…) sent to it. A caller may use these tools only when its
+# own credential is this same key. Unset = the tools answer "not configured".
+INTERNAL_API_BASE_URL = os.getenv("INTERNAL_API_BASE_URL", "").strip()
+SCANOVA_SERVICE_TOKEN = os.getenv("SCANOVA_SERVICE_TOKEN", "").strip() or None

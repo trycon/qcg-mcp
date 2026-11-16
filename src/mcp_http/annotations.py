@@ -35,6 +35,8 @@ READ_ONLY = frozenset({
     "get_page", "get_page_preview",
     # ai_page_tools.py
     "get_ai_page_quota", "get_ai_page",
+    # internal_tools.py
+    "lookup_customer_plan",
 })
 
 ADDITIVE = frozenset({

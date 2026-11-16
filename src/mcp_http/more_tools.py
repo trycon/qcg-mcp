@@ -653,4 +653,9 @@ from mcp_http.ai_page_tools import AI_PAGE_TOOLS  # noqa: E402
 
 MORE_TOOLS += AI_PAGE_TOOLS
 
+# Internal tools (Scanova's own services, never customers) live in internal_tools.py.
+from mcp_http.internal_tools import INTERNAL_TOOLS  # noqa: E402
+
+MORE_TOOLS += INTERNAL_TOOLS
+
 MORE_TOOLS_BY_NAME: dict[str, MoreTool] = {t.name: t for t in MORE_TOOLS}
