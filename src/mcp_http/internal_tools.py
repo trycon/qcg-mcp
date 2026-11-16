@@ -25,7 +25,8 @@ from api_response import api_result
 from mcp_http.more_tools import MoreTool, _input
 from scanova_api import NO_KEY
 
-TIMEOUT_S = 10
+# The caller gives the whole call 5 s, so time out first and answer an error.
+TIMEOUT_S = 4
 PATH = "internal/plan-lookup/"
 ENDPOINT = "/internal/plan-lookup/"
 MAX_EMAIL_CHARS = 254
