@@ -117,3 +117,48 @@ def test_rules_and_schemas_come_from_the_bundle():
     assert not any(t.startswith("form_") for t in P.blocks())
     assert P.theme_problems({"_v": 2}) == []
     assert P.theme_problems({"_v": 3})
+
+
+# QCG-20804: the bundle carries qcg-backend's extended conditional_urls.json, so a
+# button's Conditional Redirection rules in the new shape pass the MCP's own check
+# unchanged (nothing dropped), and a malformed one is still caught before saving.
+_NEW_RULES = [
+    {
+        "id": "r_hours",
+        "name": "Office hours",
+        "enabled": False,
+        "conditions": [
+            {"logicOperator": "if", "field": "time_of_day", "operator": "between",
+             "value": {"start": "09:00", "end": "17:00"}, "timeZone": "Asia/Kolkata"},
+            {"logicOperator": "or", "field": "total_scans", "operator": "up_to", "value": {"to": 100}},
+        ],
+        "split": {"variants": [
+            {"key": "A", "url": "https://example.com/a", "weight": 50},
+            {"key": "B", "url": "https://example.com/b", "weight": 50},
+        ]},
+    },
+    {"conditions": [{"logicOperator": "if", "field": "country", "operator": "includes", "value": ["US"]}],
+     "redirectUrl": "https://example.com/us"},
+]
+
+
+def _button(conditions):
+    return [{"id": "b1", "type": "button",
+             "data": {"label": "Go", "link": "https://example.com", "conditions": conditions}}]
+
+
+def test_button_accepts_new_conditional_redirection_rules():
+    page_blocks.reset()
+    blocks = _button(copy.deepcopy(_NEW_RULES))
+    assert P.block_problems(blocks) == []
+    assert blocks[0]["data"]["conditions"] == _NEW_RULES
+
+
+def test_button_rejects_malformed_new_rules():
+    page_blocks.reset()
+    both = copy.deepcopy(_NEW_RULES[0])
+    both["redirectUrl"] = "https://example.com/x"
+    no_tz = copy.deepcopy(_NEW_RULES[0])
+    del no_tz["conditions"][0]["timeZone"]
+    for rules in ([both], [no_tz], [dict(_NEW_RULES[0], conditions=[])]):
+        assert P.block_problems(_button(rules)), rules
