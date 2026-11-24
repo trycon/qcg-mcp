@@ -627,6 +627,7 @@ TOOL_OUTPUT_SCHEMAS: dict[str, dict] = {
     # Analytics & Reporting
     "get_account_stats": GET_ACCOUNT_STATS_OUTPUT,
     "get_qr_analytics": GET_QR_ANALYTICS_OUTPUT,
+    "get_account_scan_breakdown": GET_QR_ANALYTICS_OUTPUT,
     "export_analytics": EXPORT_OUTPUT,
     "export_raw_scans": EXPORT_OUTPUT,
     # Account & Billing

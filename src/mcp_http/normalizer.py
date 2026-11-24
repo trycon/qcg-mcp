@@ -53,6 +53,7 @@ _TOOL_ENDPOINTS = {
     # Analytics
     "get_account_stats":       "auth/stats/",
     "get_qr_analytics":        "analytics/qr/",
+    "get_account_scan_breakdown": "analytics/qr/",
     "export_analytics":        "analytics/qr/export/",
     "export_raw_scans":        "analytics/qr/raw/",
     # Folders

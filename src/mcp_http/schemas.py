@@ -267,6 +267,14 @@ GET_QR_ANALYTICS_SCHEMA = {
     "required": ["filter_by", "q", "types", "from_date", "to_date"],
 }
 
+GET_ACCOUNT_SCAN_BREAKDOWN_SCHEMA = {
+    "type": "object",
+    "properties": {
+        k: v for k, v in GET_QR_ANALYTICS_SCHEMA["properties"].items() if k not in ("filter_by", "q")
+    },
+    "required": ["types", "from_date", "to_date"],
+}
+
 EXPORT_ANALYTICS_SCHEMA = {
     "type": "object",
     "properties": {

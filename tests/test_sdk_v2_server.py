@@ -42,7 +42,7 @@ def _without_annotations(tools):
 from mcp_http.more_tools import MORE_TOOLS  # noqa: E402
 from mcp_http.toolsets import TOOLSET_META_KEY  # noqa: E402
 
-_ADDED = {"preview_qr_design", "list_custom_domains", *(t.name for t in MORE_TOOLS)}
+_ADDED = {"preview_qr_design", "get_account_scan_breakdown", "list_custom_domains", *(t.name for t in MORE_TOOLS)}
 _NEW_INPUTS = {"set_qr_design": {"accept_risk"}}
 # Rewritten on purpose: create_form's old `data` ({"fields": [...]}, an object)
 # never matched the API, which takes a list of blocks as a JSON string, so every
