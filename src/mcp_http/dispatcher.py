@@ -7,7 +7,7 @@ from design import DESIGN_OPTIONS, apply_design, build_pattern_info, extract_des
 from design_checks import check_design, data_uri, render, summary, verify_scans
 from domains import list_custom_domains
 from mcp_http.more_tools import MORE_TOOLS
-from analytics import get_account_stats, get_qr_analytics
+from analytics import get_account_scan_breakdown, get_account_stats, get_qr_analytics
 from billing import get_current_plan
 from folders import (
     create_folder,
@@ -405,6 +405,13 @@ _DISPATCH = {
     "get_qr_analytics": lambda a, k: get_qr_analytics(
         filter_by=a["filter_by"],
         q=a["q"],
+        types=a["types"],
+        from_date=a["from_date"],
+        to_date=a["to_date"],
+        exclude_bot_scan=a.get("exclude_bot_scan", False),
+        api_key=k,
+    ),
+    "get_account_scan_breakdown": lambda a, k: get_account_scan_breakdown(
         types=a["types"],
         from_date=a["from_date"],
         to_date=a["to_date"],

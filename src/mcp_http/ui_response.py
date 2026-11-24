@@ -71,6 +71,8 @@ UI_ENABLED_TOOLS = frozenset({
     # now returns plain text. No widget currently covers it — re-add a
     # dedicated resource/entry here if a UI for it is built again.
     #
+    # get_account_scan_breakdown is excluded for the same reason (no widget).
+    #
     # export_analytics / export_raw_scans removed for now (2026-08-24) —
     # tools no longer registered (see registry.py/dispatcher.py). Kept out
     # of this set accordingly; analytics-export.html and its

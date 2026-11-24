@@ -47,6 +47,30 @@ def get_qr_analytics(filter_by: str, q: list, types: list, from_date: str, to_da
         return {"error": f"API request failed: {str(e)}"}
 
 
+def get_account_scan_breakdown(types: list, from_date: str, to_date: str,
+                               exclude_bot_scan: bool = False, api_key: str = None) -> dict:
+    """POST /analytics/qr/?all=true — scan metrics across every QR code the caller can see.
+
+    The backend (analytics/views.py) reads `all` from the query string and, with the q=['all'] sentinel,
+    skips the per-qrid filter (services._build_qrid_filter_query include_all).
+    """
+    if not api_key:
+        return _auth_error()
+    params = {
+        "type": ",".join(types),
+        "from": from_date,
+        "to": to_date,
+        "exclude_bot_scan": exclude_bot_scan,
+        "all": "true",
+    }
+    body = {"filter_by": "qrid", "q": ["all"]}
+    try:
+        resp = requests.post(f"{_BASE}/analytics/qr/", headers=_headers(api_key), params=params, json=body)
+        return api_result(resp)
+    except requests.RequestException as e:
+        return {"error": f"API request failed: {str(e)}"}
+
+
 def export_analytics(filter_by: str, q: list, from_date: str, to_date: str,
                      file_format: str = "xlsx", exclude_bot_scan: bool = False,
                      api_key: str = None) -> dict:

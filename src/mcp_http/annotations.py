@@ -19,7 +19,7 @@ READ_ONLY = frozenset({
     "list_qr_codes", "retrieve_qr_code", "download_qr_code", "get_qr_categories", "get_qr_category_fields",
     "validate_qr_info", "open_qr_code_creation_form", "get_qr_design_options", "preview_qr_design", "list_custom_domains",
     "list_folders", "list_forms", "retrieve_form", "list_lead_lists", "retrieve_lead_list", "list_tags",
-    "get_account_stats", "get_qr_analytics", "get_current_plan",
+    "get_account_stats", "get_qr_analytics", "get_account_scan_breakdown", "get_current_plan",
     "list_users", "get_user", "list_user_roles",
     # more_tools.py
     "list_form_responses", "get_form_analytics", "get_form_question_analytics", "list_form_templates", "list_form_notifications",
