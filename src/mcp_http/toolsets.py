@@ -36,7 +36,7 @@ TOOLSETS: dict[str, tuple[str, str, frozenset[str]]] = {
         "list_lead_lists", "retrieve_lead_list", "update_lead_list", "delete_lead_list", "attach_lead_list_to_qr", "detach_lead_list_from_qr",
     })),
     "analytics": ("Analytics & activity", "Scans and account statistics, reports, and the account's activity feed.", frozenset({
-        "get_account_stats", "get_qr_analytics", "get_analytics_overview", "top_qr_codes_by_scans", "list_analytics_reports", "create_analytics_report",
+        "get_account_stats", "get_qr_analytics", "get_account_scan_breakdown", "get_analytics_overview", "top_qr_codes_by_scans", "list_analytics_reports", "create_analytics_report",
         "get_activity_feed", "get_activity_summary",
     })),
     "billing": ("Plan & billing", "The current plan, other plans and what a downgrade would affect, payments, orders and top-ups.", frozenset({

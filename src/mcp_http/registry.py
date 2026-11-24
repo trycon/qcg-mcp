@@ -51,6 +51,7 @@ from mcp_http.schemas import (
     UPDATE_LEAD_LIST_SCHEMA,
     # Analytics
     ACCOUNT_STATS_SCHEMA,
+    GET_ACCOUNT_SCAN_BREAKDOWN_SCHEMA,
     GET_QR_ANALYTICS_SCHEMA,
     # Account & Billing
     GET_CURRENT_PLAN_SCHEMA,
@@ -479,6 +480,18 @@ def list_mcp_tools():
             ),
             READ_ONLY_TOOL_ANNOTATIONS_JSON,
             GET_QR_ANALYTICS_SCHEMA,
+        ),
+        _tool(
+            "get_account_scan_breakdown",
+            "Get account-wide scan breakdown",
+            (
+                "Scans across the whole account (every QR code you can see), broken down by device, country, city, "
+                "browser, time of day, date, etc. Use for account-wide questions like \"which countries do my scans "
+                "come from?\" without naming QR codes. For specific QR codes (by qrid, tag or folder) use "
+                "get_qr_analytics; to rank QR codes by scans use top_qr_codes_by_scans."
+            ),
+            READ_ONLY_TOOL_ANNOTATIONS_JSON,
+            GET_ACCOUNT_SCAN_BREAKDOWN_SCHEMA,
         ),
         # export_analytics / export_raw_scans removed for now (2026-08-24) —
         # not registered as tools, but the underlying analytics.py functions
